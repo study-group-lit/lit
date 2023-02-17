@@ -19,7 +19,7 @@
 \addbibresource{literature.bib}
 
 \title{Project LIT - Outline}
-\author{Erik Imgrund, Niklas Loeser, Andre Trump}
+\author{Niklas Loeser, Erik Imgrund, Andre Trump}
 \date{\today}
 
 \begin{document}
@@ -34,27 +34,27 @@
 
 \section{Task Description}
 \paragraph{What is the aim - in view of the specific phenomenon under consideration?}
-Identify linguistic biases of current models for \ac{NLI}. Improve \acp{LM} by removing biases from the training process.
+The aim is to identify linguistic biases of current models for \ac{NLI} and improve \acp{LM} by removing biases from the training process.
 
 \paragraph{Hypotheses}
 \begin{itemize}
-    \item Current language models are biased for \ac{NLI} in the zero-shot and fine-tuned settings.
-    \item Removing biases from the dataset improves results in a less biased model.
-    \item A less biased model results in worse accuracy.
+    \item Current \acp{LM} are biased for \ac{NLI} in zero-shot and fine-tuned settings.
+    \item Removing biases from the dataset results in a less biased model.
+    \item A less biased model results in worse overall accuracy.
 \end{itemize}
 
 \section{Method}
-\paragraph{How will we approach this aim?} First as a baseline we will test the bias and accuracy of a model in a zero-shot and fine-tuned manner. The bias is tested by calculating plausibility and faithfulness \parencite{attanasio2022ferret} for the explanations provided as well as manual inspection of handpicked examples. By analyzing the baseline models and in particular their explanations we aim to identify linguistic biases in their predictions. Using those identified linguistic biases we want to remove heavily biased examples for the training dataset and train a model on the de-biased data. The resulting model is compared to the baseline models.
+\paragraph{How will we approach this aim?} First, as a baseline we will test the bias and accuracy of a model in a zero-shot and fine-tuned manner. The bias is tested by calculating plausibility and faithfulness \parencite{attanasio2022ferret} for the explanations provided as well as manual inspection of handpicked examples. By analyzing the baseline models and in particular their explanations we aim to identify linguistic biases in their predictions. Using those identified linguistic biases we want to remove heavily biased examples from the training dataset and train a model on the de-biased data. The resulting model is compared to the baseline models.
 
-\paragraph{Which methods will we apply?} A pretrained BERT model \parencite{devlin2018bert} is used for the zero-shot tasks as well as basis for the fine-tuning tasks. Integrated Gradients \parencite{sundararajan2017integratedgradients}, LIME \parencite{ribeiro2016lime} and Partition SHAP Values \parencite{lundberg2017shap} are used as explanation methods. Two approaches to removing the biased examples are tested \parencite{clark2019don}: The biased data can be reweighed based on how biased it is such that biased examples influence the fine-tuning less or more depending on how biased the example is. A different approach is based on ensembling the fine-tuning model during training with a biased model so that the model does not need to learn those.
+\paragraph{Which methods will we apply?} A pretrained BERT model \parencite{devlin2018bert} is used for the zero-shot tasks as well as to be the basis for the fine-tuning tasks. Integrated Gradients \parencite{sundararajan2017integratedgradients}, LIME \parencite{ribeiro2016lime} and Partition SHAP Values \parencite{lundberg2017shap} are used as explanation methods. Two approaches to removing the biased examples are tested \parencite{clark2019don}: The biased data can be reweighted based on how biased it is such that biased examples influence the fine-tuning less depending on how biased the example is. A different approach is based on ensembling the fine-tuning model during training with a biased model so that the model does not need to learn those.
 
-\paragraph{How to probe or fine-tune for your task?} For the zero-shot task two methods are tried. The next-sentence-prediction head of the pretrained BERT model is used or discourse relation markers between the premise and hypothesis are predicted using a pretrained DisSent model \parencite{nie2017dissent}. Each discourse marker is assigned to either entailment, neutral or contradiction and the most probable discourse marker is used to assign a prediction of the model.
+\paragraph{How to probe or fine-tune for your task?} For the zero-shot task two methods are tried. Either the next-sentence-prediction head of the pretrained BERT model is used or discourse relation markers between the premise and hypothesis are predicted using a pretrained DisSent model \parencite{nie2017dissent}. Each discourse marker is assigned to either entailment, neutral or contradiction and the most probable discourse marker is used to assign a prediction of the model.
 
-For fine-tuning the premise and hypothesis are both fed into a \ac{LM} separated by a marker token and a text classification head is trained based on the embedding obtained from the model to predict the class of the combined text. That is either entailment, neutral or contradiction.
+For fine-tuning, the premise and hypothesis are both fed into a \ac{LM} separated by a marker token. A text classification head is trained based on the embedding obtained from the model to predict the class of the combined text. 
 
 \section{Models and Data Sets}
 \paragraph{Select suitable data and resources}
-To test the bias of the model we plan to use e-SNLI \parencite{camburu2018esnli} for large-scale calculation of plausibility and faithfulness of the explanations the models provide. For testing the accuracy and manually analyzing the bias of the models we plan to use SICK \parencite{marelli2014sick}, as it is less biased than SNLI \parencite{bowman2015snli} and MultiNLI \parencite{williams2018multinli}. To fine-tune the model we use MultiNLI, as it is less biased than SNLI but is sufficiently large.
+To test the bias of the model we plan to use e-SNLI \parencite{camburu2018esnli} for large-scale calculation of plausibility and faithfulness of the explanations provided. For testing the accuracy and manually analyzing the bias of the models we plan to use SICK \parencite{marelli2014sick}, as it is less biased than SNLI \parencite{bowman2015snli} and MultiNLI \parencite{williams2018multinli}. To fine-tune the model we use MultiNLI, as it is less biased than SNLI but is sufficiently large.
 
 \paragraph{Additional resources to improve learning} Additionally, the training set of SICK can be used to introduce data with less bias. Additional tests could be introduced to test specific biases identified by manual analysis.
 
