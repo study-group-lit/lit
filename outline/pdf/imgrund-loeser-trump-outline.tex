@@ -40,6 +40,8 @@ What is our aim?
 What are our hypotheses?
 
 \section{Method (Erik)}
+\label{sec:method}
+
 How to probe for NLI?
 
 How to fine-tune for NLI?
@@ -61,19 +63,20 @@ Which data sets to use?
 
 \section{Experiments}
 \subsection{Baseline}
-We use two models as a baseline to compare our results with: A pretrained RoBERTa model will serve as a zero-shot baseline. Furthermore, we use RoBERTa model fine-tuned on the MultiNLI dataset as a fine-tuned baseline.
+We use two models as a baseline to compare our results with: A pretrained RoBERTa model will serve as a zero-shot baseline. Furthermore, we use a RoBERTa model fine-tuned on the MultiNLI dataset as a fine-tuned baseline.
 
 \subsection{Obtaining models with lower bias}
-To pursue our two approaches to obtain a fine-tuned model with a lower bias we then conduct the following experiments: For the first approach, we fine-tune a pretrained RoBERTa model on the MultiNLI dataset after it has been preprocessed as described above to reduce the bias in the dataset. In case too many records of the dataset need to be filtered out because they carry a bias we use the less biased SICK dataset to increase our amount of training data. 
+To pursue our two approaches to obtain a fine-tuned model with a lower bias we then conduct the following experiments: For the first approach, we fine-tune a pretrained RoBERTa model on the MultiNLI dataset after it has been preprocessed as described in \autoref{sec:method} to reduce the bias in the dataset. In case too many records of the dataset need to be filtered out because they carry a bias we use the less biased SICK dataset to increase our amount of training data. 
 
 For the second approach we need to conduct two experiments: First, we fine-tune a pretrained RoBERTAa model only on the hypotheses of the entire MultiNLI dataset to create a biased model. The ensembled model consists of the biased model we obtained before and a standard RoBERTa model. The ensembled model is trained on the entire MultiNLI dataset.
 
 \subsection{Test}
-To measure the performance of our models we will test them in two different aspects: First, we will measure the accuracy that our models archive by testing them on the SICK dataset as it is less biased than the e-SNLI dataset.
+To measure the performance of the models they are tested in two different aspects: First, the accuracy that the models archive is measured by testing them on the SICK dataset as it is less biased than the e-SNLI dataset.
 
-Additionally, we will ensure that our models come to their predictions for the right reasons by applying the interpretability methods described in the next sections. These tests will be conducted on subsets of the e-SNLI dataset. Each subset will contain only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows us to determine which linguistic phenomena the respective model copes better or worse with.
+Additionally, it is ensured that the models come to their predictions for the right reasons by applying the interpretability methods described in \autoref{sec:analysis}. These tests are conducted on subsets of the e-SNLI dataset. Each subset contains only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows to determine which linguistic phenomena the respective model copes better or worse with.
 
 \section{Analysis (Niklas)}
+\label{sec:analysis}
 1. Accuracy (F1 + MCC) auf SICK und eSNLI einzeln nach Kategorien
 2. Auf Bias überprüfen: Vergleich vom Modell für wichtig erachtete Token mit von Menschen als wichitg erachtete Tokens
 Visualisierungen:
