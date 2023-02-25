@@ -32,12 +32,20 @@
 
 \maketitle
 
-\section{Task Description (Niklas)}
-What is NLI?
+\section{Task Description}
+% What is NLI?
+Given a premise and a hypotheses, \ac{NLI} is the task of determining, whether the hypotheses is true, false, or cannot be determined. The model respectively chooses one of the three classes \texttt{entailment}, \texttt{contradiction} or \texttt{neutral}.
 
-What is our aim?
+% What is our aim?
+Our aim is to identify linguistic biases in the ROBERTA model, fine-tuned on MultiNLI. After identifying linguistic biases we then aim to improve the model, by removing the identified biases.
 
-What are our hypotheses?
+% What are our hypotheses?
+We pose the following hypotheses:
+\begin{enumerate}
+  \item The fine-tuned ROBERTA model has linguistic biases for the \ac{NLI} task.
+  \item Removing linguistic biases from the datasets used for fine-tuning ROBERTA results in a less biased model.
+  \item A less biased model performs worse. % Will not name accuracy here, as accuracy is bad. We can name F1 and other score later.
+\end{enumerate}
 
 \section{Method (Erik)}
 How to probe for NLI?
@@ -75,7 +83,7 @@ Test:
 - eSNLI für Interpretability, Kategorisiert nach linguistischen Phänomenen
 - SICK für Accuracy, weil eSNLI hat Bias ohne Ende
 
-\section{Analysis (Niklas)}
+\section{Analysis}
 1. Accuracy (F1 + MCC) auf SICK und eSNLI einzeln nach Kategorien
 2. Auf Bias überprüfen: Vergleich vom Modell für wichtig erachtete Token mit von Menschen als wichitg erachtete Tokens
 Visualisierungen:
