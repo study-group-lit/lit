@@ -59,21 +59,19 @@ Which data sets to use?
 - SICK
 - eSNLI
 
-\section{Experiments (Andre)}
-Baseline:
-1. Zero-shot Probing auf pretrained ROBERTA
-2. Für NLI fine-tuned ROBERTA mit Classification Head
-Unsere:
-3. ROBERTA fine-tuned nur mit Hypotheses
-4. Ensemble: hypothesis-only Model freezed + standard ROBERTA fine-tuning mit hypothesis-only model
-5. ROBERTA fine-tuning auf MultiNLI mit reduziertem Bias
+\section{Experiments}
+\subsection{Baseline}
+We use two models as a baseline to compare our results with: A pretrained RoBERTa model will serve as zero-short baseline. Furthermore, we use RoBERTa model fine-tuned on the MultiNLI datset as fine-tuned baseline.
 
-Training:
-- MultiNLI
-- optional: SICK (weil wenige Daten)
-Test:
-- eSNLI für Interpretability, Kategorisiert nach linguistischen Phänomenen
-- SICK für Accuracy, weil eSNLI hat Bias ohne Ende
+\subsection{Obtaining models with lower bias}
+To pursue our two approaches to obtain a fine-tuned model with lower bias we then conduct the following experiments: For the first approach we fine-tune a pretrained RoBERTa model on the MultiNLI dataset after it has been preprocessed as described above in order to reduce the bias in the dataset. In case too many records of the dataset need to be filtered out because they carry a bias we use the less biased SICK dataset to increase out amount of training data. 
+
+For the second approach we need to conduct two experiments: First, we fine-tune a pretrained RoBERTAa model only on the hypotheses of the entire MultiNLI dataset to create a biased model. The ensembled model consists of the biased model we obtained before and a standard RoBERTa model. The ensembled model is trained on the entire MultiNLI dataset.
+
+\subsection{Test}
+To measure the performance of our models we will test them in two different aspects: First, we will measure the accuracy our models archive by testing them on SICK dataset as it is less biased than the e-SNLI dataset.
+
+Additionally, we will ensure that our models come to their predictions for the right reasons by applying the interpretability methods described in the next sections. These tests will be conducted on subsets of the e-SNLI dataset. Each subset will contain only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows us to determine which linguistic phenomena the respective model copes better or worse with.
 
 \section{Analysis (Niklas)}
 1. Accuracy (F1 + MCC) auf SICK und eSNLI einzeln nach Kategorien
