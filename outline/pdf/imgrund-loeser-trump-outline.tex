@@ -26,6 +26,7 @@
 
 \begin{acronym}
     \acro{LM}{Language Model}
+    \acro{MCC}{Matthews correlation coefficient}
     \acro{NLI}{Natural Language Inference}
     \acro{PLM}{Pretrained Language Model}
 \end{acronym}
@@ -84,12 +85,25 @@ Test:
 - SICK für Accuracy, weil eSNLI hat Bias ohne Ende
 
 \section{Analysis}
-1. Accuracy (F1 + MCC) auf SICK und eSNLI einzeln nach Kategorien
-2. Auf Bias überprüfen: Vergleich vom Modell für wichtig erachtete Token mit von Menschen als wichitg erachtete Tokens
-Visualisierungen:
-- Confusion Matrix (Gentrennt nach Phänomenen)
-- Tabellen Interpretability Metriken (siehe ferret)
+% 1. Accuracy (F1 + MCC) auf SICK und eSNLI einzeln nach Kategorien
+% 2. Auf Bias überprüfen: Vergleich vom Modell für wichtig erachtete Token mit von Menschen als wichitg erachtete Tokens
+% Visualisierungen:
+% - Confusion Matrix (Gentrennt nach Phänomenen)
+% - Tabellen Interpretability Metriken (siehe ferret)
 
+% Accuracy
+For model analysis, we choose the SICK dataset, as it is less biased than other datasets, such as MultiNLI. As we only perform analysis of the models, the smallness of SICK does not impact the results.
+
+In addition, we choose the eSNLI dataset, as it provides explanations alongside the data, to which we can compare our results. The eSNLI data will be grouped according to linguistic phaenomena, such that we perform the analysis separately for each phenomenon.
+
+To measure the accuracy, we provide the Macro $F_1$-score \parencite{macrof1} and \ac{MCC}\parencite{mcc}, as \ac{MCC} has proven to be more reliable than accuracy and $F_1$ \parencite{mccGood}.
+
+
+% Bias
+To analyze linguistic biases, we compare the eSNLI explanations to important tokens for each linguistic phenomenon. We detect important tokens using the confusion matrix for each linguistic phaenomena and interpretability metrics.
+
+% Ferret
+We use the interpretability metrics plausibility and faithfulness \parencite{attanasio2022ferret} using the integrated Gradients \parencite{sundararajan2017integratedgradients}, LIME \parencite{ribeiro2016lime} and Partition SHAP Values \parencite{lundberg2017shap} methods.
 
 \printbibliography
 
