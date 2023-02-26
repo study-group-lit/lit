@@ -14,6 +14,15 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{amsmath}
+\usepackage{etoolbox}
+
+\widowpenalty=10000
+\clubpenalty=10000
+\parfillskip 0pt plus 0.75\textwidth
+\makeatletter
+\patchcmd{\@sect}{\begingroup}{\begingroup\parfillskip=0pt plus 1fil\relax}{}{}
+\patchcmd{\@ssect}{\begingroup}{\begingroup\parfillskip=0pt plus 1fil\relax}{}{}
+\makeatother
 
 \onehalfspacing
 \setlength{\parindent}{0pt}
@@ -47,10 +56,10 @@
 
 \section{Task Description}
 % What is NLI?
-Given a premise and a hypothesis, \ac{NLI} is the task of determining, whether the hypothesis is true, false, or cannot be determined, given only the premise. If the hypothesis is true, it can be said to be \textbf{entailed} by the premise. If the hypothesis is false, it is \textbf{contradictory} to the premise. If the truthiness of hypothesis cannot be determined by the premise, it is said to be \textbf{neutral}. Respectively, one of the three classes \texttt{entailment}, \texttt{contradiction} or \texttt{neutral} is chosen.
+Given a premise and a hypothesis, \ac{NLI} is the task of determining, whether the hypothesis is true, false, or cannot be determined, given only the premise. If the hypothesis is true, it can be said to be \textbf{entailed} by the premise. If the hypothesis is false, it is \textbf{contradictory} to the premise. If the truthiness of the hypothesis cannot be determined by the premise, it is said to be \textbf{neutral}. Respectively, one of the three classes \texttt{entailment}, \texttt{contradiction} or \texttt{neutral} is chosen.
 
 % What is our aim?
-Our aim is to identify biases in \acp{LM} for \ac{NLI} and mitigating those biases by removing biased data in the training procedure.
+Our aim is to identify biases in \acp{LM} for \ac{NLI} and mitigate those biases by removing biased data in the training procedure.
 
 % What are our hypotheses?
 We pose the following hypotheses:\vspace{-1.5em}
@@ -61,7 +70,7 @@ We pose the following hypotheses:\vspace{-1.5em}
   \item[H4] \acp{LM} with less bias make better predictions for data without the same bias.
 \end{description}
 
-\section{Method}
+\section{Method} \label{sec:method}
 \paragraph{Probing for \acs{NLI}}
 To provide a zero-shot baseline for our experiments, the inherent classification performance of \acp{PLM} on \acs{NLI} is tested. As the \ac{PLM} we plan to use (see \autoref{sec:models_datasets} for further information) is a \ac{MLM}, a mask prediction task is used for zero-shot testing. The template used for that task is \texttt{<premise> <mask> <hypothesis>}, where \texttt{<premise>} is the entire premise sentence with the full stop removed, \texttt{<hypothesis>} is the hypothesis sentence and \texttt{<mask>} is the token that will be predicted.
 
@@ -78,7 +87,7 @@ To provide a zero-shot baseline for our experiments, the inherent classification
     \label{tab:discourse:markers}
 \end{table}
 
-This task is inspired by the discourse prediction task introduced by \cite{dissent} where a word to relate two sentences to each other is to be predicted. In the same way, we constrain the number of words that are relevant for this task to a short list of typical discourse markers shown in \autoref{tab:discourse:markers} and only compare predictions between those. The predicted class is then obtained by summing the probability of all discourse markers associated with a class and choosing the class with maximum probability.
+This task is inspired by the discourse prediction task introduced by \cite{dissent} where a word to relate two sentences to each other is to be predicted. In the same way, we constrain the number of words that are relevant for this task to a short list of typical discourse markers shown in \autoref{tab:discourse:markers} and only compare predictions between those. The predicted class is then obtained by summing the probability of all discourse markers associated with a class and choosing the class with the maximum probability.
 
 \paragraph{Fine-tuning for \acs{NLI}}
 
@@ -86,7 +95,7 @@ Fine-tuning for \acs{NLI} is performed by supervised training on a corpus contai
 
 \paragraph{Detecting biased data}
 
-By changing the fine-tuning process to only using the hypothesis as input of the model, biases in the data can be found. Such a hypothesis-only model can only correctly predict the labels either by chance or by abusing biases in the data -- it is never correct for the right reasons. It has been shown that for datasets currently used for fine-tuning for \acs{NLI}, hypothesis-only models can be trained that are better than a majority baseline (\cite{hyponly}). Thus, it can be concluded that biases in the data must exist that facilitate correct predictions based only on the hypothesis.
+By changing the fine-tuning process to only using the hypothesis as input of the model, biases in the data can be found. Such a hypothesis-only model can only correctly predict the labels either by chance or by abusing biases in the data -- it is never correct for the right reasons. It has been shown that for datasets currently used for fine-tuning for \acs{NLI}, hypothesis-only models can be trained that are better than a majority baseline \parencite{hyponly}. Thus, it can be concluded that biases in the data must exist that facilitate correct predictions based only on the hypothesis.
 
 We plan on using this fact to find biased samples in the training datasets. This can be done by first fine-tuning a hypothesis-only model on the dataset and then declaring all samples biased that a hypothesis-only model is correct on with high confidence.
 
@@ -94,11 +103,11 @@ We plan on using this fact to find biased samples in the training datasets. This
 
 We employ two methods to remove data bias from the training procedure. The naive method is, to simply remove all samples deemed biased from the training set. By completely removing them from the training procedure, the model cannot be biased by those samples.
 
-An additional method is introduced by \cite{clark2019don}. This method is based on using an ensemble of a frozen biased model and a main model during training and only using the fine-tuned main model during testing. By using the frozen biased model in an ensemble with the main model, the main model can learn to predict based on patterns other than those based on biases. The ensembling is done by multiplying the prediction of the biased model with the prediction of the main model. The influence of the prediction of the biased model can be reduced by a learned value that is predicted by a secondary head of the main model. By learning to always completely discount the biased model, the model might then learn the biases itself. To prevent this, an additional entropy term is added to the loss function, which punishes the model for discounting the biased prediction too much. \footnote{For more information and justification of this procedure compare with section 3.2 of \cite{clark2019don}.}
+An additional method is introduced by \cite{ensemble}. This method is based on using an ensemble of a frozen biased model and a main model during training and only using the fine-tuned main model during testing. By using the frozen biased model in an ensemble with the main model, the main model can learn to predict based on patterns other than those based on biases. The ensembling is done by multiplying the prediction of the biased model with the prediction of the main model. The influence of the prediction of the biased model can be reduced by a learned value that is predicted by a secondary head of the main model. By learning to always completely discount the biased model, the model might then learn the biases itself. To prevent this, an additional entropy term is added to the loss function, which punishes the model for discounting the biased prediction too much. \footnote{For more information and justification of this procedure compare with section 3.2 of \cite{ensemble}.}
 
 \section{Models and Data Sets} \label{sec:models_datasets}
 \paragraph{Models}
-All experiments and variants are based on the pre-trained \acf{RoBERTa} (\cite{roberta}) in the variation \texttt{roberta-base}, as this provides a good tradeoff of high downstream performance and lower computational requirements. The default pre-trained model is used for the prompt task. All fine-tuned models are based on the pre-trained model with an additional classification head based on the pooled token representation. The classification head is a multilayer perceptron with a single hidden layer of size $768$ and the pooled representation is obtained from the first \texttt{<s>}-token in the output of the \acs{RoBERTa} model. This \texttt{<s>}-token is the equivalent of \acs{RoBERTa} to the \texttt{CLS}-token of other models.
+All experiments and variants are based on the pre-trained \acf{RoBERTa} \parencite{roberta} in the variation \texttt{roberta-base}, as this provides a good tradeoff of high downstream performance and lower computational requirements. The default pre-trained model is used for the prompt task. All fine-tuned models are based on the pre-trained model with an additional classification head based on the pooled token representation. The classification head is a multilayer perceptron with a single hidden layer of size $768$ and the pooled representation is obtained from the first \texttt{<s>}-token in the output of the \acs{RoBERTa} model. This \texttt{<s>}-token is the equivalent of \acs{RoBERTa} to the \texttt{CLS}-token of other models.
 
 \begin{table}[h]
     \centering
@@ -113,7 +122,7 @@ All experiments and variants are based on the pre-trained \acf{RoBERTa} (\cite{r
     \label{tab:datasets:classes}
 \end{table}
 
-\paragraph{Datasets} We use \acs{MultiNLI} (\cite{multinli}), \acs{e-SNLI} (\cite{esnli}) and \acs{SICK} (\cite{sick}). In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+\paragraph{Datasets} We use \acs{MultiNLI} \parencite{multinli}, \acs{e-SNLI} \parencite{esnli} and \acs{SICK} \parencite{sick}. In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
 
 \begin{table}[h]
     \centering
@@ -128,7 +137,7 @@ All experiments and variants are based on the pre-trained \acf{RoBERTa} (\cite{r
     \label{tab:datasets:sizes}
 \end{table}
 
-\Acf{MultiNLI} (\cite{multinli}) is a very large corpus that improves upon the \acs{SNLI} corpus by collecting premise-hypothesis pairs from ten different domains. Additionally, only five genres are included in the training dataset and two different validation datasets are provided. One of the validation datasets consists of the same genres as the training dataset while the other validation dataset consists of pairs from five different genres. This allows for cross-domain evaluation and comparisons to in-domain evaluation. Furthermore, including training data from multiple genres is hypothesized to reduce linguistic bias.
+\Acf{MultiNLI} \parencite{multinli} is a very large corpus that improves upon the \acs{SNLI} corpus by collecting premise-hypothesis pairs from ten different domains. Additionally, only five genres are included in the training dataset and two different validation datasets are provided. One of the validation datasets consists of the same genres as the training dataset while the other validation dataset consists of pairs from five different genres. This allows for cross-domain evaluation and comparisons to in-domain evaluation. Furthermore, including training data from multiple genres is hypothesized to reduce linguistic bias.
 
 \begin{lstlisting}[
     language=json,
@@ -145,9 +154,9 @@ All experiments and variants are based on the pre-trained \acf{RoBERTa} (\cite{r
 
 \autoref{code:data:samples:multinli} shows relevant features of a random sample from the \ac{MultiNLI} dataset. Included are the hypothesis and premise as plain text and the expected label numerically encoded. Additional features such as parses of the premise and hypothesis and the genre of the pair are included in the dataset but irrelevant to this project.
 
-\Acf{SICK} (\cite{sick}) is a small corpus constructed specifically to address issues with crowd-sourced datasets. It is constructed from two source datasets that describe the same videos or images. The descriptions are first normalized and then expanded to include specific linguistic phenomena. The dataset is much smaller than \acs{SNLI} and \acs{MultiNLI} but is considered to have much higher data quality. The features present in \acs{SICK} are similar to the features present in \acs{MultiNLI}, this is the same numerical label, the premise and the hypothesis as plain text. No parses and genre indications are included, but no further interest is spent on this detail, as those features are not relevant to this project.
+\Acf{SICK} \parencite{sick} is a small corpus constructed specifically to address issues with crowd-sourced datasets. It is constructed from two source datasets that describe the same videos or images. The descriptions are first normalized and then expanded to include specific linguistic phenomena. The dataset is much smaller than \acs{SNLI} and \acs{MultiNLI} but is considered to have much higher data quality. The features present in \acs{SICK} are similar to the features present in \acs{MultiNLI}, this is the same numerical label, the premise and the hypothesis as plain text. No parses and genre indications are included, but no further interest is spent on this detail, as those features are not relevant to this project.
 
-\Acf{e-SNLI} (\cite{esnli}) is a variant of the \acs{SNLI} (\cite{snli}) corpus that adds up to three natural language explanations and for each explanation an annotation of which words in the premise and hypothesis sentences are deemed important for correct classifications.
+\Acf{e-SNLI} \parencite{esnli} is a variant of the \acs{SNLI} \parencite{snli} corpus that adds up to three natural language explanations and for each explanation an annotation of which words in the premise and hypothesis sentences are deemed important for correct classifications.
 
 \begin{lstlisting}[
     language=json,
@@ -173,20 +182,15 @@ All experiments and variants are based on the pre-trained \acf{RoBERTa} (\cite{r
 \autoref{code:data:samples:multinli} depicts a random sample from the \acs{e-SNLI} corpus including all available features. Comparing it to the features of \acs{MultiNLI} and \acs{SICK}, it is obvious that explanations and highlights of the sentences are added to the data. Up to three different explanations are included and for each explanation, the words in the premise and hypothesis that are relevant to this explanation are provided. The words are provided as indices into the premise and hypotheses starting at zero.
 
 \section{Experiments}
-\subsection{Baseline}
-We use two models as a baseline to compare our results with: A pretrained RoBERTa model will serve as a zero-shot baseline. Furthermore, we use a RoBERTa model fine-tuned on the MultiNLI dataset as a fine-tuned baseline.
+\paragraph{Baseline} We use two models as baselines to compare against our results. A pre-trained \ac{RoBERTa} model will serve as a zero-shot baseline. Furthermore, we use a \ac{RoBERTa} model fine-tuned on the \ac{MultiNLI} dataset as a fine-tuned baseline. The comparison between our fine-tuned results and the zero-shot baseline is used to test \textbf{H1}.
 
-\subsection{Obtaining models with lower bias}
-To pursue our two approaches to obtain a fine-tuned model with a lower bias we then conduct the following experiments: For the first approach, we fine-tune a pretrained RoBERTa model on the MultiNLI dataset after it has been preprocessed as described in \autoref{sec:method} to reduce the bias in the dataset. In case too many records of the dataset need to be filtered out because they carry a bias we use the less biased SICK dataset to increase our amount of training data. 
+\paragraph{Obtaining models with lower bias} To pursue our two approaches to obtain a fine-tuned model with less bias we conduct the following experiments: For the first approach, we fine-tune a pre-trained \ac{RoBERTa} model on the \ac{MultiNLI} dataset after it has been preprocessed as described in \autoref{sec:method} to reduce the bias in the dataset. Optionally, we can add the training data from \ac{SICK} to increase our total amount of training data. 
 
-For the second approach we need to conduct two experiments: First, we fine-tune a pretrained RoBERTAa model only on the hypotheses of the entire MultiNLI dataset to create a biased model. The ensembled model consists of the biased model we obtained before and a standard RoBERTa model. The ensembled model is trained on the entire MultiNLI dataset.
+For the second approach we need to conduct two experiments: First, we fine-tune a pre-trained \ac{RoBERTa} model only on the hypotheses of the entire \ac{MultiNLI} dataset to create a biased model. Then an ensemble consisting of the biased model we previously obtained and a standard \ac{RoBERTa} model is trained on the entire \ac{MultiNLI} dataset as described in \autoref{sec:method}.
 
-\subsection{Test}
-To measure the performance of the models they are tested in two different aspects: First, the accuracy that the models archive is measured by testing them on the SICK dataset as it is less biased than the e-SNLI dataset.
+\paragraph{Test} To measure the quality of the models, they are tested in two different aspects: First, the predictive performance that the models achieve is measured by testing them on the SICK dataset as it is less biased than the e-SNLI dataset. Additionally, it is ensured that the models come to their predictions for the right reasons by applying the interpretability methods described in \autoref{sec:analysis}. These tests are conducted on subsets of the e-SNLI dataset. Each subset contains only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows for determining which linguistic phenomena the respective model copes better with or worse.
 
-Additionally, it is ensured that the models come to their predictions for the right reasons by applying the interpretability methods described in \autoref{sec:analysis}. These tests are conducted on subsets of the e-SNLI dataset. Each subset contains only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows to determine which linguistic phenomena the respective model copes better or worse with.
-
-\section{Analysis}
+\section{Analysis} \label{sec:analysis}
 % 1. Accuracy (F1 + MCC) auf SICK und eSNLI einzeln nach Kategorien
 % 2. Auf Bias überprüfen: Vergleich vom Modell für wichtig erachtete Token mit von Menschen als wichitg erachtete Tokens
 % Visualisierungen:
@@ -197,17 +201,16 @@ Additionally, it is ensured that the models come to their predictions for the ri
 To analyze the performance of the \acp{LM}, we test their predictive performance and their bias. We provide different scores and visualizations to test our hypothesis and provide insights into the datasets and \acp{LM}.
 % Accuracy
 
-To measure the predictive performance, we provide the macro $\text{F}_1$-score \parencite{macrof1} and \ac{MCC}\parencite{mcc}, as \ac{MCC} has proven to be more reliable than accuracy and $\text{F}_1$ \parencite{mccGood}.
-
+To measure the predictive performance, we provide the macro $\text{F}_1$-score \parencite{macrof1} and \ac{MCC} \parencite{mcc}, as \ac{MCC} has proven to be more reliable than accuracy and $\text{F}_1$ \parencite{mccGood}.
 
 % Bias
-To analyze biases, we compare the words deemed important by the \ac{e-SNLI} explanations to the tokens deemed important for the model prediction by interpretability methods. Furthermore to detect linguistic biases, we conduct a confusion analysis for each specific linguistic phenomenon.
+To analyze biases, we compare the words deemed important by the \ac{e-SNLI} explanations to the tokens deemed important for the model prediction by interpretability methods. Furthermore, to detect linguistic biases, we conduct a confusion analysis for each specific linguistic phenomenon.
 
 % Ferret
-To generate explanations we use the interpretability methods Integrated Gradients \parencite{sundararajan2017integratedgradients}, \ac{LIME} \parencite{ribeiro2016lime} and Partition SHAP Values \parencite{lundberg2017shap}. We use the plausibility and faithfulness \parencite{attanasio2022ferret} metrics to judge the model bias.
+To generate explanations we use the interpretability methods Integrated Gradients \parencite{integratedgradients}, \ac{LIME} \parencite{lime} and Partition SHAP Values \parencite{shap}. We use the plausibility and faithfulness \parencite{ferret} metrics to judge the model bias.
 
 To demonstrate the biases, we provide example sentences with important tokens highlighted. Furthermore, to provide a different view on the importance of certain tokens, we visualize the attention maps.
 
-\printbibliography
+\printbibliography{}
 
 \end{document}
