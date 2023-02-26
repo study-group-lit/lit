@@ -5,27 +5,50 @@
   year={2022}
 }
 
-@article{bowman2015snli,
-  title={A large annotated corpus for learning natural language inference},
-  author={Bowman, Samuel R and Angeli, Gabor and Potts, Christopher and Manning, Christopher D},
-  journal={arXiv preprint arXiv:1508.05326},
-  year={2015}
+@inproceedings{snli,
+  title = "A large annotated corpus for learning natural language inference",
+  author = "Bowman, Samuel R.  and
+    Angeli, Gabor  and
+    Potts, Christopher  and
+    Manning, Christopher D.",
+  booktitle = "Proceedings of the 2015 Conference on Empirical Methods in Natural Language Processing",
+  month = sep,
+  year = "2015",
+  address = "Lisbon, Portugal",
+  publisher = "Association for Computational Linguistics",
+  url = "https://aclanthology.org/D15-1075",
+  doi = "10.18653/v1/D15-1075",
+  pages = "632--642",
 }
 
-@article{camburu2018esnli,
-  title={e-snli: Natural language inference with natural language explanations},
-  author={Camburu, Oana-Maria and Rockt{\"a}schel, Tim and Lukasiewicz, Thomas and Blunsom, Phil},
-  journal={Advances in Neural Information Processing Systems},
-  volume={31},
-  year={2018}
+
+@incollection{esnli,
+  title = {e-SNLI: Natural Language Inference with Natural Language Explanations},
+  author = {Camburu, Oana-Maria and Rockt"{a}schel, Tim and Lukasiewicz, Thomas and Blunsom, Phil},
+  booktitle = {Advances in Neural Information Processing Systems 31},
+  editor = {S. Bengio and H. Wallach and H. Larochelle and K. Grauman and N. Cesa-Bianchi and R. Garnett},
+  pages = {9539--9549},
+  year = {2018},
+  publisher = {Curran Associates, Inc.},
+  url = {http://papers.nips.cc/paper/8163-e-snli-natural-language-inference-with-natural-language-explanations.pdf}
 }
 
-@article{clark2019don,
-  title={Don't take the easy way out: Ensemble based methods for avoiding known dataset biases},
-  author={Clark, Christopher and Yatskar, Mark and Zettlemoyer, Luke},
-  journal={arXiv preprint arXiv:1909.03683},
-  year={2019}
+@inproceedings{clark2019don,
+    title = "Don{'}t Take the Easy Way Out: Ensemble Based Methods for Avoiding Known Dataset Biases",
+    author = "Clark, Christopher  and
+      Yatskar, Mark  and
+      Zettlemoyer, Luke",
+    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
+    month = nov,
+    year = "2019",
+    address = "Hong Kong, China",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/D19-1418",
+    doi = "10.18653/v1/D19-1418",
+    pages = "4069--4082",
+    abstract = "State-of-the-art models often make use of superficial patterns in the data that do not generalize well to out-of-domain or adversarial settings. For example, textual entailment models often learn that particular key words imply entailment, irrespective of context, and visual question answering models learn to predict prototypical answers, without considering evidence in the image. In this paper, we show that if we have prior knowledge of such biases, we can train a model to be more robust to domain shift. Our method has two stages: we (1) train a naive model that makes predictions exclusively based on dataset biases, and (2) train a robust model as part of an ensemble with the naive one in order to encourage it to focus on other patterns in the data that are more likely to generalize. Experiments on five datasets with out-of-domain test sets show significantly improved robustness in all settings, including a 12 point gain on a changing priors visual question answering dataset and a 9 point gain on an adversarial question answering test set.",
 }
+
 
 @article{devlin2018bert,
   title={Bert: Pre-training of deep bidirectional transformers for language understanding},
@@ -42,13 +65,21 @@
   year={2017}
 }
 
-@inproceedings{marelli2014sick,
-  title={A SICK cure for the evaluation of compositional distributional semantic models.},
-  author={Marelli, Marco and Menini, Stefano and Baroni, Marco and Bentivogli, Luisa and Bernardi, Raffaella and Zamparelli, Roberto and others},
-  booktitle={Lrec},
-  pages={216--223},
-  year={2014},
-  organization={Reykjavik}
+@inproceedings{sick,
+  title = "A {SICK} cure for the evaluation of compositional distributional semantic models",
+  author = "Marelli, Marco  and
+    Menini, Stefano  and
+    Baroni, Marco  and
+    Bentivogli, Luisa  and
+    Bernardi, Raffaella  and
+    Zamparelli, Roberto",
+  booktitle = "Proceedings of the Ninth International Conference on Language Resources and Evaluation ({LREC}'14)",
+  month = may,
+  year = "2014",
+  address = "Reykjavik, Iceland",
+  publisher = "European Language Resources Association (ELRA)",
+  url = "http://www.lrec-conf.org/proceedings/lrec2014/pdf/363_Paper.pdf",
+  pages = "216--223",
 }
 
 @article{matthews1975comparison,
@@ -62,7 +93,7 @@
   publisher={Elsevier}
 }
 
-@article{nie2017dissent,
+@article{dissent,
   title={Dissent: Sentence representation learning from explicit discourse relations},
   author={Nie, Allen and Bennett, Erin D and Goodman, Noah D},
   journal={arXiv preprint arXiv:1710.04334},
@@ -86,10 +117,63 @@
   organization={PMLR}
 }
 
-@article{williams2018multinli,
-  title={The multi-genre nli corpus},
-  author={Williams, Adina and Nangia, Nikita and Bowman, Samuel R},
-  year={2018}
+@InProceedings{multinli,
+  author = "Williams, Adina
+            and Nangia, Nikita
+            and Bowman, Samuel",
+  title = "A Broad-Coverage Challenge Corpus for
+           Sentence Understanding through Inference",
+  booktitle = "Proceedings of the 2018 Conference of
+               the North American Chapter of the
+               Association for Computational Linguistics:
+               Human Language Technologies, Volume 1 (Long
+               Papers)",
+  year = "2018",
+  publisher = "Association for Computational Linguistics",
+  pages = "1112--1122",
+  location = "New Orleans, Louisiana",
+  url = "http://aclweb.org/anthology/N18-1101"
+}
+
+@article{roberta,
+  author    = {Yinhan Liu and
+               Myle Ott and
+               Naman Goyal and
+               Jingfei Du and
+               Mandar Joshi and
+               Danqi Chen and
+               Omer Levy and
+               Mike Lewis and
+               Luke Zettlemoyer and
+               Veselin Stoyanov},
+  title     = {RoBERTa: {A} Robustly Optimized {BERT} Pretraining Approach},
+  journal   = {CoRR},
+  volume    = {abs/1907.11692},
+  year      = {2019},
+  url       = {http://arxiv.org/abs/1907.11692},
+  archivePrefix = {arXiv},
+  eprint    = {1907.11692},
+  timestamp = {Thu, 01 Aug 2019 08:59:33 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1907-11692.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{hyponly,
+  title = "Hypothesis Only Baselines in Natural Language Inference",
+  author = "Poliak, Adam  and
+    Naradowsky, Jason  and
+    Haldar, Aparajita  and
+    Rudinger, Rachel  and
+    Van Durme, Benjamin",
+  booktitle = "Proceedings of the Seventh Joint Conference on Lexical and Computational Semantics",
+  month = jun,
+  year = "2018",
+  address = "New Orleans, Louisiana",
+  publisher = "Association for Computational Linguistics",
+  url = "https://aclanthology.org/S18-2023",
+  doi = "10.18653/v1/S18-2023",
+  pages = "180--191",
+  abstract = "We propose a hypothesis only baseline for diagnosing Natural Language Inference (NLI). Especially when an NLI dataset assumes inference is occurring based purely on the relationship between a context and a hypothesis, it follows that assessing entailment relations while ignoring the provided context is a degenerate solution. Yet, through experiments on 10 distinct NLI datasets, we find that this approach, which we refer to as a hypothesis-only model, is able to significantly outperform a majority-class baseline across a number of NLI datasets. Our analysis suggests that statistical irregularities may allow a model to perform NLI in some datasets beyond what should be achievable without access to the context.",
 }
 
 @article{mccBad,
