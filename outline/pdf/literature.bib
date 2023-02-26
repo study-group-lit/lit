@@ -1,4 +1,4 @@
-@article{attanasio2022ferret,
+@article{ferret,
   title={ferret: a Framework for Benchmarking Explainers on Transformers},
   author={Attanasio, Giuseppe and Pastor, Eliana and Di Bonaventura, Chiara and Nozza, Debora},
   journal={arXiv preprint arXiv:2208.01575},
@@ -33,31 +33,23 @@
   url = {http://papers.nips.cc/paper/8163-e-snli-natural-language-inference-with-natural-language-explanations.pdf}
 }
 
-@inproceedings{clark2019don,
-    title = "Don{'}t Take the Easy Way Out: Ensemble Based Methods for Avoiding Known Dataset Biases",
-    author = "Clark, Christopher  and
-      Yatskar, Mark  and
-      Zettlemoyer, Luke",
-    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
-    month = nov,
-    year = "2019",
-    address = "Hong Kong, China",
-    publisher = "Association for Computational Linguistics",
-    url = "https://aclanthology.org/D19-1418",
-    doi = "10.18653/v1/D19-1418",
-    pages = "4069--4082",
-    abstract = "State-of-the-art models often make use of superficial patterns in the data that do not generalize well to out-of-domain or adversarial settings. For example, textual entailment models often learn that particular key words imply entailment, irrespective of context, and visual question answering models learn to predict prototypical answers, without considering evidence in the image. In this paper, we show that if we have prior knowledge of such biases, we can train a model to be more robust to domain shift. Our method has two stages: we (1) train a naive model that makes predictions exclusively based on dataset biases, and (2) train a robust model as part of an ensemble with the naive one in order to encourage it to focus on other patterns in the data that are more likely to generalize. Experiments on five datasets with out-of-domain test sets show significantly improved robustness in all settings, including a 12 point gain on a changing priors visual question answering dataset and a 9 point gain on an adversarial question answering test set.",
+@inproceedings{ensemble,
+  title = "Don{'}t Take the Easy Way Out: Ensemble Based Methods for Avoiding Known Dataset Biases",
+  author = "Clark, Christopher  and
+    Yatskar, Mark  and
+    Zettlemoyer, Luke",
+  booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
+  month = nov,
+  year = "2019",
+  address = "Hong Kong, China",
+  publisher = "Association for Computational Linguistics",
+  url = "https://aclanthology.org/D19-1418",
+  doi = "10.18653/v1/D19-1418",
+  pages = "4069--4082",
+  abstract = "State-of-the-art models often make use of superficial patterns in the data that do not generalize well to out-of-domain or adversarial settings. For example, textual entailment models often learn that particular key words imply entailment, irrespective of context, and visual question answering models learn to predict prototypical answers, without considering evidence in the image. In this paper, we show that if we have prior knowledge of such biases, we can train a model to be more robust to domain shift. Our method has two stages: we (1) train a naive model that makes predictions exclusively based on dataset biases, and (2) train a robust model as part of an ensemble with the naive one in order to encourage it to focus on other patterns in the data that are more likely to generalize. Experiments on five datasets with out-of-domain test sets show significantly improved robustness in all settings, including a 12 point gain on a changing priors visual question answering dataset and a 9 point gain on an adversarial question answering test set.",
 }
 
-
-@article{devlin2018bert,
-  title={Bert: Pre-training of deep bidirectional transformers for language understanding},
-  author={Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
-  journal={arXiv preprint arXiv:1810.04805},
-  year={2018}
-}
-
-@article{lundberg2017shap,
+@article{shap,
   title={A unified approach to interpreting model predictions},
   author={Lundberg, Scott M and Lee, Su-In},
   journal={Advances in neural information processing systems},
@@ -82,25 +74,23 @@
   pages = "216--223",
 }
 
-@article{matthews1975comparison,
-  title={Comparison of the predicted and observed secondary structure of T4 phage lysozyme},
-  author={Matthews, Brian W},
-  journal={Biochimica et Biophysica Acta (BBA)-Protein Structure},
-  volume={405},
-  number={2},
-  pages={442--451},
-  year={1975},
-  publisher={Elsevier}
+@inproceedings{dissent,
+  title = "{D}is{S}ent: Learning Sentence Representations from Explicit Discourse Relations",
+  author = "Nie, Allen  and
+    Bennett, Erin  and
+    Goodman, Noah",
+  booktitle = "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics",
+  month = jul,
+  year = "2019",
+  address = "Florence, Italy",
+  publisher = "Association for Computational Linguistics",
+  url = "https://aclanthology.org/P19-1442",
+  doi = "10.18653/v1/P19-1442",
+  pages = "4497--4510",
+  abstract = "Learning effective representations of sentences is one of the core missions of natural language understanding. Existing models either train on a vast amount of text, or require costly, manually curated sentence relation datasets. We show that with dependency parsing and rule-based rubrics, we can curate a high quality sentence relation task by leveraging explicit discourse relations. We show that our curated dataset provides an excellent signal for learning vector representations of sentence meaning, representing relations that can only be determined when the meanings of two sentences are combined. We demonstrate that the automatically curated corpus allows a bidirectional LSTM sentence encoder to yield high quality sentence embeddings and can serve as a supervised fine-tuning dataset for larger models such as BERT. Our fixed sentence embeddings achieve high performance on a variety of transfer tasks, including SentEval, and we achieve state-of-the-art results on Penn Discourse Treebank{'}s implicit relation prediction task.",
 }
 
-@article{dissent,
-  title={Dissent: Sentence representation learning from explicit discourse relations},
-  author={Nie, Allen and Bennett, Erin D and Goodman, Noah D},
-  journal={arXiv preprint arXiv:1710.04334},
-  year={2017}
-}
-
-@inproceedings{ribeiro2016lime,
+@inproceedings{lime,
   title={" Why should i trust you?" Explaining the predictions of any classifier},
   author={Ribeiro, Marco Tulio and Singh, Sameer and Guestrin, Carlos},
   booktitle={Proceedings of the 22nd ACM SIGKDD international conference on knowledge discovery and data mining},
@@ -108,7 +98,7 @@
   year={2016}
 }
 
-@inproceedings{sundararajan2017integratedgradients,
+@inproceedings{integratedgradients,
   title={Axiomatic attribution for deep networks},
   author={Sundararajan, Mukund and Taly, Ankur and Yan, Qiqi},
   booktitle={International conference on machine learning},
@@ -177,23 +167,23 @@
 }
 
 @article{mccBad,
-    title = {On the performance of Matthews correlation coefficient (MCC) for imbalanced dataset},
-    journal = {Pattern Recognition Letters},
-    volume = {136},
-    pages = {71-80},
-    year = {2020},
-    author = {Qiuming Zhu}
+  title = {On the performance of Matthews correlation coefficient (MCC) for imbalanced dataset},
+  journal = {Pattern Recognition Letters},
+  volume = {136},
+  pages = {71-80},
+  year = {2020},
+  author = {Qiuming Zhu}
 }
 
 @Article{mccGood,
-    author={Chicco, Davide and T{\"o}tsch, Niklas and Jurman, Giuseppe},
-    title={The Matthews correlation coefficient (MCC) is more reliable than balanced accuracy, bookmaker informedness, and markedness in two-class confusion matrix evaluation},
-    journal={BioData Mining},
-    year={2021},
-    month={Feb},
-    day={04},
-    volume={14},
-    number={1}
+  author={Chicco, Davide and T{\"o}tsch, Niklas and Jurman, Giuseppe},
+  title={The Matthews correlation coefficient (MCC) is more reliable than balanced accuracy, bookmaker informedness, and markedness in two-class confusion matrix evaluation},
+  journal={BioData Mining},
+  year={2021},
+  month={Feb},
+  day={04},
+  volume={14},
+  number={1}
 }
 
 @article{mcc,
@@ -208,18 +198,11 @@
 
 @misc{macrof1,
   doi = {10.48550/ARXIV.1911.03347},
-
   url = {https://arxiv.org/abs/1911.03347},
-
   author = {Opitz, Juri and Burst, Sebastian},
-
   keywords = {Machine Learning (cs.LG), Machine Learning (stat.ML), FOS: Computer and information sciences, FOS: Computer and information sciences},
-
   title = {Macro F1 and Macro F1},
-
   publisher = {arXiv},
-
   year = {2019},
-
   copyright = {arXiv.org perpetual, non-exclusive license}
 }
