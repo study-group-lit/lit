@@ -11,6 +11,8 @@
 \usepackage{placeins}
 \usepackage[nolist]{acronym}
 \usepackage[style=authoryear]{biblatex}
+\usepackage{listings}
+\usepackage{xcolor}
 
 \onehalfspacing
 \setlength{\parindent}{0pt}
@@ -22,12 +24,20 @@
 \author{Niklas Loeser, Erik Imgrund, Andre Trump}
 \date{\today}
 
+\input{json.tex}
+
 \begin{document}
 
 \begin{acronym}
+    \acro{e-SNLI}{Natural Language Inference with Natural Language Explanations}
     \acro{LM}{Language Model}
+    \acro{MLM}{Masked Language Model}
+    \acro{MultiNLI}{Multi-Genre Natural Language Inference}
     \acro{NLI}{Natural Language Inference}
     \acro{PLM}{Pretrained Language Model}
+    \acro{RoBERTa}{Robustly Optimized {BERT} Pretraining Approach}
+    \acro{SICK}{Sentences Involving Compositional Knowldedge}
+    \acro{SNLI}{Stanford Natural Language Inference}
 \end{acronym}
 
 \maketitle
@@ -39,25 +49,116 @@ What is our aim?
 
 What are our hypotheses?
 
-\section{Method (Erik)}
-How to probe for NLI?
+\section{Method}
+\paragraph{Probing for \acs{NLI}}
+To provide a zero-shot baseline for our experiments, the inherent classification performance of \acp{PLM} on \acs{NLI} is tested. As the \ac{PLM} we plan to use (see \autoref{sec:models_datasets} for further information) is a \ac{MLM}, a mask prediction task is used for zero-shot testing. The template used for that task is \texttt{<premise> <mask> <hypothesis>}, where \texttt{<premise>} is the entire premise sentence with the full stop removed, \texttt{<hypothesis>} is the hypothesis sentence and \texttt{<mask>} is the token that will be predicted. 
 
-How to fine-tune for NLI?
+\begin{table}[h]
+    \centering
+    \caption{The discourse markers chosen for the zero-shot task with their associated predicted labels.}
+    \begin{tabular}{c | c | c}
+        Entailment & Neutral & Contradiction \\
+        \hline
+        as & and  & but \\
+        because & also & although \\
+        so & or & still
+    \end{tabular}
+    \label{tab:discourse:markers}
+\end{table}
 
-How do we detect biased data?
+This task is inspired by the discourse prediction task introduced by \cite{dissent} where a word to relate two sentences to each other is to be predicted. In the same way, we constrain the number of words that are relevant for this task to a short list of typical discourse markers shown in \autoref{tab:discourse:markers} and only compare predictions between those. The predicted class is then obtained by summing the probability of all discourse markers associated with a class and choosing the class with maximum probability.
 
-How to mitigate biases?
+\paragraph{Fine-tuning for \acs{NLI}}
 
-\section{Models and Data Sets (Erik)}
-Which models do we use?
+Fine-tuning for \acs{NLI} is performed by supervised training on a corpus containing premises, hypotheses and the expected labels. To predict on a single sample, both the premise and hypothesis are fed into the network separated by a separator token. The prediction is then computed by a classification head based on the pooled representation of the complete input. Classification is performed by predicting a vector with three dimensions where each dimension corresponds to one of the labels. The predicted label is the index of the maximum value in that vector. Thus the model is fine-tuned by training it to predict the correct label on the training dataset.
 
-Roberta, aber welche?
+\paragraph{Detecting biased data}
 
-Which data sets to use?
+By changing the fine-tuning process to only using the hypothesis as input of the model, biases in the data can be found. Such a hypothesis-only model can only correctly predict the labels either by chance or by abusing biases in the data -- it is never correct for the right reasons. It has been shown that for datasets currently used for fine-tuning for \acs{NLI}, hypothesis-only models can be trained that are better than a majority baseline (\cite{hyponly}). Thus, it can be concluded that biases in the data must exist that facilitate correct predictions based only on the hypothesis.
 
-- MultiNLI
-- SICK
-- eSNLI
+We plan on using this fact to find biased samples in the training datasets. This can be done by first fine-tuning a hypothesis-only model on the dataset and then declaring all samples biased that a hypothesis-only model is correct on with high confidence.
+
+\paragraph{Mitigating data bias}
+
+We employ two methods to remove data bias from the training procedure. The naive method is, to simply remove all samples deemed biased from the training set. By completely removing them from the training procedure, the model cannot be biased by those samples.
+
+An additional method is introduced by \cite{clark2019don}. This method is based on using an ensemble of a frozen biased model and a main model during training and only using the fine-tuned main model during testing. By using the frozen biased model in an ensemble with the main model, the main model can learn to predict based on patterns other than those based on biases. The ensembling is done by multiplying the prediction of the biased model with the prediction of the main model. The influence of the prediction of the biased model can be reduced by a learned value that is predicted by a secondary head of the main model. By learning to always completely discount the biased model, the model might then learn the biases itself. To prevent this, an additional entropy term is added to the loss function, which punishes the model for discounting the biased prediction too much. \footnote{For more information and justification of this procedure compare with section 3.2 of \cite{clark2019don}.}
+
+\section{Models and Data Sets} \label{sec:models_datasets}
+\paragraph{Models}
+All experiments and variants are based on the pre-trained \acf{RoBERTa} (\cite{roberta}) in the variation \texttt{roberta-base}, as this provides a good tradeoff of high downstream performance and lower computational requirements. The default pre-trained model is used for the prompt task. All fine-tuned models are based on the pre-trained model with an additional classification head based on the pooled token representation. The classification head is a multilayer perceptron with a single hidden layer of size $768$ and the pooled representation is obtained from the first \texttt{<s>}-token in the output of the \acs{RoBERTa} model. This \texttt{<s>}-token is the equivalent of \acs{RoBERTa} to the \texttt{CLS}-token of other models.
+
+\begin{table}[h]
+    \centering
+    \caption{Class distributions for the datasets used}
+    \begin{tabular}{r || c | c | c}
+        & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
+        \hline
+        Entailment & $137841$ & $2821$ & $190113$ \\
+        Neutral & $137152$ & $5595$ & $189218$ \\
+        Contradiction & $137356$ & $1424$ & $189702$
+    \end{tabular}
+    \label{tab:datasets:classes}
+\end{table}
+
+\paragraph{Datasets} We use \acs{MultiNLI} (\cite{multinli}), \acs{e-SNLI} (\cite{esnli}) and \acs{SICK} (\cite{sick}). In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+
+\begin{table}[h]
+    \centering
+    \caption{Dataset split sizes. \acs{MultiNLI} shows the matched/mismatched validation sizes.}
+    \begin{tabular}{r || c | c | c}
+        & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
+        \hline
+        Train & $392702$ & $4439$ & $549367$ \\
+        Validation & $9815$/$9832$ & $495$ & $9842$ \\
+        Test & - & $4906$ & $9824$
+    \end{tabular}
+    \label{tab:datasets:sizes}
+\end{table}
+
+\Acf{MultiNLI} (\cite{multinli}) is a very large corpus that improves upon the \acs{SNLI} corpus by collecting premise-hypothesis pairs from ten different domains. Additionally, only five genres are included in the training dataset and two different validation datasets are provided. One of the validation datasets consists of the same genres as the training dataset while the other validation dataset consists of pairs from five different genres. This allows for cross-domain evaluation and comparisons to in-domain evaluation. Furthermore, including training data from multiple genres is hypothesized to reduce linguistic bias.
+
+\begin{lstlisting}[
+    language=json,
+    caption={Relevant features of a random data sample from \acs{MultiNLI}.},
+    label=code:data:samples:multinli
+    ]
+{
+  "hypothesis": "Product and geography are what...",
+  "premise": "Conceptually cream skimming has...",
+  "label": 1,
+  ...
+}
+\end{lstlisting}
+
+\autoref{code:data:samples:multinli} shows relevant features of a random sample from the \ac{MultiNLI} dataset. Included are the hypothesis and premise as plain text and the expected label numerically encoded. Additional features such as parses of the premise and hypothesis and the genre of the pair are included in the dataset but irrelevant to this project.
+
+\Acf{SICK} (\cite{sick}) is a small corpus constructed specifically to address issues with crowd-sourced datasets. It is constructed from two source datasets that describe the same videos or images. The descriptions are first normalized and then expanded to include specific linguistic phenomena. The dataset is much smaller than \acs{SNLI} and \acs{MultiNLI} but is considered to have much higher data quality. The features present in \acs{SICK} are similar to the features present in \acs{MultiNLI}, this is the same numerical label, the premise and the hypothesis as plain text. No parses and genre indications are included, but no further interest is spent on this detail, as those features are not relevant to this project.
+
+\Acf{e-SNLI} (\cite{esnli}) is a variant of the \acs{SNLI} (\cite{snli}) corpus that adds up to three natural language explanations and for each explanation an annotation of which words in the premise and hypothesis sentences are deemed important for correct classifications.
+
+\begin{lstlisting}[
+    language=json,
+    caption={A random data sample from \acs{MultiNLI}.},
+    label=code:data:samples:esnli
+    ]
+{
+  "explanation_1": "the person is not neces...",
+  "explanation_2": "",
+  "explanation_3": "",
+  "hypothesis": "A person is training his horse...",
+  "label": 1,
+  "premise": "A person on a horse jumps over a...",
+  "sentence1_highlighted_1": "{}",
+  "sentence1_highlighted_2": "",
+  "sentence1_highlighted_3": "",
+  "sentence2_highlighted_1": "3,4,5",
+  "sentence2_highlighted_2": "",
+  "sentence2_highlighted_3": ""
+}
+\end{lstlisting}
+
+\autoref{code:data:samples:multinli} depicts a random sample from the \acs{e-SNLI} corpus including all available features. Comparing it to the features of \acs{MultiNLI} and \acs{SICK}, it is obvious that explanations and highlights of the sentences are added to the data. Up to three different explanations are included and for each explanation, the words in the premise and hypothesis that are relevant to this explanation are provided. The words are provided as indices into the premise and hypotheses starting at zero.
 
 \section{Experiments (Andre)}
 Baseline:
