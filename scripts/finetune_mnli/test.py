@@ -1,4 +1,3 @@
-from datasets import load_dataset
 from transformers import pipeline
 from evaluate import EvaluationSuite
 
