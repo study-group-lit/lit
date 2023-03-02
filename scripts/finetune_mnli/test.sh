@@ -2,7 +2,7 @@
 #SBATCH --job-name=test_mnli
 #SBATCH --output=test.txt
 #SBATCH --ntasks=1
-#SBATCH --time=72:00:00
+#SBATCH --time=2:00:00
 #SBATCH --mem=32000
 #SBATCH --partition=students
 #SBATCH --cpus-per-task=4
