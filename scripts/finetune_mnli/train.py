@@ -15,13 +15,13 @@ if not os.path.exists(checkpoint_path):
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
 
-def preprocess_dataset(dataset, premise="premise", hypothesis="hypothesis"):
+def preprocess_dataset(dataset, premise_column="premise", hypothesis_column="hypothesis"):
     """
     tokenizes columns with premise and hypothesis of a dataset
     """
     dataset = dataset.map(lambda d: tokenizer(
-        text=dataset[premise],
-        text_pair=dataset[hypothesis],
+        text=d[premise_column],
+        text_pair=d[hypothesis_column],
         padding="max_length",
         truncation=True
         ), batched=True)
@@ -51,7 +51,7 @@ roberta = RobertaModel.from_pretrained("roberta-base")
 # config is taken from official fine-tuning of roberta for mnli
 # only change are the label keys that were changed from LABEL_0, LABEL_1, LABEL_2
 # to ENTAILMENT, NEUTRAL and HYPOTHESIS for better readability
-config = RobertaConfig.from_json_file("../models/sequence_classification.json")
+config = RobertaConfig.from_json_file("../../models/sequence_classification.json")
 # initialize untrained roberta sequence classifier
 model = RobertaForSequenceClassification(config)
 
@@ -74,7 +74,8 @@ mnli_val = preprocess_dataset(mnli["validation_matched"])
 training_args = TrainingArguments(
     output_dir=checkpoint_path,         # output directory
     num_train_epochs=3,                 # total number of training epochs
-    per_device_train_batch_size=16,     # batch size per device during training
+    per_device_train_batch_size=8,      # original training has batch_size 16 =>
+    gradient_accumulation_steps=2,      # 2 accumulation steps, as we can maximally use 8 as batch size
     per_device_eval_batch_size=32,      # batch size for evaluation
     warmup_steps=0,                     # number of warmup steps for learning rate scheduler
     weight_decay=0.0,                   # strength of weight decay

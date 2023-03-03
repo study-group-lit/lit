@@ -38,7 +38,7 @@ class Suite(evaluate.EvaluationSuite):
     def task_for(self, data: str, split: str, premise: str = "premise", hypothesis: str = "hypothesis"):
         metric = evaluate.combine([
             evaluate.load("accuracy"),
-            evaluate.load("matthews.correlation"),
+            evaluate.load("matthews_correlation"),
             ConfiguredMetric(evaluate.load("f1"), average="macro"),
         ])
 
