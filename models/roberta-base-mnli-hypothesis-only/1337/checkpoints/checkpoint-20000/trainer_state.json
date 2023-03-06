@@ -1,0 +1,52 @@
+{
+  "best_metric": 0.8884707093238831,
+  "best_model_checkpoint": "../../models/roberta-base-mnli-hypothesis-only/1337/checkpoints/checkpoint-20000",
+  "epoch": 0.8148631029986962,
+  "global_step": 20000,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 0.41,
+      "learning_rate": 1.7401958103155937e-05,
+      "loss": 0.9275,
+      "step": 10000
+    },
+    {
+      "epoch": 0.41,
+      "eval_Acc": 0.5852266938359654,
+      "eval_BAcc": 0.5852397065344639,
+      "eval_F1": 0.5825491460271356,
+      "eval_MCC": 0.3784007155295838,
+      "eval_loss": 0.8941690921783447,
+      "eval_runtime": 308.9936,
+      "eval_samples_per_second": 31.764,
+      "eval_steps_per_second": 0.994,
+      "step": 10000
+    },
+    {
+      "epoch": 0.81,
+      "learning_rate": 1.4667177159109555e-05,
+      "loss": 0.8826,
+      "step": 20000
+    },
+    {
+      "epoch": 0.81,
+      "eval_Acc": 0.5876719307182884,
+      "eval_BAcc": 0.5897219655843047,
+      "eval_F1": 0.587594685325702,
+      "eval_MCC": 0.3840103940262156,
+      "eval_loss": 0.8884707093238831,
+      "eval_runtime": 306.1336,
+      "eval_samples_per_second": 32.061,
+      "eval_steps_per_second": 1.003,
+      "step": 20000
+    }
+  ],
+  "max_steps": 73632,
+  "num_train_epochs": 3,
+  "total_flos": 8.419629367296e+16,
+  "trial_name": null,
+  "trial_params": null
+}
