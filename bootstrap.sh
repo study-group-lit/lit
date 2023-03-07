@@ -1,6 +1,5 @@
 #!/bin/env sh
 # Setup Python environment
-pip install virtualenv
-virtualenv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
