@@ -1,4 +1,3 @@
-# %%
 from datasets import load_dataset
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score, balanced_accuracy_score
@@ -20,40 +19,34 @@ if not os.path.exists(model_path):
 checkpoint_path = os.path.join(model_path, "checkpoints")
 if not os.path.exists(checkpoint_path):
     os.mkdir(checkpoint_path)
-# %%
+
 mnli = load_dataset("multi_nli")
 
-# %%
 roberta = RobertaModel.from_pretrained("roberta-base")
 
-# %%
 config = RobertaConfig.from_json_file("../../models/sequence_classification.json")
 model = RobertaForSequenceClassification(config)
 
-# %%
 state_dict = roberta.state_dict()
 del state_dict["pooler.dense.weight"]
 del state_dict["pooler.dense.bias"]
 model.roberta.load_state_dict(state_dict)
 
-# %%
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
-# %%
+def map_mnli_split(split, tokenizer):
+    split = split.map(lambda d: {"x": d["hypothesis"]}, batched=True)
+    split = split.map(lambda d: tokenizer(d["x"], padding="max_length", truncation=True), batched=True)
+    split.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
+    return split
+
 mnli_train = mnli["train"]
 # Only use hypothesis
-mnli_train = mnli_train.map(lambda d: {"x": d["hypothesis"]}, batched=True)
-mnli_train = mnli_train.map(lambda d: tokenizer(d["x"], padding="max_length", truncation=True), batched=True)
-mnli_train.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
+mnli_train = map_mnli_split(mnli_train, tokenizer)
 
-# %%
 mnli_val = mnli["validation_matched"]
-# Only use hypothesis
-mnli_val = mnli_val.map(lambda d: {"x": d["hypothesis"]}, batched=True) \
-    .map(lambda d: tokenizer(d["x"], padding="max_length", truncation=True), batched=True)
-mnli_val.set_format(type='torch', columns=['input_ids', 'attention_mask', 'label'])
+mnli_val = map_mnli_split(mnli_val, tokenizer)
 
-# %%
 def compute_metrics(pred):
     """
     Shows a few helpful metrics and saves them in specified directory
@@ -70,7 +63,6 @@ def compute_metrics(pred):
         "BAcc": balanced_accuracy_score(true, predicted),
     }
 
-# %%
 training_args = TrainingArguments(
     output_dir=checkpoint_path,          # output directory
     num_train_epochs=3,              # total number of training epochs
@@ -98,7 +90,6 @@ trainer = Trainer(
     compute_metrics=compute_metrics,     # the callback that computes metrics of interest
 )
 
-# %%
 trainer.train()
 trainer.evaluate()
 model.save_pretrained(model_path)
