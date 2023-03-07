@@ -3,12 +3,16 @@ from datasets import load_dataset
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score, balanced_accuracy_score
 from transformers import RobertaForSequenceClassification, RobertaModel, RobertaConfig, RobertaTokenizer
-import sys
 import os
+import argparse
 
-seed = 42
-if len(sys.argv) > 1:
-    seed = int(sys.argv[1])
+parser = argparse.ArgumentParser(
+                    prog = 'Hypothesis only MNLI training',
+                    description = 'Trains RoBERTa using only MNLI hypothesis')
+parser.add_argument("seed", default=42, type=int, nargs='?')
+args = parser.parse_args()
+
+seed = args.seed
 model_path = "../../models/roberta-base-mnli-hypothesis-only/" + str(seed)
 
 if not os.path.exists(model_path):
