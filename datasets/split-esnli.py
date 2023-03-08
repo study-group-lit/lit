@@ -2,9 +2,12 @@ from datasets import load_dataset
 import re
 import nltk
 from nltk.corpus import wordnet
+from nltk import ngrams, word_tokenize
 import multiprocessing
 
 nltk.download('wordnet')
+nltk.download('punkt')
+
 esnli = load_dataset("../datasets/esnli.py")
 
 def transform_highlighted(record: dict) -> dict:
@@ -99,11 +102,56 @@ def add_co_hyponym_column(record: dict) -> dict:
                 relation_pairs.add((word_premise, word_hypothesis))
     return { "co_hyponym": len(relation_pairs) }
 
+all_quantifiers = {
+    "a few",
+    "a large number of",
+    "a little",
+    "a number of",
+    "a small number of",
+    "all",
+    "any",
+    "enough", 
+    "each",
+    "every",
+    "few",
+    "fewer",
+    "less",
+    "lots of",
+    "many",
+    "most",
+    "much",
+    "no",
+    "none of",
+    "not many",
+    "not much",
+    "numerous",
+    "plenty of",
+    "several",
+    "some",
+    "whole",
+    "many of"
+}
+
+def add_quantifier_column(record: dict) -> dict:
+    shingles = []
+    for sentence in [record["premise"], record["hypothesis"]]:
+        tokens = word_tokenize(sentence)
+        for n in range(1, 5):
+            shingles.extend(ngrams(tokens, n))
+    shingles = map(lambda shingle: " ".join(shingle), shingles)
+    quantifiers = list(filter(lambda shingle: shingle in all_quantifiers, shingles))
+    return { "quantifiers": len(quantifiers) }
+
 splits = ["train", "test", "validation"]
 for split in splits:
     for key in simple_relation_functions.keys():
         print(f"Adding {key} column to {split} split...")
         esnli[split] = esnli[split].map(add_simple_relation_column, fn_kwargs={ "relation": key }, num_proc=num_cpus)
+
     print(f"Adding co-hyponym column to {split} split...")
     esnli[split] = esnli[split].map(add_co_hyponym_column, num_proc=num_cpus)
+
+    print(f"Adding quantifier column to {split} split...")
+    esnli[split] = esnli[split].map(add_quantifier_column, num_proc=num_cpus)
+
     esnli[split].to_csv(f"../datasets/esnli_{split}_phenomena.csv")
