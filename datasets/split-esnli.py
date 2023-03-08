@@ -2,10 +2,10 @@ from datasets import load_dataset
 import re
 import nltk
 from nltk.corpus import wordnet
+import multiprocessing
 
 nltk.download('wordnet')
 esnli = load_dataset("../datasets/esnli.py")
-esnli.data
 
 def transform_highlighted(record: dict) -> dict:
     highlighted_premise_all = set()
@@ -22,17 +22,19 @@ def transform_highlighted(record: dict) -> dict:
     return record
 
 def parse_indices(indices: str) -> list[int]:
-    if indices in [r"{}", ""]:
+    if indices in ["{}", ""]:
         return []
     return [int(i) for i in indices.split(",")]
 
 def get_words_at_indices(string: str, indices: list[int]) -> str:
     split_string = string.split(" ")
+    # Remove punctuation marks and empty strings
     return filter(lambda word: word != "", map(lambda i: re.sub(r"[.,!?]", "", split_string[i]), indices))
 
+num_cpus = multiprocessing.cpu_count()
 splits = ["train", "test", "validation"]
 for split in splits:
-    esnli[split] = esnli[split].map(transform_highlighted, num_proc=8)
+    esnli[split] = esnli[split].map(transform_highlighted, num_proc=num_cpus)
 
 
 def get_synonyms(word: str) -> set[str]:
@@ -101,7 +103,7 @@ splits = ["train", "test", "validation"]
 for split in splits:
     for key in simple_relation_functions.keys():
         print(f"Adding {key} column to {split} split...")
-        esnli[split] = esnli[split].map(add_simple_relation_column, fn_kwargs={ "relation": key }, num_proc=8)
+        esnli[split] = esnli[split].map(add_simple_relation_column, fn_kwargs={ "relation": key }, num_proc=num_cpus)
     print(f"Adding co-hyponym column to {split} split...")
-    esnli[split] = esnli[split].map(add_co_hyponym_column, num_proc=8)
+    esnli[split] = esnli[split].map(add_co_hyponym_column, num_proc=num_cpus)
     esnli[split].to_csv(f"../datasets/esnli_{split}_phenomena.csv")
