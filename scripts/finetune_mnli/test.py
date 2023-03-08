@@ -1,7 +1,7 @@
 from transformers import pipeline
 from evaluate import EvaluationSuite
 
-model = pipeline("text-classification", model="../../models/roberta-base-mnli/")
+model = pipeline("text-classification", model="/workspace/students/lit/models/roberta-base-finetuned-mnli/")
 
 suite = EvaluationSuite.load("../../datasets/evaluation_suite.py")
 print(suite.run(model))
