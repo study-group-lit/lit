@@ -7,8 +7,8 @@ import json
 import argparse
 
 parser = argparse.ArgumentParser(
-                    prog = 'Hypothesis only esnli evaluation calculation',
-                    description = 'Calculate evaluations on esnli data on the hypothesis only RoBERTa model')
+                    prog = 'Esnli evaluation calculation',
+                    description = 'Calculate evaluations on esnli data on the RoBERTa model')
 parser.add_argument("seed", default=42, type=int, nargs='?')
 args = parser.parse_args()
 
@@ -17,7 +17,7 @@ seed = args.seed
 esnli = load_dataset("../../datasets/esnli.py", split='validation')
 
 
-model_path = f"../../models/roberta-base-mnli-hypothesis-only/{seed}/"
+model_path = f"/workspace/students/lit/models/roberta-base-mnli/"
 model = RobertaForSequenceClassification.from_pretained(model_path)
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
@@ -45,11 +45,18 @@ def create_one_hot(hypothesis, esnli_explanation):
 
 
 def calculate_evaluations(row):
+    premise = row["premise"]
     hypothesis = row["hypothesis"]
+    query = premise + "</s></s>" + hypothesis
+
     label = row["label"]
-    esnli_explanation = row["sentence2_highlighted_1"]
-    rationale = create_one_hot(hypothesis, esnli_explanation)
-    ferret_explanations = bench.explain(hypothesis, target=label)
+    esnli_premise_explanation = row["sentence1_highlighted_1"]
+    esnli_hypotheses_explanation = row["sentence2_highlighted_1"]
+    premise_rationale = create_one_hot(premise, esnli_premise_explanation)
+    hypotheses_rationale = create_one_hot(hypothesis, esnli_hypotheses_explanation)
+    rationale = premise_rationale + [0, 0] + hypotheses_rationale
+
+    ferret_explanations = bench.explain(query, target=label)
     
     row["ferret_explanations"] = [explanation.scores for explanation in ferret_explanations]
     evaluations = [bench.evaluate_explanation(explanation, label, rationale) for explanation in ferret_explanations]
