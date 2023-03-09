@@ -2,11 +2,12 @@ from datasets import load_dataset
 import re
 import nltk
 from nltk.corpus import wordnet
-from nltk import ngrams, word_tokenize
+from nltk import ngrams, word_tokenize, pos_tag
 import multiprocessing
 
 nltk.download('wordnet')
 nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 
 esnli = load_dataset("../datasets/esnli.py")
 
@@ -142,6 +143,14 @@ def add_quantifier_column(record: dict) -> dict:
     quantifiers = list(filter(lambda shingle: shingle in all_quantifiers, shingles))
     return { "quantifiers": len(quantifiers) }
 
+def add_numerical_column(record: dict) -> dict:
+    tagged_tokens = []
+    for sentence in [record["premise"], record["hypothesis"]]:
+        tokens = word_tokenize(sentence)
+        tagged_tokens.extend(pos_tag(tokens))
+    numericals = list(filter(lambda tagged_token: tagged_token[1] == "CD", tagged_tokens))
+    return { "numericals": len(numericals) }
+
 splits = ["train", "test", "validation"]
 for split in splits:
     for key in simple_relation_functions.keys():
@@ -153,5 +162,8 @@ for split in splits:
 
     print(f"Adding quantifier column to {split} split...")
     esnli[split] = esnli[split].map(add_quantifier_column, num_proc=num_cpus)
+
+    print(f"Adding numerical column to {split} split...")
+    esnli[split] = esnli[split].map(add_numerical_column, num_proc=num_cpus)
 
     esnli[split].to_csv(f"../datasets/esnli_{split}_phenomena.csv")
