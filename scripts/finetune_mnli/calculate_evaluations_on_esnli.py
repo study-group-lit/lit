@@ -9,16 +9,16 @@ import argparse
 parser = argparse.ArgumentParser(
                     prog = 'Esnli evaluation calculation',
                     description = 'Calculate evaluations on esnli data on the RoBERTa model')
-parser.add_argument("seed", default=42, type=int, nargs='?')
+parser.add_argument("-v", "--variant", type=str, default="1")
 args = parser.parse_args()
 
-seed = args.seed
+variant = args.variant
 
 esnli = load_dataset("../../datasets/esnli.py", split='validation')
 
 
-model_path = f"/workspace/students/lit/models/roberta-base-mnli/"
-model = RobertaForSequenceClassification.from_pretained(model_path)
+model_path = f"/workspace/students/lit/models/roberta-base-finetuned-mnli/"
+model = RobertaForSequenceClassification.from_pretrained(model_path)
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
 
@@ -98,8 +98,6 @@ esnli_with_evaluations = esnli.map(calculate_evaluations)
 dataset_scores = calculate_dataset_scores(esnli_with_evaluations)
 
 
-esnli_with_evaluations.save_to_disk(f"../../datasets/esnli_evaluations_hypothesis_only_{seed}.hf")
-with open(f"../../datasets/esnli_evaluation_scores_hypothesis_only_{seed}.json", "w+") as f:
+esnli_with_evaluations.save_to_disk(f"../../datasets/esnli_evaluations_{variant}.hf")
+with open(f"../../datasets/esnli_evaluation_scores_{variant}.json", "w+") as f:
     f.write(json.dumps(dataset_scores))
-
-
