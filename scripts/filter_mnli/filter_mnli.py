@@ -26,17 +26,15 @@ label_mapping = {
     "CONTRADICTION": 2
 }
 
-def add_prediction_columns(record, model, seed):
-    prediction = model({"text":record['premise'], "text_pair":record['hypothesis']})
-    label = prediction["label"]
-    score = prediction["score"]
-    return { f"prediction_{seed}": label_mapping[label], f"score_{seed}": score }
+def add_prediction_columns(records, model, seed):
+    predictions = model([{"text": p, "text_pair": h} for p, h in zip(records["premise"], records["hypothesis"])])
+    return { f"prediction_{seed}": [ label_mapping[p["label"]] for p in predictions ], f"score_{seed}": [ p["score"] for p in predictions ] }
 
 for seed in seeds:
     print(f"Adding predictions of model {seed}...")
     model = models[seed]
-    mnli["train"] = mnli["train"].map(add_prediction_columns, fn_kwargs={ "model": model, "seed": seed }, batch_size=32)
-mnli.save_to_disk(f"{dataset_path}/mnli_with_predictions")
+    mnli["train"] = mnli["train"].map(add_prediction_columns, fn_kwargs={ "model": model, "seed": seed }, batched=True, batch_size=32)
+mnli.save_to_disk(f"{dataset_path}/mnli_with_predictions-test")
 
 def correct_by_at_least(record, at_least):
     predictions = []
