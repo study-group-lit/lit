@@ -1,5 +1,6 @@
 import os
 import multiprocessing
+import copy
 from datasets import load_dataset, DatasetDict
 from transformers import pipeline
 
@@ -43,14 +44,14 @@ def correct_by_at_least(record, at_least):
         predictions.append(record[f"prediction_{seed}"])
     return len(list(filter(lambda pred: pred == record["label"], predictions))) >= at_least
 
-mnli_at_least_two = DatasetDict()
+mnli_at_least_two = copy.deepcopy(mnli)
 print(f"Filtering split by at least two...")
-mnli_at_least_two["train"] = mnli["train"].filter(correct_by_at_least, fn_kwargs={ "at_least": 2 }, num_proc=cpu_count)
+mnli_at_least_two["train"] = mnli_at_least_two["train"].filter(correct_by_at_least, fn_kwargs={ "at_least": 2 }, num_proc=cpu_count)
 print(f"Saving filtered datset...")
 mnli_at_least_two.save_to_disk(f"{dataset_path}/mnli_at_least_two")
 
-mnli_three = DatasetDict()
+mnli_three = copy.deepcopy(mnli)
 print(f"Filtering split by three...")
-mnli_three["train"] = mnli["train"].filter(correct_by_at_least, fn_kwargs={ "at_least": 3 }, num_proc=cpu_count)
+mnli_three["train"] = mnli_three["train"].filter(correct_by_at_least, fn_kwargs={ "at_least": 3 }, num_proc=cpu_count)
 print(f"Saving filtered datset...")
 mnli_three.save_to_disk(f"{dataset_path}/mnli_three")
