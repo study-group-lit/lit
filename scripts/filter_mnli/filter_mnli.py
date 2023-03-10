@@ -7,10 +7,10 @@ from transformers import pipeline
 seeds = ["42", "69", "1337"]
 cpu_count = multiprocessing.cpu_count()
 
-model_path = "../../models"
+model_path = "/workspace/students/lit/models"
 if not os.path.exists(model_path):
     raise IOError("Model path does not exist")
-dataset_path = "../../datasets"
+dataset_path = "/workspace/students/lit/datasets"
 if not os.path.exists(dataset_path):
     raise IOError("Dataset path does not exist")
 
@@ -34,7 +34,7 @@ for seed in seeds:
     print(f"Adding predictions of model {seed}...")
     model = models[seed]
     mnli["train"] = mnli["train"].map(add_prediction_columns, fn_kwargs={ "model": model, "seed": seed }, batched=True, batch_size=32)
-mnli.save_to_disk(f"{dataset_path}/mnli_with_predictions-test")
+mnli.save_to_disk(f"{dataset_path}/mnli_with_predictions")
 
 def correct_by_at_least(record, at_least):
     predictions = []
