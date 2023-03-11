@@ -110,7 +110,7 @@ trainer = Trainer(
 )
 
 # train, evaluate and save everything
-trainer.train(resume_from_checkpoint=True)
+trainer.train()
 trainer.evaluate()
 model.save_pretrained(model_path)
 tokenizer.save_pretrained(model_path)
