@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=test_filtered_at_least_two_mnli
-#SBATCH --output=test_filtered_at_least_two.txt
+#SBATCH --output=test_at_least_two.txt
 #SBATCH --ntasks=1
 #SBATCH --time=2:00:00
 #SBATCH --mem=32000

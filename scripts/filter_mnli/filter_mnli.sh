@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name=finetune_mnli
-#SBATCH --output=train.txt
+#SBATCH --job-name=filter_mnli
+#SBATCH --output=filter_mnli.txt
 #SBATCH --ntasks=1
 #SBATCH --time=24:00:00
 #SBATCH --mem=32000
