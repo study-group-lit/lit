@@ -5,17 +5,33 @@ from ferret import SHAPExplainer, LIMEExplainer, IntegratedGradientExplainer
 from statistics import mean, median
 import json
 import argparse
+from math import ceil
 
 parser = argparse.ArgumentParser(
                     prog = 'Esnli evaluation calculation',
                     description = 'Calculate evaluations on esnli data on the RoBERTa model')
 parser.add_argument("-v", "--variant", type=str, default="1")
+# For each row the SHAP explainer alone takes 16s. Running all tasks would take ~150h
+# Thus we chunk the task into pieces of 2000 items (esnli validation has about 10000)
+parser.add_argument("-c", "--chunk_index", type=int, default=0)
 args = parser.parse_args()
 
 variant = args.variant
+chunk_index = args.chunk_index
+
+CHUNK_SIZE = 2000
 
 esnli = load_dataset("../../datasets/esnli.py", split='validation')
+esnli_size = len(esnli)
+maximum_chunk = ceil(esnli_size / CHUNK_SIZE)
 
+esnli_start_index = chunk_index*CHUNK_SIZE
+if esnli_start_index >= esnli_size:
+    print("Choose a smaller chunk index")
+    exit(1)
+
+esnli_end_index = min((chunk_index+1)*CHUNK_SIZE, esnli_size)
+esnli = esnli.select(range(esnli_start_index, esnli_end_index))
 
 model_path = f"/workspace/students/lit/models/roberta-base-finetuned-mnli/"
 model = RobertaForSequenceClassification.from_pretrained(model_path)
@@ -98,6 +114,6 @@ esnli_with_evaluations = esnli.map(calculate_evaluations)
 dataset_scores = calculate_dataset_scores(esnli_with_evaluations)
 
 
-esnli_with_evaluations.save_to_disk(f"../../datasets/esnli_evaluations_{variant}.hf")
-with open(f"../../datasets/esnli_evaluation_scores_{variant}.json", "w+") as f:
+esnli_with_evaluations.save_to_disk(f"../../datasets/esnli_evaluations_{variant}_chunk_{chunk_index}.hf")
+with open(f"../../datasets/esnli_evaluation_scores_{variant}_chunk_{chunk_index}.json", "w+") as f:
     f.write(json.dumps(dataset_scores))
