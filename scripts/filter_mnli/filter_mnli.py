@@ -1,40 +1,16 @@
 import os
 import multiprocessing
 import copy
-from datasets import load_dataset, DatasetDict
-from transformers import pipeline
+from datasets import load_dataset
 
 seeds = ["42", "69", "1337"]
 cpu_count = multiprocessing.cpu_count()
 
-model_path = "/workspace/students/lit/models"
-if not os.path.exists(model_path):
-    raise IOError("Model path does not exist")
-dataset_path = "/workspace/students/lit/datasets"
+dataset_path = "/workspace/students/lit/datasets/mnli_with_predictions"
 if not os.path.exists(dataset_path):
     raise IOError("Dataset path does not exist")
 
-models = dict()
-for seed in seeds:
-    models[seed] = pipeline("text-classification", model=f"{model_path}/roberta-base-finetuned-mnli-hypothesis-only/{seed}")
-
-mnli = load_dataset("multi_nli")
-
-label_mapping = {
-    "ENTAILMENT": 0,
-    "NEUTRAL": 1,
-    "CONTRADICTION": 2
-}
-
-def add_prediction_columns(records, model, seed):
-    predictions = model([{"text": p, "text_pair": h} for p, h in zip(records["premise"], records["hypothesis"])])
-    return { f"prediction_{seed}": [ label_mapping[p["label"]] for p in predictions ], f"score_{seed}": [ p["score"] for p in predictions ] }
-
-for seed in seeds:
-    print(f"Adding predictions of model {seed}...")
-    model = models[seed]
-    mnli["train"] = mnli["train"].map(add_prediction_columns, fn_kwargs={ "model": model, "seed": seed }, batched=True, batch_size=32)
-mnli.save_to_disk(f"{dataset_path}/mnli_with_predictions")
+mnli = load_dataset(dataset_path)
 
 def correct_by_at_least(record, at_least):
     predictions = []
@@ -42,14 +18,22 @@ def correct_by_at_least(record, at_least):
         predictions.append(record[f"prediction_{seed}"])
     return len(list(filter(lambda pred: pred == record["label"], predictions))) >= at_least
 
-mnli_at_least_two = copy.deepcopy(mnli)
-print(f"Filtering split by at least two...")
-mnli_at_least_two["train"] = mnli_at_least_two["train"].filter(correct_by_at_least, fn_kwargs={ "at_least": 2 }, num_proc=cpu_count)
-print(f"Saving filtered datset...")
-mnli_at_least_two.save_to_disk(f"{dataset_path}/mnli_at_least_two")
+def correct_by_maximum(record, maximum):
+    predictions = []
+    for seed in seeds:
+        predictions.append(record[f"prediction_{seed}"])
+    return len(list(filter(lambda pred: pred == record["label"], predictions))) <= maximum
 
-mnli_three = copy.deepcopy(mnli)
-print(f"Filtering split by three...")
-mnli_three["train"] = mnli_three["train"].filter(correct_by_at_least, fn_kwargs={ "at_least": 3 }, num_proc=cpu_count)
+mnli_maximum_one = copy.deepcopy(mnli)
+# throw out 2 or 3 correct -> keep 0, 1 correct
+print(f"Filtering split by maximum one...")
+mnli_maximum_one["train"] = mnli_maximum_one["train"].filter(correct_by_maximum, fn_kwargs={ "maximum": 1 }, num_proc=cpu_count)
 print(f"Saving filtered datset...")
-mnli_three.save_to_disk(f"{dataset_path}/mnli_three")
+mnli_maximum_one.save_to_disk(f"{dataset_path}/mnli_maximum_one")
+
+mnli_maximum_two = copy.deepcopy(mnli)
+# throw out 3 correct -> keep 0, 1 or 2 correct
+print(f"Filtering split by maximum two...")
+mnli_maximum_two["train"] = mnli_maximum_two["train"].filter(correct_by_maximum, fn_kwargs={ "maximum": 2 }, num_proc=cpu_count)
+print(f"Saving filtered datset...")
+mnli_maximum_two.save_to_disk(f"{dataset_path}/mnli_maximum_two")
