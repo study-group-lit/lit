@@ -17,12 +17,12 @@ def transform_highlighted(record: dict) -> dict:
     for i in range(1, 4):
         highlighted_current_premise = get_words_at_indices(record["premise"], parse_indices(record[f"premise_highlighted_{i}"]))
         highlighted_premise_all.update(highlighted_current_premise)
-        record[f"premise_highlighted_{i}"] = ",".join(highlighted_current_premise)
+        record[f"premise_highlighted_words_{i}"] = ",".join(highlighted_current_premise)
         highlighted_current_hypothesis = get_words_at_indices(record["hypothesis"], parse_indices(record[f"hypothesis_highlighted_{i}"]))
         highlighted_hypothesis_all.update(highlighted_current_hypothesis)
-        record[f"hypothesis_highlighted_{i}"] = ",".join(highlighted_current_hypothesis)
-    record["highlighted_premise_all"] = ",".join(highlighted_premise_all)
-    record["highlighted_hypothesis_all"] = ",".join(highlighted_hypothesis_all)
+        record[f"hypothesis_highlighted_words_{i}"] = ",".join(highlighted_current_hypothesis)
+    record["premise_highlighted_words_all"] = ",".join(highlighted_premise_all)
+    record["hypothesis_highlighted_words_all"] = ",".join(highlighted_hypothesis_all)
     return record
 
 def parse_indices(indices: str) -> list[int]:
@@ -30,10 +30,10 @@ def parse_indices(indices: str) -> list[int]:
         return []
     return [int(i) for i in indices.split(",")]
 
-def get_words_at_indices(string: str, indices: list[int]) -> str:
+def get_words_at_indices(string: str, indices: list[int]) -> list[str]:
     split_string = string.split(" ")
     # Remove punctuation marks and empty strings
-    return filter(lambda word: word != "", map(lambda i: re.sub(r"[.,!?]", "", split_string[i]), indices))
+    return list(filter(lambda word: word != "", map(lambda i: re.sub(r"[.,!?]", "", split_string[i]), indices)))
 
 num_cpus = multiprocessing.cpu_count()
 splits = ["train", "test", "validation"]
@@ -80,8 +80,8 @@ simple_relation_functions = {
 }
 
 def add_simple_relation_column(record: dict, relation: str) -> dict:
-    important_premise = set(record["highlighted_premise_all"].split(","))
-    important_hypothesis = set(record["highlighted_hypothesis_all"].split(","))
+    important_premise = set(record["premise_highlighted_words_all"].split(","))
+    important_hypothesis = set(record["hypothesis_highlighted_words_all"].split(","))
     relation_pairs = set()
     for word_premise in important_premise:
         related_words = simple_relation_functions[relation](word_premise)
@@ -94,8 +94,8 @@ def are_co_hyponym(word_1: str, word_2: str) -> bool:
     return len(common_hypernyms) > 0
 
 def add_co_hyponym_column(record: dict) -> dict:
-    important_premise = set(record["highlighted_premise_all"].split(","))
-    important_hypothesis = set(record["highlighted_hypothesis_all"].split(","))
+    important_premise = set(record["premise_highlighted_words_all"].split(","))
+    important_hypothesis = set(record["hypothesis_highlighted_words_all"].split(","))
     relation_pairs = set()
     for word_premise in important_premise:
         for word_hypothesis in important_hypothesis:
@@ -133,23 +133,50 @@ all_quantifiers = {
     "many of"
 }
 
+def split_consecutive_sublists(indices: list[int]) -> list[list[int]]:
+    if len(indices) == 0:
+        return []
+    indices.sort()
+    sublists = []
+    current_sublist = [ indices[0] ]
+    for item in indices[1:]:
+        if current_sublist[-1] == item-1:
+            current_sublist.append(item)
+        else:
+            sublists.append(current_sublist)
+            current_sublist = [ item ]
+    return sublists
+
+def get_important_words_grouped(record: dict) -> set[str]:
+    words_and_groups = set()
+    for sentence in ["premise", "hypothesis"]:
+        for i in range(1, 4):
+            word_indices_premise = parse_indices(record[f"{sentence}_highlighted_{i}"])
+            grouped_word_indices_premise = split_consecutive_sublists(word_indices_premise)
+            for word_group_indices in grouped_word_indices_premise:
+                word_group = get_words_at_indices(record[sentence], word_group_indices)
+                words_and_groups.update(word_group)
+                words_and_groups.update(" ".join(word_group))
+    return words_and_groups
+
 def add_quantifier_column(record: dict) -> dict:
-    shingles = []
-    for sentence in [record["premise"], record["hypothesis"]]:
-        tokens = word_tokenize(sentence)
-        for n in range(1, 5):
-            shingles.extend(ngrams(tokens, n))
-    shingles = map(lambda shingle: " ".join(shingle), shingles)
-    quantifiers = list(filter(lambda shingle: shingle in all_quantifiers, shingles))
+    important_words_grouped = get_important_words_grouped(record)
+    quantifiers = list(filter(lambda phrase: phrase in all_quantifiers, important_words_grouped))
     return { "quantifiers": len(quantifiers) }
+
+def get_important_words(record: dict) -> set[str]:
+    important_words = set(record["premise_highlighted_words_all"].split(","))
+    important_words.update(record["hypothesis_highlighted_words_all"].split(","))
+    return important_words
 
 def add_numerical_column(record: dict) -> dict:
     tagged_tokens = []
+    important_words = get_important_words(record)
     for sentence in [record["premise"], record["hypothesis"]]:
         tokens = word_tokenize(sentence)
         tagged_tokens.extend(pos_tag(tokens))
-    numericals = list(filter(lambda tagged_token: tagged_token[1] == "CD", tagged_tokens))
-    return { "numericals": len(numericals) }
+    important_numerical_words = list(filter(lambda tagged_token: tagged_token[1] == "CD" and tagged_token[0] in important_words, tagged_tokens))
+    return { "numericals": len(important_numerical_words) }
 
 splits = ["train", "test", "validation"]
 for split in splits:
