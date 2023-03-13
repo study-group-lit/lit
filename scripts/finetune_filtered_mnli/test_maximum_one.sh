@@ -14,4 +14,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ~/lit/venv/bin/activate
-python3 test.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli-maximum-one/
+python3 test.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli-maximum_one/

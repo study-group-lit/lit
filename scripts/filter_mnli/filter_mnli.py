@@ -1,16 +1,16 @@
 import os
 import multiprocessing
 import copy
-from datasets import load_dataset
+from datasets import load_from_disk
 
 seeds = ["42", "69", "1337"]
 cpu_count = multiprocessing.cpu_count()
 
-dataset_path = "/workspace/students/lit/datasets/mnli_with_predictions"
+dataset_path = "/workspace/students/lit/datasets"
 if not os.path.exists(dataset_path):
     raise IOError("Dataset path does not exist")
 
-mnli = load_dataset(dataset_path)
+mnli = load_from_disk(dataset_path)
 
 def correct_by_at_least(record, at_least):
     predictions = []
