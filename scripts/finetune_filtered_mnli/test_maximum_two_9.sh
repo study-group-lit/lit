@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name=test_more_filtered_maximum_one_mnli
-#SBATCH --output=test_more_maximum_one.txt
+#SBATCH --job-name=test_maximum_two_9
+#SBATCH --output=test_maximum_two_9.txt
 #SBATCH --ntasks=1
 #SBATCH --time=2:00:00
 #SBATCH --mem=32000
@@ -14,4 +14,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ~/lit/venv/bin/activate
-python3 test.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli-maximum_one_6/
+python3 test.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli-maximum_two_9/

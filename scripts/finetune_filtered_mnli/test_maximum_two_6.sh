@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name=test_more_filtered_maximum_two_mnli
-#SBATCH --output=test_more_maximum_two.txt
+#SBATCH --job-name=test_maximum_two_6
+#SBATCH --output=test_maximum_two_6.txt
 #SBATCH --ntasks=1
 #SBATCH --time=2:00:00
 #SBATCH --mem=32000
