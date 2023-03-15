@@ -1,5 +1,5 @@
 from datasets import load_dataset
-from transformers import RobertaForSequenceClassification, RobertaModel, RobertaConfig, RobertaTokenizer
+from transformers import RobertaForSequenceClassification, RobertaTokenizer
 from ferret import Benchmark
 from ferret import SHAPExplainer, LIMEExplainer, IntegratedGradientExplainer
 from statistics import mean, median
