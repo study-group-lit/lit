@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=test_maximum_two_3
-#SBATCH --output=test_maximum_two_6.txt
+#SBATCH --output=test_maximum_two_3.txt
 #SBATCH --ntasks=1
 #SBATCH --time=2:00:00
 #SBATCH --mem=32000
