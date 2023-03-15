@@ -5,21 +5,22 @@ from ferret import SHAPExplainer, LIMEExplainer, IntegratedGradientExplainer
 from statistics import mean, median
 import json
 import argparse
+import os
 
 parser = argparse.ArgumentParser(
                     prog = 'Hypothesis only esnli evaluation calculation',
                     description = 'Calculate evaluations on esnli data on the hypothesis only RoBERTa model')
+parser.add_argument("-m", "--model", default="../../models/roberta-base-mnli-hypothesis-only/42/", type=str)
 parser.add_argument("seed", default=42, type=int, nargs='?')
-parser.add_argument("-v", "--variant", type=str, default="1")
 args = parser.parse_args()
 
+model_path = args.model
 seed = args.seed
-variant = args.variant
+
+if not os.path.exists(model_path):
+    raise IOError("Model path does not exist")
 
 esnli = load_dataset("../../datasets/esnli.py", split='validation')
-
-
-model_path = f"../../models/roberta-base-mnli-hypothesis-only/{seed}/"
 model = RobertaForSequenceClassification.from_pretrained(model_path)
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
@@ -34,7 +35,12 @@ bench = Benchmark(model, tokenizer, explainers=explainers)
 
 
 BPE_DIVIDER_TOKEN = "Ġ"
-def create_one_hot(hypothesis, esnli_explanation):
+def create_token_rationale_encoding(hypothesis, esnli_explanation):
+    """
+    Creates a list, in which for each token is specified, if the token is part of the explanation (1), or not (0).
+    https://github.com/g8a9/ferret/blob/55978fa7528e0cf2f88ea767288f5d3048dd7553/ferret/benchmark.py#L158
+    Ferret calls this a one-hot-encoding, though the returned list may contain several 1's 
+    """
     tokens = tokenizer.tokenize(hypothesis)
     one_hot_encoding = []
     current_word_index = 0
@@ -50,7 +56,7 @@ def calculate_evaluations(row):
     hypothesis = row["hypothesis"]
     label = row["label"]
     esnli_explanation = row["sentence2_highlighted_1"]
-    rationale = create_one_hot(hypothesis, esnli_explanation)
+    rationale = create_token_rationale_encoding(hypothesis, esnli_explanation)
     ferret_explanations = bench.explain(hypothesis, target=label)
     
     row["ferret_explanations"] = [explanation.scores for explanation in ferret_explanations]
@@ -86,15 +92,11 @@ def calculate_dataset_scores(dataset):
     return dataset_scores
 
 
-
 esnli_with_evaluations = esnli.map(calculate_evaluations)
-
-
 dataset_scores = calculate_dataset_scores(esnli_with_evaluations)
 
-
-esnli_with_evaluations.save_to_disk(f"../../datasets/esnli_evaluations_hypothesis_only_{seed}_{variant}.hf")
-with open(f"../../datasets/esnli_evaluation_scores_hypothesis_only_{seed}_{variant}.json", "w+") as f:
+esnli_with_evaluations.save_to_disk(f"../../datasets/esnli_evaluations_hypothesis_only_{seed}.hf")
+with open(f"../../datasets/esnli_evaluation_scores_hypothesis_only_{seed}.json", "w+") as f:
     f.write(json.dumps(dataset_scores))
 
 

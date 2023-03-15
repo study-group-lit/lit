@@ -6,18 +6,20 @@ from statistics import mean, median
 import json
 import argparse
 from math import ceil
+import os
 
 parser = argparse.ArgumentParser(
                     prog = 'Esnli evaluation calculation',
                     description = 'Calculate evaluations on esnli data on the RoBERTa model')
-parser.add_argument("-v", "--variant", type=str, default="1")
 # For each row the SHAP explainer alone takes 16s. Running all tasks would take ~150h
 # Thus we chunk the task into pieces of 2000 items (esnli validation has about 10000)
 parser.add_argument("-c", "--chunk_index", type=int, default=0)
+parser.add_argument("-m", "--model", default="/workspace/students/lit/models/roberta-base-finetuned-mnli/", type=str)
 args = parser.parse_args()
 
 variant = args.variant
 chunk_index = args.chunk_index
+model_path = args.model
 
 CHUNK_SIZE = 2000
 
@@ -27,13 +29,13 @@ maximum_chunk = ceil(esnli_size / CHUNK_SIZE)
 
 esnli_start_index = chunk_index*CHUNK_SIZE
 if esnli_start_index >= esnli_size:
-    print("Choose a smaller chunk index")
-    exit(1)
+    raise "Choose a smaller chunk index"
 
 esnli_end_index = min((chunk_index+1)*CHUNK_SIZE, esnli_size)
 esnli = esnli.select(range(esnli_start_index, esnli_end_index))
 
-model_path = f"/workspace/students/lit/models/roberta-base-finetuned-mnli/"
+if not os.path.exists(model_path):
+    raise IOError("Model path does not exist")
 model = RobertaForSequenceClassification.from_pretrained(model_path)
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
@@ -48,7 +50,12 @@ bench = Benchmark(model, tokenizer, explainers=explainers)
 
 
 BPE_DIVIDER_TOKEN = "Ġ"
-def create_one_hot(hypothesis, esnli_explanation):
+def create_token_rationale_encoding(hypothesis, esnli_explanation):
+    """
+    Creates a list, in which for each token is specified, if the token is part of the explanation (1), or not (0).
+    https://github.com/g8a9/ferret/blob/55978fa7528e0cf2f88ea767288f5d3048dd7553/ferret/benchmark.py#L158
+    Ferret calls this a one-hot-encoding, though the returned list may contain several 1's 
+    """
     tokens = tokenizer.tokenize(hypothesis)
     one_hot_encoding = []
     current_word_index = 0
@@ -68,8 +75,8 @@ def calculate_evaluations(row):
     label = row["label"]
     esnli_premise_explanation = row["sentence1_highlighted_1"]
     esnli_hypotheses_explanation = row["sentence2_highlighted_1"]
-    premise_rationale = create_one_hot(premise, esnli_premise_explanation)
-    hypotheses_rationale = create_one_hot(hypothesis, esnli_hypotheses_explanation)
+    premise_rationale = create_token_rationale_encoding(premise, esnli_premise_explanation)
+    hypotheses_rationale = create_token_rationale_encoding(hypothesis, esnli_hypotheses_explanation)
     rationale = premise_rationale + [0, 0] + hypotheses_rationale
 
     ferret_explanations = bench.explain(query, target=label)
@@ -103,17 +110,12 @@ def calculate_dataset_scores(dataset):
             evaluation_scores = [calculate_score(dataset, row_value_selector, score) for score in scores]
             named_evaluation_scores = {name: value for (name, value) in zip(score_names, evaluation_scores)}
             dataset_scores[explainer_name][evaluator_name] = named_evaluation_scores
-
     return dataset_scores
 
 
-
 esnli_with_evaluations = esnli.map(calculate_evaluations)
-
-
 dataset_scores = calculate_dataset_scores(esnli_with_evaluations)
 
-
-esnli_with_evaluations.save_to_disk(f"../../datasets/esnli_evaluations_{variant}_chunk_{chunk_index}.hf")
-with open(f"../../datasets/esnli_evaluation_scores_{variant}_chunk_{chunk_index}.json", "w+") as f:
+esnli_with_evaluations.save_to_disk(f"../../datasets/esnli_evaluations_chunk_{chunk_index}.hf")
+with open(f"../../datasets/esnli_evaluation_scores_chunk_{chunk_index}.json", "w+") as f:
     f.write(json.dumps(dataset_scores))
