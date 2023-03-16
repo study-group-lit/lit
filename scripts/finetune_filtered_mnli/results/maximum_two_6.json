@@ -1,0 +1,32 @@
+[
+    {
+        "accuracy": 0.6181818181818182,
+        "matthews_correlation": 0.5230666139750516,
+        "f1": 0.6203740234049411,
+        "total_time_in_seconds": 43.07043613214046,
+        "samples_per_second": 11.492802127225643,
+        "latency_in_seconds": 0.08701098208513224,
+        "task_name": "sick/validation",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.832603158430973,
+        "matthews_correlation": 0.749055343074234,
+        "f1": 0.831717347142714,
+        "total_time_in_seconds": 932.7777214739472,
+        "samples_per_second": 10.522335358192983,
+        "latency_in_seconds": 0.09503593698155345,
+        "task_name": "multi_nli/validation_matched",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.8397070789259561,
+        "matthews_correlation": 0.7593700981642765,
+        "f1": 0.8384592757956005,
+        "total_time_in_seconds": 1072.4011650430039,
+        "samples_per_second": 9.168210852890795,
+        "latency_in_seconds": 0.10907253509387753,
+        "task_name": "multi_nli/validation_mismatched",
+        "data_preprocessor": null
+    }
+]
