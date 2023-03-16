@@ -36,9 +36,7 @@ def get_words_at_indices(string, indices) -> list:
     return list(filter(lambda word: word != "", map(lambda i: re.sub(r"[.,!?]", "", split_string[i]), indices)))
 
 num_cpus = multiprocessing.cpu_count()
-splits = ["train", "test", "validation"]
-for split in splits:
-    esnli[split] = esnli[split].map(transform_highlighted, num_proc=num_cpus)
+esnli = esnli.map(transform_highlighted, num_proc=num_cpus)
 
 
 def get_synonyms(word: str) -> set:
@@ -178,19 +176,17 @@ def add_numerical_column(record: dict) -> dict:
     important_numerical_words = list(filter(lambda tagged_token: tagged_token[1] == "CD" and tagged_token[0] in important_words, tagged_tokens))
     return { "numericals": len(important_numerical_words) }
 
-splits = ["train", "test", "validation"]
-for split in splits:
-    for key in simple_relation_functions.keys():
-        print(f"Adding {key} column to {split} split...")
-        esnli[split] = esnli[split].map(add_simple_relation_column, fn_kwargs={ "relation": key }, num_proc=num_cpus)
+for key in simple_relation_functions.keys():
+    print(f"Adding {key} column...")
+    esnli = esnli.map(add_simple_relation_column, fn_kwargs={ "relation": key }, num_proc=num_cpus)
 
-    print(f"Adding co-hyponym column to {split} split...")
-    esnli[split] = esnli[split].map(add_co_hyponym_column, num_proc=num_cpus)
+print(f"Adding co-hyponym column...")
+esnli = esnli.map(add_co_hyponym_column, num_proc=num_cpus)
 
-    print(f"Adding quantifier column to {split} split...")
-    esnli[split] = esnli[split].map(add_quantifier_column, num_proc=num_cpus)
+print(f"Adding quantifier column...")
+esnli = esnli.map(add_quantifier_column, num_proc=num_cpus)
 
-    print(f"Adding numerical column to {split} split...")
-    esnli[split] = esnli[split].map(add_numerical_column, num_proc=num_cpus)
+print(f"Adding numerical column...")
+esnli = esnli.map(add_numerical_column, num_proc=num_cpus)
 
-esnli.save_to_disk("/workspace/students/lit/datasets/esnli_phenomena")
+esnli.save_to_disk(dataset_dict_path="/workspace/students/lit/datasets/esnli_phenomena")
