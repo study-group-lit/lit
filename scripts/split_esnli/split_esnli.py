@@ -57,17 +57,15 @@ def get_antonyms(word: str) -> set:
 def get_hypernyms(word: str) -> set:
     hypernyms = set()
     for synset in wordnet.synsets(word):
-        for lemma in synset.lemmas():
-            if lemma.hypernyms():
-                hypernyms.add(lemma.hypernyms()[0].name())
+        for hypernym_synset in synset.hypernyms():
+            hypernyms.update(hypernym_synset.lemma_names())
     return hypernyms
 
 def get_hyponyms(word: str) -> set:
     hyponyms = set()
     for synset in wordnet.synsets(word):
-        for lemma in synset.lemmas():
-            if lemma.hyponyms():
-                hyponyms.add(lemma.hyponyms()[0].name())
+        for hyponym_synset in synset.hyponyms():
+            hyponyms.update(hyponym_synset.lemma_names())
     return hyponyms
 
 simple_relation_functions = {
