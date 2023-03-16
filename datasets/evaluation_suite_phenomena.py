@@ -42,8 +42,10 @@ class Suite(evaluate.EvaluationSuite):
             ConfiguredMetric(evaluate.load("f1"), average="macro"),
         ])
 
-        data = self.esnli_phenomena["validation"].filter(lambda r: r[phenomenon] > 0, num_proc=cpu_count())
+        print(f"Filtering data by phenomenon {phenomenon}...")
+        data = self.esnli_phenomena["train"].filter(lambda r: r[phenomenon] > 0, num_proc=cpu_count())
         data.info.description = phenomenon
+        print(f"Dataset for {phenomenon} has size {data.num_rows}...")
 
         return SubTask(
                 task_type="text-classification",
