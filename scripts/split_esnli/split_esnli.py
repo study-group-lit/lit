@@ -187,4 +187,4 @@ esnli = esnli.map(add_quantifier_column, num_proc=num_cpus)
 print(f"Adding numerical column...")
 esnli = esnli.map(add_numerical_column, num_proc=num_cpus)
 
-esnli.save_to_disk(dataset_dict_path="/workspace/students/lit/datasets/esnli_phenomena")
+esnli.save_to_disk(dataset_dict_path="../../../lit-data/datasets/esnli_phenomena")
