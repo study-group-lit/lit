@@ -1,7 +1,7 @@
 import evaluate
 from evaluate.evaluation_suite import SubTask
 from multiprocessing import cpu_count
-from datasets import load_from_disk
+from datasets import DatasetDict
 
 
 # code from https://discuss.huggingface.co/t/combining-metrics-for-multiclass-predictions-evaluations/21792/11
@@ -28,10 +28,10 @@ class ConfiguredMetric:
         return self.metric._feature_names()
 
 
-class PhenomenaSuite(evaluate.EvaluationSuite):
+class Suite(evaluate.EvaluationSuite):
     def __init__(self, name):
         super().__init__(name)
-        self.esnli_phenomena = load_from_disk("/workspace/students/lit/datasets/esnli_phenomena")
+        self.esnli_phenomena = DatasetDict.load_from_disk("/workspace/students/lit/datasets/esnli_phenomena")
         self.phenomena = ["synonym", "antonym", "hypernym", "hyponym", "co_hyponym", "quantifiers", "numericals"]
         self.suite = list(map(lambda phenomenon: self.task_for(phenomenon), self.phenomena))
     
@@ -42,13 +42,12 @@ class PhenomenaSuite(evaluate.EvaluationSuite):
             ConfiguredMetric(evaluate.load("f1"), average="macro"),
         ])
 
-        data = self.esnli_phenomena.filter(lambda r: r[phenomenon] > 0, num_proc=cpu_count())
+        data = self.esnli_phenomena["validation"].filter(lambda r: r[phenomenon] > 0, num_proc=cpu_count())
         data.info.description = phenomenon
 
         return SubTask(
                 task_type="text-classification",
                 data=data,
-                split="validation",
                 args_for_task={
                     "metric": metric,
                     "input_column": "premise",

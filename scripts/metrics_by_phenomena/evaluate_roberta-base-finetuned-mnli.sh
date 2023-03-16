@@ -14,4 +14,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ~/lit/venv/bin/activate
-python3 evaluate.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli
+python3 evaluate_model.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli
