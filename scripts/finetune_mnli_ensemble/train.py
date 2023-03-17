@@ -120,7 +120,7 @@ class EnsembleForSequenceClassification(RobertaPreTrainedModel):
                 loss = loss_fct(logits, labels)
             
             if entropy is not None:
-                loss += 0.01*entropy
+                loss += 0.03*entropy
         
         if not return_dict:
             output = (logits,) + outputs[2:]
@@ -216,7 +216,7 @@ trainer = Trainer(
     compute_metrics=compute_metrics,    # the callback that computes metrics of interest
 )
 
-trainer.train(resume_from_checkpoint=True)
+trainer.train(resume_from_checkpoint=False)
 trainer.evaluate()
 model.save_pretrained(model_path)
 tokenizer.save_pretrained(model_path)

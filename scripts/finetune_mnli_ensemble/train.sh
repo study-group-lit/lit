@@ -2,10 +2,11 @@
 #SBATCH --job-name=finetune_ensemble
 #SBATCH --output=train.txt
 #SBATCH --ntasks=1
-#SBATCH --time=24:00:00
+#SBATCH --time=36:00:00
 #SBATCH --mem=32000
 #SBATCH --mail-type=ALL
 #SBATCH --partition=students
+#SBATCH --nodelist=gpu08
 #SBATCH --cpus-per-task=4
 #SBATCH --qos=batch
 #SBATCH --gres=gpu
