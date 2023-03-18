@@ -9,6 +9,37 @@ nltk.download('wordnet')
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
+all_quantifiers = {
+    "a few",
+    "a large number of",
+    "a little",
+    "a number of",
+    "a small number of",
+    "all",
+    "any",
+    "enough", 
+    "each",
+    "every",
+    "few",
+    "fewer",
+    "less",
+    "lots of",
+    "many",
+    "most",
+    "much",
+    "no",
+    "none of",
+    "not many",
+    "not much",
+    "numerous",
+    "plenty of",
+    "several",
+    "some",
+    "whole",
+    "many of"
+}
+
+num_cpus = multiprocessing.cpu_count()
 esnli = load_dataset("../../datasets/esnli.py")
 
 def transform_highlighted(record):
@@ -34,10 +65,6 @@ def get_words_at_indices(string, indices) -> list:
     split_string = string.split(" ")
     # Remove punctuation marks and empty strings
     return list(filter(lambda word: word != "", map(lambda i: re.sub(r"[.,!?]", "", split_string[i]), indices)))
-
-num_cpus = multiprocessing.cpu_count()
-esnli = esnli.map(transform_highlighted, num_proc=num_cpus)
-
 
 def get_synonyms(word: str) -> set:
     synonyms = set()
@@ -68,13 +95,6 @@ def get_hyponyms(word: str) -> set:
             hyponyms.update(hyponym_synset.lemma_names())
     return hyponyms
 
-simple_relation_functions = {
-    "synonym": get_synonyms,
-    "antonym": get_antonyms,
-    "hypernym": get_hypernyms,
-    "hyponym": get_hyponyms,
-}
-
 def add_simple_relation_column(record: dict, relation: str) -> dict:
     important_premise = set(record["premise_highlighted_words_all"].split(","))
     important_hypothesis = set(record["hypothesis_highlighted_words_all"].split(","))
@@ -98,36 +118,6 @@ def add_co_hyponym_column(record: dict) -> dict:
             if are_co_hyponym(word_premise, word_hypothesis):
                 relation_pairs.add((word_premise, word_hypothesis))
     return { "co_hyponym": len(relation_pairs) }
-
-all_quantifiers = {
-    "a few",
-    "a large number of",
-    "a little",
-    "a number of",
-    "a small number of",
-    "all",
-    "any",
-    "enough", 
-    "each",
-    "every",
-    "few",
-    "fewer",
-    "less",
-    "lots of",
-    "many",
-    "most",
-    "much",
-    "no",
-    "none of",
-    "not many",
-    "not much",
-    "numerous",
-    "plenty of",
-    "several",
-    "some",
-    "whole",
-    "many of"
-}
 
 def split_consecutive_sublists(indices: list) -> list:
     if len(indices) == 0:
@@ -174,17 +164,27 @@ def add_numerical_column(record: dict) -> dict:
     important_numerical_words = list(filter(lambda tagged_token: tagged_token[1] == "CD" and tagged_token[0] in important_words, tagged_tokens))
     return { "numericals": len(important_numerical_words) }
 
-for key in simple_relation_functions.keys():
-    print(f"Adding {key} column...")
-    esnli = esnli.map(add_simple_relation_column, fn_kwargs={ "relation": key }, num_proc=num_cpus)
+simple_relation_functions = {
+    "synonym": get_synonyms,
+    "antonym": get_antonyms,
+    "hypernym": get_hypernyms,
+    "hyponym": get_hyponyms,
+}
 
-print(f"Adding co-hyponym column...")
-esnli = esnli.map(add_co_hyponym_column, num_proc=num_cpus)
+if __name__ == "__main__":
+    esnli = esnli.map(transform_highlighted, num_proc=num_cpus)
 
-print(f"Adding quantifier column...")
-esnli = esnli.map(add_quantifier_column, num_proc=num_cpus)
+    for key in simple_relation_functions.keys():
+        print(f"Adding {key} column...")
+        esnli = esnli.map(add_simple_relation_column, fn_kwargs={ "relation": key }, num_proc=num_cpus)
 
-print(f"Adding numerical column...")
-esnli = esnli.map(add_numerical_column, num_proc=num_cpus)
+    print(f"Adding co-hyponym column...")
+    esnli = esnli.map(add_co_hyponym_column, num_proc=num_cpus)
 
-esnli.save_to_disk(dataset_dict_path="../../../lit-data/datasets/esnli_phenomena")
+    print(f"Adding quantifier column...")
+    esnli = esnli.map(add_quantifier_column, num_proc=num_cpus)
+
+    print(f"Adding numerical column...")
+    esnli = esnli.map(add_numerical_column, num_proc=num_cpus)
+
+    esnli.save_to_disk(dataset_dict_path="../../../lit-data/datasets/esnli_phenomena")
