@@ -1,0 +1,161 @@
+[
+    {
+        "accuracy": 0.75,
+        "matthews_correlation": 0.5773502691896258,
+        "f1": 0.7333333333333334,
+        "confusion_matrix": [
+            [
+                2,
+                1
+            ],
+            [
+                0,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.39608667232096195,
+        "samples_per_second": 10.098799781777736,
+        "latency_in_seconds": 0.09902166808024049,
+        "task_name": "many",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5,
+        "matthews_correlation": -0.16666666666666666,
+        "f1": 0.2222222222222222,
+        "confusion_matrix": [
+            [
+                2,
+                1,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                1,
+                0,
+                0
+            ]
+        ],
+        "total_time_in_seconds": 0.3253424512222409,
+        "samples_per_second": 12.294737391240734,
+        "latency_in_seconds": 0.08133561280556023,
+        "task_name": "few",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.6666666666666666,
+        "matthews_correlation": 0.5,
+        "f1": 0.6666666666666666,
+        "confusion_matrix": [
+            [
+                1,
+                1
+            ],
+            [
+                0,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.24553638510406017,
+        "samples_per_second": 12.218148437465093,
+        "latency_in_seconds": 0.08184546170135339,
+        "task_name": "several",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.75,
+        "matthews_correlation": 0.0,
+        "f1": 0.42857142857142855,
+        "confusion_matrix": [
+            [
+                3,
+                0
+            ],
+            [
+                1,
+                0
+            ]
+        ],
+        "total_time_in_seconds": 0.34958196990191936,
+        "samples_per_second": 11.442237713581916,
+        "latency_in_seconds": 0.08739549247547984,
+        "task_name": "some",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 0.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                3
+            ]
+        ],
+        "total_time_in_seconds": 0.24865621328353882,
+        "samples_per_second": 12.064850342505403,
+        "latency_in_seconds": 0.08288540442784627,
+        "task_name": "no",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 0.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.09080890286713839,
+        "samples_per_second": 11.01213612792008,
+        "latency_in_seconds": 0.09080890286713839,
+        "task_name": "much",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 0.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.08905338868498802,
+        "samples_per_second": 11.229218952434685,
+        "latency_in_seconds": 0.08905338868498802,
+        "task_name": "each",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.75,
+        "matthews_correlation": 0.7,
+        "f1": 0.7777777777777777,
+        "confusion_matrix": [
+            [
+                1,
+                0,
+                0
+            ],
+            [
+                0,
+                1,
+                0
+            ],
+            [
+                1,
+                0,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.32798099238425493,
+        "samples_per_second": 12.19582870007812,
+        "latency_in_seconds": 0.08199524809606373,
+        "task_name": "all",
+        "data_preprocessor": null
+    }
+]

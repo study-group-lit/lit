@@ -1,0 +1,222 @@
+[
+    {
+        "accuracy": 0.5,
+        "matthews_correlation": 0.3181818181818182,
+        "f1": 0.43333333333333335,
+        "confusion_matrix": [
+            [
+                1,
+                2,
+                0
+            ],
+            [
+                0,
+                0,
+                1
+            ],
+            [
+                0,
+                0,
+                2
+            ]
+        ],
+        "total_time_in_seconds": 0.5808732705190778,
+        "samples_per_second": 10.329275428077974,
+        "latency_in_seconds": 0.09681221175317963,
+        "task_name": "several",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.8333333333333334,
+        "matthews_correlation": 0.6324555320336759,
+        "f1": 0.7777777777777778,
+        "confusion_matrix": [
+            [
+                4,
+                1
+            ],
+            [
+                0,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.49600638542324305,
+        "samples_per_second": 12.096618463651815,
+        "latency_in_seconds": 0.08266773090387383,
+        "task_name": "many",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 0.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                3
+            ]
+        ],
+        "total_time_in_seconds": 0.2637037653476,
+        "samples_per_second": 11.376401835011961,
+        "latency_in_seconds": 0.08790125511586666,
+        "task_name": "no",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.9,
+        "matthews_correlation": 0.7276068751089989,
+        "f1": 0.5555555555555555,
+        "confusion_matrix": [
+            [
+                8,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                1,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.8668364221230149,
+        "samples_per_second": 11.536201923205386,
+        "latency_in_seconds": 0.08668364221230149,
+        "task_name": "some",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.6,
+        "matthews_correlation": 0.5303300858899106,
+        "f1": 0.5555555555555555,
+        "confusion_matrix": [
+            [
+                2,
+                2,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.44774977397173643,
+        "samples_per_second": 11.166951477491127,
+        "latency_in_seconds": 0.08954995479434728,
+        "task_name": "few",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.8571428571428571,
+        "matthews_correlation": 0.8017837257372732,
+        "f1": 0.8412698412698413,
+        "confusion_matrix": [
+            [
+                3,
+                1,
+                0
+            ],
+            [
+                0,
+                1,
+                0
+            ],
+            [
+                0,
+                0,
+                2
+            ]
+        ],
+        "total_time_in_seconds": 0.5913571668788791,
+        "samples_per_second": 11.837177922346429,
+        "latency_in_seconds": 0.0844795952684113,
+        "task_name": "all",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5,
+        "matthews_correlation": 0.5,
+        "f1": 0.3333333333333333,
+        "confusion_matrix": [
+            [
+                1,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                1,
+                0
+            ]
+        ],
+        "total_time_in_seconds": 0.17141201253980398,
+        "samples_per_second": 11.667793699905223,
+        "latency_in_seconds": 0.08570600626990199,
+        "task_name": "any",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 0.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.09179786406457424,
+        "samples_per_second": 10.89349964936614,
+        "latency_in_seconds": 0.09179786406457424,
+        "task_name": "much",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 1.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                2,
+                0
+            ],
+            [
+                0,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.2719219531863928,
+        "samples_per_second": 11.0325774173283,
+        "latency_in_seconds": 0.09064065106213093,
+        "task_name": "each",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 0.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.09038586355745792,
+        "samples_per_second": 11.063677002591275,
+        "latency_in_seconds": 0.09038586355745792,
+        "task_name": "whole",
+        "data_preprocessor": null
+    }
+]
