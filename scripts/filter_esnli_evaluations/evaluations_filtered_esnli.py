@@ -14,7 +14,7 @@ esnli = load_from_disk("/workspace/students/lit/datasets/esnli_phenomena_with_pr
 # https://github.com/g8a9/ferret/blob/b1343501db6367ca9048283862f8e0763c72e4ba/ferret/benchmark.py#L88
 
 def filter_predicted_samples(records):
-    predicted_label = records["prediction_42"]
+    predicted_label = records["prediction"]
     label = records["label"]
     return predicted_label == label
 
@@ -30,9 +30,9 @@ def calculate_dataset_scores(dataset):
     explainer_names = ["shap", "lime", "integrated_gradient", "integrated_gradient_multiply_by_inputs"]
     evaluator_names = ["comprehensiveness", "sufficiency", "loo", "auprc_plausibility", "tokenf1_plausibility", "tokeniou_plausibility"]
     dataset_scores = {}
-    for i, explainer_name in zip(range(4), explainer_names): # 4 explainers
+    for i, explainer_name in enumerate(explainer_names): # 4 explainers
         dataset_scores[explainer_name] = {}
-        for j, evaluator_name in zip(range(6), evaluator_names): # 6 evaluators for each explainers
+        for j, evaluator_name in enumerate(evaluator_names): # 6 evaluators for each explainers
             row_value_selector = lambda row: row["evaluations"][i][j]
             evaluation_scores = [calculate_score(dataset, row_value_selector, score) for score in scores]
             named_evaluation_scores = {name: value for (name, value) in zip(score_names, evaluation_scores)}
