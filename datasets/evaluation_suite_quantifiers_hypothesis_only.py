@@ -12,52 +12,64 @@ datasets.disable_caching()
 
 
 def filter_quantifiers(dataset):
-    dataset["validation"] = dataset["validation"].filter(lambda record: record["quantifiers"] > 0)
+    dataset["validation"] = dataset["validation"].filter(
+        lambda record: record["quantifiers"] > 0)
     return dataset
+
 
 def split_consecutive_sublists(indices):
     if len(indices) == 0:
         return []
     indices.sort()
     sublists = []
-    current_sublist = [ indices[0] ]
+    current_sublist = [indices[0]]
     for item in indices[1:]:
         if current_sublist[-1] == item-1:
             current_sublist.append(item)
         else:
             sublists.append(current_sublist)
-            current_sublist = [ item ]
+            current_sublist = [item]
     return sublists
+
 
 def parse_indices(indices: str):
     if indices in ["{}", ""]:
         return []
     return [int(i) for i in indices.split(",")]
 
+
 def get_words_at_indices(string: str, indices):
     split_string = string.split(" ")
     # Remove punctuation marks and empty strings
     return list(filter(lambda word: word != "", map(lambda i: re.sub(r"[.,!?]", "", split_string[i]), indices)))
 
+
 def get_important_words_grouped(record: dict, hypothesis_only: bool):
     words_and_groups = set()
-    parts = ["hypothesis"] if hypothesis_only else ["premise", "hypothesis"] 
+    parts = ["hypothesis"] if hypothesis_only else ["premise", "hypothesis"]
     for sentence in parts:
         for i in range(1, 4):
-            word_indices_premise = parse_indices(record[f"{sentence}_highlighted_{i}"])
-            grouped_word_indices_premise = split_consecutive_sublists(word_indices_premise)
+            word_indices_premise = parse_indices(
+                record[f"{sentence}_highlighted_{i}"])
+            grouped_word_indices_premise = split_consecutive_sublists(
+                word_indices_premise)
             for word_group_indices in grouped_word_indices_premise:
-                word_group = get_words_at_indices(record[sentence], word_group_indices)
+                word_group = get_words_at_indices(
+                    record[sentence], word_group_indices)
                 words_and_groups.update(word_group)
                 words_and_groups.update(" ".join(word_group))
     return words_and_groups
 
+
 def add_quantifier_column(record: dict) -> dict:
     important_words_grouped = get_important_words_grouped(record)
-    quantifiers = list(filter(lambda phrase: phrase in all_quantifiers, important_words_grouped))
+    quantifiers = list(
+        filter(lambda phrase: phrase in all_quantifiers, important_words_grouped))
+
 
 def has_quantifier(record: str, quantifier: str, hypothesis_only: bool) -> bool:
-    important_words_grouped = get_important_words_grouped(record, hypothesis_only)
+    important_words_grouped = get_important_words_grouped(
+        record, hypothesis_only)
     return any([phrase == quantifier for phrase in important_words_grouped])
 
 # code from https://discuss.huggingface.co/t/combining-metrics-for-multiclass-predictions-evaluations/21792/11
@@ -89,8 +101,7 @@ class ConfiguredMetric:
 class Suite(evaluate.EvaluationSuite):
     def __init__(self, name):
         super().__init__(name)
-        esnli_phenomena = DatasetDict.load_from_disk(
-            "/workspace/students/lit/datasets/esnli_phenomena")
+        esnli_phenomena = DatasetDict.load_from_disk("/workspace/students/lit/datasets/esnli_phenomena")
         self.esnli_quantifiers = filter_quantifiers(esnli_phenomena)
         self.quantifiers = {
             "a few",
@@ -121,7 +132,8 @@ class Suite(evaluate.EvaluationSuite):
             "whole",
             "many of"
         }
-        self.suite = list(filter(None, [self.task_for(quantifier, True) for quantifier in self.quantifiers]))
+        self.suite = list(filter(None, [self.task_for(
+            quantifier, True) for quantifier in self.quantifiers]))
 
     def task_for(self, quantifier: str, hypothesis_only: bool):
         metric = evaluate.combine([
@@ -133,7 +145,7 @@ class Suite(evaluate.EvaluationSuite):
 
         print(f"Filtering data by quantifier {quantifier}...")
         data = self.esnli_quantifiers["validation"].filter(
-            lambda r: has_quantifier(r, quantifier, hypothesis_only) , num_proc=cpu_count())
+            lambda r: has_quantifier(r, quantifier, hypothesis_only), num_proc=cpu_count())
         data.info.description = quantifier
         print(f"Dataset for {quantifier} has size {data.num_rows}...")
 

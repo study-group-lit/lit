@@ -85,8 +85,7 @@ class ConfiguredMetric:
 class Suite(evaluate.EvaluationSuite):
     def __init__(self, name):
         super().__init__(name)
-        esnli_phenomena = DatasetDict.load_from_disk(
-            "/workspace/students/lit/datasets/esnli_phenomena")
+        esnli_phenomena = DatasetDict.load_from_disk("/workspace/students/lit/datasets/esnli_phenomena")
         self.esnli_quantifiers = filter_quantifiers(esnli_phenomena)
         self.quantifiers = {
             "a few",
