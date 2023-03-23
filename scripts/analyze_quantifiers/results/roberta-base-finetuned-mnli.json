@@ -1,0 +1,234 @@
+[
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 0.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                3
+            ]
+        ],
+        "total_time_in_seconds": 0.3070581844076514,
+        "samples_per_second": 9.770135278391376,
+        "latency_in_seconds": 0.10235272813588382,
+        "task_name": "no",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5,
+        "matthews_correlation": 0.5,
+        "f1": 0.3333333333333333,
+        "confusion_matrix": [
+            [
+                1,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                1,
+                0
+            ]
+        ],
+        "total_time_in_seconds": 0.1709414618089795,
+        "samples_per_second": 11.699911647151602,
+        "latency_in_seconds": 0.08547073090448976,
+        "task_name": "any",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 1.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                2,
+                0
+            ],
+            [
+                0,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.2607199056074023,
+        "samples_per_second": 11.50660128159706,
+        "latency_in_seconds": 0.08690663520246744,
+        "task_name": "each",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.8,
+        "matthews_correlation": 0.6614378277661476,
+        "f1": 0.6190476190476191,
+        "confusion_matrix": [
+            [
+                3,
+                1,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.4054952962324023,
+        "samples_per_second": 12.330599260846519,
+        "latency_in_seconds": 0.08109905924648046,
+        "task_name": "few",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.0,
+        "matthews_correlation": 0.0,
+        "f1": 0.0,
+        "confusion_matrix": [
+            [
+                0,
+                0
+            ],
+            [
+                1,
+                0
+            ]
+        ],
+        "total_time_in_seconds": 0.083631188608706,
+        "samples_per_second": 11.957261598645987,
+        "latency_in_seconds": 0.083631188608706,
+        "task_name": "whole",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.8333333333333334,
+        "matthews_correlation": 0.7833494518006403,
+        "f1": 0.8222222222222223,
+        "confusion_matrix": [
+            [
+                2,
+                1,
+                0
+            ],
+            [
+                0,
+                1,
+                0
+            ],
+            [
+                0,
+                0,
+                2
+            ]
+        ],
+        "total_time_in_seconds": 0.5040557272732258,
+        "samples_per_second": 11.903445740926324,
+        "latency_in_seconds": 0.08400928787887096,
+        "task_name": "several",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 1.0,
+        "matthews_correlation": 0.0,
+        "f1": 1.0,
+        "confusion_matrix": [
+            [
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.09230712335556746,
+        "samples_per_second": 10.833400106598441,
+        "latency_in_seconds": 0.09230712335556746,
+        "task_name": "much",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.8571428571428571,
+        "matthews_correlation": 0.8017837257372732,
+        "f1": 0.8412698412698413,
+        "confusion_matrix": [
+            [
+                3,
+                1,
+                0
+            ],
+            [
+                0,
+                1,
+                0
+            ],
+            [
+                0,
+                0,
+                2
+            ]
+        ],
+        "total_time_in_seconds": 0.5986784333363175,
+        "samples_per_second": 11.692420521965978,
+        "latency_in_seconds": 0.0855254904766168,
+        "task_name": "all",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.8333333333333334,
+        "matthews_correlation": 0.6708203932499369,
+        "f1": 0.6296296296296297,
+        "confusion_matrix": [
+            [
+                4,
+                0,
+                1
+            ],
+            [
+                0,
+                1,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ]
+        ],
+        "total_time_in_seconds": 0.49320092145353556,
+        "samples_per_second": 12.165427392789775,
+        "latency_in_seconds": 0.08220015357558927,
+        "task_name": "many",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.9,
+        "matthews_correlation": 0.7276068751089989,
+        "f1": 0.5555555555555555,
+        "confusion_matrix": [
+            [
+                8,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                1,
+                1
+            ]
+        ],
+        "total_time_in_seconds": 0.8513779202476144,
+        "samples_per_second": 11.745665188370875,
+        "latency_in_seconds": 0.08513779202476145,
+        "task_name": "some",
+        "data_preprocessor": null
+    }
+]
