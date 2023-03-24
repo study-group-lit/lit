@@ -54,7 +54,6 @@ class Suite(evaluate.EvaluationSuite):
                 args_for_task={
                     "metric": metric,
                     "input_column": "premise",
-                    "second_input_column": "hypothesis",
                     "label_column": "label",
                     "label_mapping": {
                         "ENTAILMENT": 0,
