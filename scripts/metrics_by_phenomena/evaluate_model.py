@@ -7,16 +7,19 @@ parser = ArgumentParser(
     prog="Evaluate by phenomena"
 )
 parser.add_argument('-m', '--model_path', required=True)
+parser.add_argument("-o", "--hypothesis_only", action='store_true')
 args = parser.parse_args()
 
 # check paths and create if needed
 model_path = args.model_path
+hypothesis_only = args.hypothesis_only
 if not os.path.exists(model_path):
     raise IOError("Model path does not exist")
 
 model = pipeline("text-classification", model=model_path)
 
-suite = EvaluationSuite.load("../../datasets/evaluation_suite_phenomena.py")
+evaluation_suite_path = "../../datasets/evaluation_suite_phenomena_hypothesis_only.py" if hypothesis_only else "../../datasets/evaluation_suite_phenomena.py"
+suite = EvaluationSuite.load(evaluation_suite_path)
 results = suite.run(model)
 
 for result in results:
