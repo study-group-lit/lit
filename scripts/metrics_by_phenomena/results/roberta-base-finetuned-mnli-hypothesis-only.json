@@ -1,13 +1,13 @@
 [
     {
-        "accuracy": 0.5508652333508128,
-        "matthews_correlation": 0.1688681871905438,
-        "f1": 0.36680170189975203,
+        "accuracy": 0.41793392763502885,
+        "matthews_correlation": -0.004940516829831223,
+        "f1": 0.26804422773933745,
         "confusion_matrix": [
             [
-                1722,
-                556,
-                363
+                1419,
+                826,
+                396
             ],
             [
                 0,
@@ -15,26 +15,26 @@
                 0
             ],
             [
-                525,
-                269,
-                379
+                643,
+                355,
+                175
             ]
         ],
-        "total_time_in_seconds": 398.6237955931574,
-        "samples_per_second": 9.56791852911018,
-        "latency_in_seconds": 0.10451594011357038,
+        "total_time_in_seconds": 352.5376217123121,
+        "samples_per_second": 10.818703494608613,
+        "latency_in_seconds": 0.0924325174914295,
         "task_name": "synonym",
         "data_preprocessor": null
     },
     {
-        "accuracy": 0.3922518159806295,
-        "matthews_correlation": 0.16572428071788445,
-        "f1": 0.2815606438860157,
+        "accuracy": 0.27602905569007263,
+        "matthews_correlation": 0.07359594665036495,
+        "f1": 0.21488833746898264,
         "confusion_matrix": [
             [
-                62,
-                10,
-                8
+                53,
+                18,
+                9
             ],
             [
                 0,
@@ -42,26 +42,26 @@
                 0
             ],
             [
-                175,
-                58,
-                100
+                177,
+                95,
+                61
             ]
         ],
-        "total_time_in_seconds": 43.5814495915547,
-        "samples_per_second": 9.476509016350661,
-        "latency_in_seconds": 0.10552409102071357,
+        "total_time_in_seconds": 38.579220816493034,
+        "samples_per_second": 10.705244721361455,
+        "latency_in_seconds": 0.0934121569406611,
         "task_name": "antonym",
         "data_preprocessor": null
     },
     {
-        "accuracy": 0.597892888498683,
-        "matthews_correlation": 0.1549898111584438,
-        "f1": 0.366923431609211,
+        "accuracy": 0.456540825285338,
+        "matthews_correlation": 0.0033507098273626535,
+        "f1": 0.2756584367661192,
         "confusion_matrix": [
             [
-                600,
-                160,
-                116
+                478,
+                254,
+                144
             ],
             [
                 0,
@@ -69,26 +69,26 @@
                 0
             ],
             [
-                127,
-                55,
-                81
+                140,
+                81,
+                42
             ]
         ],
-        "total_time_in_seconds": 120.03651569969952,
-        "samples_per_second": 9.488779254885113,
-        "latency_in_seconds": 0.10538763450368703,
+        "total_time_in_seconds": 108.41494461894035,
+        "samples_per_second": 10.505931668400391,
+        "latency_in_seconds": 0.095184323633837,
         "task_name": "hypernym",
         "data_preprocessor": null
     },
     {
-        "accuracy": 0.5728597449908925,
-        "matthews_correlation": 0.158238234278709,
-        "f1": 0.36424895858858125,
+        "accuracy": 0.43989071038251365,
+        "matthews_correlation": 0.013879522718996845,
+        "f1": 0.27315356948137637,
         "confusion_matrix": [
             [
-                541,
-                161,
-                102
+                440,
+                244,
+                120
             ],
             [
                 0,
@@ -96,26 +96,26 @@
                 0
             ],
             [
-                139,
-                67,
-                88
+                150,
+                101,
+                43
             ]
         ],
-        "total_time_in_seconds": 115.79278947226703,
-        "samples_per_second": 9.482455729792887,
-        "latency_in_seconds": 0.10545791390916852,
+        "total_time_in_seconds": 104.22097288351506,
+        "samples_per_second": 10.535307526127248,
+        "latency_in_seconds": 0.09491891883744541,
         "task_name": "hyponym",
         "data_preprocessor": null
     },
     {
-        "accuracy": 0.5031960227272727,
-        "matthews_correlation": 0.1805588378187532,
-        "f1": 0.35803809778869544,
+        "accuracy": 0.36274857954545453,
+        "matthews_correlation": 0.0005486358385800009,
+        "f1": 0.256120032644146,
         "confusion_matrix": [
             [
-                2054,
-                649,
-                410
+                1666,
+                981,
+                466
             ],
             [
                 0,
@@ -123,25 +123,25 @@
                 0
             ],
             [
-                1119,
-                620,
-                780
+                1345,
+                797,
+                377
             ]
         ],
-        "total_time_in_seconds": 587.7110004443675,
-        "samples_per_second": 9.582941268313256,
-        "latency_in_seconds": 0.10435209524935503,
+        "total_time_in_seconds": 516.1177269229665,
+        "samples_per_second": 10.912239022630214,
+        "latency_in_seconds": 0.09164022139967445,
         "task_name": "co_hyponym",
         "data_preprocessor": null
     },
     {
-        "accuracy": 0.5909090909090909,
-        "matthews_correlation": 0.41412051372216757,
-        "f1": 0.5377854694763989,
+        "accuracy": 0.45454545454545453,
+        "matthews_correlation": 0.2317626372012753,
+        "f1": 0.32571578670869455,
         "confusion_matrix": [
             [
-                17,
-                9,
+                16,
+                10,
                 1
             ],
             [
@@ -150,41 +150,41 @@
                 0
             ],
             [
-                3,
-                5,
-                5
+                4,
+                9,
+                0
             ]
         ],
-        "total_time_in_seconds": 4.692145891487598,
-        "samples_per_second": 9.377372532218992,
-        "latency_in_seconds": 0.10663967935199087,
+        "total_time_in_seconds": 4.171818574890494,
+        "samples_per_second": 10.546959128287344,
+        "latency_in_seconds": 0.09481405852023851,
         "task_name": "quantifiers",
         "data_preprocessor": null
     },
     {
-        "accuracy": 0.5264765784114053,
-        "matthews_correlation": 0.16109767664283883,
-        "f1": 0.396205225600265,
+        "accuracy": 0.4093686354378819,
+        "matthews_correlation": -0.008779115091193786,
+        "f1": 0.2800089420397731,
         "confusion_matrix": [
             [
-                419,
-                129,
-                49
+                355,
+                188,
+                54
             ],
             [
-                31,
-                28,
-                8
+                37,
+                21,
+                9
             ],
             [
-                170,
-                78,
-                70
+                195,
+                97,
+                26
             ]
         ],
-        "total_time_in_seconds": 102.96096536051482,
-        "samples_per_second": 9.53759511249293,
-        "latency_in_seconds": 0.10484823356467904,
+        "total_time_in_seconds": 90.1859377194196,
+        "samples_per_second": 10.888615507387993,
+        "latency_in_seconds": 0.09183904044747414,
         "task_name": "numericals",
         "data_preprocessor": null
     }
