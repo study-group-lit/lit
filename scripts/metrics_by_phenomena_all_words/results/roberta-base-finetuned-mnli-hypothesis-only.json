@@ -20,9 +20,9 @@
                 913
             ]
         ],
-        "total_time_in_seconds": 882.8258143197745,
-        "samples_per_second": 10.199067419587935,
-        "latency_in_seconds": 0.09804818017767375,
+        "total_time_in_seconds": 936.1523052798584,
+        "samples_per_second": 9.618093070131676,
+        "latency_in_seconds": 0.10397071360282746,
         "task_name": "synonym",
         "data_preprocessor": null
     },
@@ -47,9 +47,9 @@
                 122
             ]
         ],
-        "total_time_in_seconds": 65.6106081372127,
-        "samples_per_second": 10.729972179616315,
-        "latency_in_seconds": 0.09319688655854076,
+        "total_time_in_seconds": 74.9663185607642,
+        "samples_per_second": 9.390883979841835,
+        "latency_in_seconds": 0.10648624795563094,
         "task_name": "antonym",
         "data_preprocessor": null
     },
@@ -74,9 +74,9 @@
                 274
             ]
         ],
-        "total_time_in_seconds": 293.45364497229457,
-        "samples_per_second": 10.79897985352743,
-        "latency_in_seconds": 0.09260133953054421,
+        "total_time_in_seconds": 335.19080425519496,
+        "samples_per_second": 9.454316645236204,
+        "latency_in_seconds": 0.10577179055070841,
         "task_name": "hypernym",
         "data_preprocessor": null
     },
@@ -101,9 +101,9 @@
                 305
             ]
         ],
-        "total_time_in_seconds": 342.0171232391149,
-        "samples_per_second": 9.853307834660452,
-        "latency_in_seconds": 0.1014887606050786,
+        "total_time_in_seconds": 312.87650931905955,
+        "samples_per_second": 10.771022750587525,
+        "latency_in_seconds": 0.09284169415995831,
         "task_name": "hyponym",
         "data_preprocessor": null
     },
@@ -128,9 +128,9 @@
                 1029
             ]
         ],
-        "total_time_in_seconds": 1003.3752921987325,
-        "samples_per_second": 9.743114142842304,
-        "latency_in_seconds": 0.10263658880919932,
+        "total_time_in_seconds": 879.0647110510617,
+        "samples_per_second": 11.120910528089833,
+        "latency_in_seconds": 0.08992069466561597,
         "task_name": "co_hyponym",
         "data_preprocessor": null
     },
@@ -155,9 +155,9 @@
                 77
             ]
         ],
-        "total_time_in_seconds": 87.50599189382046,
-        "samples_per_second": 9.450781393387091,
-        "latency_in_seconds": 0.1058113565826124,
+        "total_time_in_seconds": 75.24983654357493,
+        "samples_per_second": 10.990057094956068,
+        "latency_in_seconds": 0.09099133802125142,
         "task_name": "quantifiers",
         "data_preprocessor": null
     },
@@ -182,9 +182,9 @@
                 189
             ]
         ],
-        "total_time_in_seconds": 260.9091729260981,
-        "samples_per_second": 9.562714763986863,
-        "latency_in_seconds": 0.10457281480003933,
+        "total_time_in_seconds": 226.27885415405035,
+        "samples_per_second": 11.02621811184092,
+        "latency_in_seconds": 0.09069292751665345,
         "task_name": "numericals",
         "data_preprocessor": null
     }
