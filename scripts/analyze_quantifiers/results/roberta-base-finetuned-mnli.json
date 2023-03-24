@@ -1,44 +1,44 @@
 [
     {
+        "accuracy": 0.8571428571428571,
+        "matthews_correlation": 0.8017837257372732,
+        "f1": 0.8412698412698413,
+        "confusion_matrix": [
+            [
+                3,
+                1,
+                0
+            ],
+            [
+                0,
+                1,
+                0
+            ],
+            [
+                0,
+                0,
+                2
+            ]
+        ],
+        "total_time_in_seconds": 0.9331422010436654,
+        "samples_per_second": 7.50153619906045,
+        "latency_in_seconds": 0.13330602872052363,
+        "task_name": "all",
+        "data_preprocessor": null
+    },
+    {
         "accuracy": 1.0,
         "matthews_correlation": 0.0,
         "f1": 1.0,
         "confusion_matrix": [
             [
-                3
+                1
             ]
         ],
-        "total_time_in_seconds": 0.3070581844076514,
-        "samples_per_second": 9.770135278391376,
-        "latency_in_seconds": 0.10235272813588382,
-        "task_name": "no",
-        "data_preprocessor": null
-    },
-    {
-        "accuracy": 0.5,
-        "matthews_correlation": 0.5,
-        "f1": 0.3333333333333333,
-        "confusion_matrix": [
-            [
-                1,
-                0,
-                0
-            ],
-            [
-                0,
-                0,
-                0
-            ],
-            [
-                0,
-                1,
-                0
-            ]
-        ],
-        "total_time_in_seconds": 0.1709414618089795,
-        "samples_per_second": 11.699911647151602,
-        "latency_in_seconds": 0.08547073090448976,
-        "task_name": "any",
+        "total_time_in_seconds": 0.12939551752060652,
+        "samples_per_second": 7.728242980602074,
+        "latency_in_seconds": 0.12939551752060652,
+        "task_name": "much",
         "data_preprocessor": null
     },
     {
@@ -55,9 +55,9 @@
                 1
             ]
         ],
-        "total_time_in_seconds": 0.2607199056074023,
-        "samples_per_second": 11.50660128159706,
-        "latency_in_seconds": 0.08690663520246744,
+        "total_time_in_seconds": 0.36591464933007956,
+        "samples_per_second": 8.198633220868397,
+        "latency_in_seconds": 0.12197154977669318,
         "task_name": "each",
         "data_preprocessor": null
     },
@@ -82,30 +82,10 @@
                 1
             ]
         ],
-        "total_time_in_seconds": 0.4054952962324023,
-        "samples_per_second": 12.330599260846519,
-        "latency_in_seconds": 0.08109905924648046,
+        "total_time_in_seconds": 0.5533325830474496,
+        "samples_per_second": 9.036156830784783,
+        "latency_in_seconds": 0.11066651660948992,
         "task_name": "few",
-        "data_preprocessor": null
-    },
-    {
-        "accuracy": 0.0,
-        "matthews_correlation": 0.0,
-        "f1": 0.0,
-        "confusion_matrix": [
-            [
-                0,
-                0
-            ],
-            [
-                1,
-                0
-            ]
-        ],
-        "total_time_in_seconds": 0.083631188608706,
-        "samples_per_second": 11.957261598645987,
-        "latency_in_seconds": 0.083631188608706,
-        "task_name": "whole",
         "data_preprocessor": null
     },
     {
@@ -129,10 +109,57 @@
                 2
             ]
         ],
-        "total_time_in_seconds": 0.5040557272732258,
-        "samples_per_second": 11.903445740926324,
-        "latency_in_seconds": 0.08400928787887096,
+        "total_time_in_seconds": 0.6913696248084307,
+        "samples_per_second": 8.678425815514414,
+        "latency_in_seconds": 0.11522827080140512,
         "task_name": "several",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5,
+        "matthews_correlation": 0.5,
+        "f1": 0.3333333333333333,
+        "confusion_matrix": [
+            [
+                1,
+                0,
+                0
+            ],
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                0,
+                1,
+                0
+            ]
+        ],
+        "total_time_in_seconds": 0.24504270032048225,
+        "samples_per_second": 8.161842802843235,
+        "latency_in_seconds": 0.12252135016024114,
+        "task_name": "any",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.0,
+        "matthews_correlation": 0.0,
+        "f1": 0.0,
+        "confusion_matrix": [
+            [
+                0,
+                0
+            ],
+            [
+                1,
+                0
+            ]
+        ],
+        "total_time_in_seconds": 0.11965923942625523,
+        "samples_per_second": 8.357064651211408,
+        "latency_in_seconds": 0.11965923942625523,
+        "task_name": "whole",
         "data_preprocessor": null
     },
     {
@@ -141,40 +168,13 @@
         "f1": 1.0,
         "confusion_matrix": [
             [
-                1
+                3
             ]
         ],
-        "total_time_in_seconds": 0.09230712335556746,
-        "samples_per_second": 10.833400106598441,
-        "latency_in_seconds": 0.09230712335556746,
-        "task_name": "much",
-        "data_preprocessor": null
-    },
-    {
-        "accuracy": 0.8571428571428571,
-        "matthews_correlation": 0.8017837257372732,
-        "f1": 0.8412698412698413,
-        "confusion_matrix": [
-            [
-                3,
-                1,
-                0
-            ],
-            [
-                0,
-                1,
-                0
-            ],
-            [
-                0,
-                0,
-                2
-            ]
-        ],
-        "total_time_in_seconds": 0.5986784333363175,
-        "samples_per_second": 11.692420521965978,
-        "latency_in_seconds": 0.0855254904766168,
-        "task_name": "all",
+        "total_time_in_seconds": 0.33676426485180855,
+        "samples_per_second": 8.908308609644598,
+        "latency_in_seconds": 0.11225475495060286,
+        "task_name": "no",
         "data_preprocessor": null
     },
     {
@@ -198,9 +198,9 @@
                 0
             ]
         ],
-        "total_time_in_seconds": 0.49320092145353556,
-        "samples_per_second": 12.165427392789775,
-        "latency_in_seconds": 0.08220015357558927,
+        "total_time_in_seconds": 0.6784738572314382,
+        "samples_per_second": 8.843376846505826,
+        "latency_in_seconds": 0.1130789762052397,
         "task_name": "many",
         "data_preprocessor": null
     },
@@ -225,9 +225,9 @@
                 1
             ]
         ],
-        "total_time_in_seconds": 0.8513779202476144,
-        "samples_per_second": 11.745665188370875,
-        "latency_in_seconds": 0.08513779202476145,
+        "total_time_in_seconds": 1.1903423108160496,
+        "samples_per_second": 8.400944761128764,
+        "latency_in_seconds": 0.11903423108160496,
         "task_name": "some",
         "data_preprocessor": null
     }
