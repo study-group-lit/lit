@@ -4,6 +4,7 @@ from datasets import DatasetDict
 from multiprocessing import cpu_count
 from transformers import AutoTokenizer, BartForConditionalGeneration
 from argparse import ArgumentParser
+import time
 
 def parse_entity_mapping(mapping_str):
     mappings_list = mapping_str.split("\n")
@@ -54,6 +55,8 @@ def add_summary_column(records, model: BartForConditionalGeneration, tokenizer: 
     return { "summary": summaries }
 
 if __name__ == "__main__":
+    time.sleep(3600)
+
     parser = ArgumentParser(
         prog="Add summaries"
     )
