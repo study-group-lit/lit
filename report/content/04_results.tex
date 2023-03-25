@@ -1,0 +1,20 @@
+\section{Results and Analysis} \label{sec:analysis}
+% 1. Accuracy (F1 + MCC) auf SICK und eSNLI einzeln nach Kategorien
+% 2. Auf Bias überprüfen: Vergleich vom Modell für wichtig erachtete Token mit von Menschen als wichitg erachtete Tokens
+% Visualisierungen:
+% - Confusion Matrix (Gentrennt nach Phänomenen)
+% - Tabellen Interpretability Metriken (siehe ferret)
+
+
+To analyze the performance of the \acp{LM}, we test their predictive performance and their bias. We provide different scores and visualizations to test our hypothesis and provide insights into the datasets and \acp{LM}.
+% Accuracy
+
+To measure the predictive performance, we provide the macro $\text{F}_1$-score \citep{macrof1} and \ac{MCC} \citep{mcc}, as \ac{MCC} has proven to be more reliable than accuracy and $\text{F}_1$ \citep{mccGood}.
+
+% Bias
+To analyze biases, we compare the words deemed important by the \ac{e-SNLI} explanations to the tokens deemed important for the model prediction by interpretability methods. Furthermore, to detect linguistic biases, we conduct a confusion analysis for each specific linguistic phenomenon.
+
+% Ferret
+To generate explanations we use the interpretability methods Integrated Gradients \citep{integratedgradients}, \ac{LIME} \citep{lime} and Partition SHAP Values \citep{shap}. We use the plausibility and faithfulness \citep{ferret} metrics to judge the model bias.
+
+To demonstrate the biases, we provide example sentences with important tokens highlighted. Furthermore, to provide a different view on the importance of certain tokens, we visualize the attention maps.
