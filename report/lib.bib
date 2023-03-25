@@ -206,3 +206,63 @@
   year = {2019},
   copyright = {arXiv.org perpetual, non-exclusive license}
 }
+
+@inproceedings{lewis-etal-2020-bart,
+    title = "{BART}: Denoising Sequence-to-Sequence Pre-training for Natural Language Generation, Translation, and Comprehension",
+    author = "Lewis, Mike  and
+      Liu, Yinhan  and
+      Goyal, Naman  and
+      Ghazvininejad, Marjan  and
+      Mohamed, Abdelrahman  and
+      Levy, Omer  and
+      Stoyanov, Veselin  and
+      Zettlemoyer, Luke",
+    booktitle = "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics",
+    month = jul,
+    year = "2020",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2020.acl-main.703",
+    doi = "10.18653/v1/2020.acl-main.703",
+    pages = "7871--7880",
+    abstract = "We present BART, a denoising autoencoder for pretraining sequence-to-sequence models. BART is trained by (1) corrupting text with an arbitrary noising function, and (2) learning a model to reconstruct the original text. It uses a standard Tranformer-based neural machine translation architecture which, despite its simplicity, can be seen as generalizing BERT (due to the bidirectional encoder), GPT (with the left-to-right decoder), and other recent pretraining schemes. We evaluate a number of noising approaches, finding the best performance by both randomly shuffling the order of sentences and using a novel in-filling scheme, where spans of text are replaced with a single mask token. BART is particularly effective when fine tuned for text generation but also works well for comprehension tasks. It matches the performance of RoBERTa on GLUE and SQuAD, and achieves new state-of-the-art results on a range of abstractive dialogue, question answering, and summarization tasks, with gains of up to 3.5 ROUGE. BART also provides a 1.1 BLEU increase over a back-translation system for machine translation, with only target language pretraining. We also replicate other pretraining schemes within the BART framework, to understand their effect on end-task performance.",
+}
+
+@misc{shleifer2020pretrained,
+      title={Pre-trained Summarization Distillation}, 
+      author={Sam Shleifer and Alexander M. Rush},
+      year={2020},
+      eprint={2010.13002},
+      primaryClass={cs.CL}
+}
+
+@inproceedings{cnn2,
+    title = "Abstractive Text Summarization using Sequence-to-sequence {RNN}s and Beyond",
+    author = "Nallapati, Ramesh  and
+      Zhou, Bowen  and
+      dos Santos, Cicero  and
+      Gul{\c{c}}ehre, {\c{C}}a{\u{g}}lar  and
+      Xiang, Bing",
+    booktitle = "Proceedings of the 20th {SIGNLL} Conference on Computational Natural Language Learning",
+    month = aug,
+    year = "2016",
+    address = "Berlin, Germany",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/K16-1028",
+    doi = "10.18653/v1/K16-1028",
+    pages = "280--290",
+}
+
+@inproceedings{cnn1,
+author = {Hermann, Karl Moritz and Ko\v{c}isk\'{y}, Tom\'{a}\v{s} and Grefenstette, Edward and Espeholt, Lasse and Kay, Will and Suleyman, Mustafa and Blunsom, Phil},
+title = {Teaching Machines to Read and Comprehend},
+year = {2015},
+publisher = {MIT Press},
+address = {Cambridge, MA, USA},
+abstract = {Teaching machines to read natural language documents remains an elusive challenge. Machine reading systems can be tested on their ability to answer questions posed on the contents of documents that they have seen, but until now large scale training and test datasets have been missing for this type of evaluation. In this work we define a new methodology that resolves this bottleneck and provides large scale supervised reading comprehension data. This allows us to develop a class of attention based deep neural networks that learn to read real documents and answer complex questions with minimal prior knowledge of language structure.},
+booktitle = {Proceedings of the 28th International Conference on Neural Information Processing Systems - Volume 1},
+pages = {1693-1701},
+numpages = {9},
+location = {Montreal, Canada},
+series = {NIPS'15}
+}
