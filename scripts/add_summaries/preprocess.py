@@ -1,10 +1,7 @@
 import os
-import re
 from datasets import DatasetDict
 from multiprocessing import cpu_count
-from transformers import AutoTokenizer, BartForConditionalGeneration
 from argparse import ArgumentParser
-import time
 
 def parse_entity_mapping(mapping_str):
     mappings_list = mapping_str.split("\n")
@@ -19,11 +16,20 @@ def preprocess(record):
 
     # unmask text
     text = record["text"]
-    for placeholder, entity in entity_mapping.items():
-        text = re.sub(placeholder, entity, text)
     split_text = text.split(" ")
+
     source = split_text[1]
-    text = " ".join(split_text[3:])
+
+    split_text_unmasked = []
+    for token in split_text:
+        if token.startswith("@"):
+            try:
+                split_text_unmasked.append(entity_mapping[token])
+            except KeyError:
+                split_text_unmasked.append(token)
+        else:
+            split_text_unmasked.append(token)
+    text = " ".join(split_text_unmasked)
 
     # unmask correct entity
     correct_entity = entity_mapping[record["correct_entity"]]
@@ -42,8 +48,17 @@ def preprocess(record):
 
     # unmask answer
     answer = record["answer_masked"]
-    for placeholder, entity in entity_mapping.items():
-        answer = re.sub(placeholder, entity, answer)
+    split_answer = answer.split(" ")
+    split_answer_unmasked = []
+    for token in split_answer:
+        if token.startswith("@"):
+            try:
+                split_answer_unmasked.append(entity_mapping[token])
+            except KeyError:
+                split_answer_unmasked.append(token)
+        else:
+            split_answer_unmasked.append(token)
+    answer = " ".join(split_answer_unmasked)
 
     return {"text": text, "correct_entity": correct_entity, "source": source, "answer_entities": answer_entities, "answer": answer }
 
@@ -61,5 +76,6 @@ if __name__ == "__main__":
 
     datasetdict = DatasetDict.load_from_disk(dataset_path)
 
-    datasetdict_preprocessed = datasetdict.map(preprocess, num_proc=cpu_count())
-    datasetdict_preprocessed.save_to_disk(dataset_dict_path=f"{dataset_path}_preprocessed")
+    datasetdict_preprocessed = datasetdict["training"].select(range(0, 10)).map(preprocess, num_proc=cpu_count())
+    # datasetdict_preprocessed.save_to_disk(dataset_dict_path=f"{dataset_path}_preprocessed")
+    datasetdict_preprocessed.to_csv("/home/students/trump/lit/test.csv")
