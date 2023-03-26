@@ -33,11 +33,10 @@ all_quantifiers = {
     "many of"
 }
 
-def contains_quantifier_in(record, fields, all_quantifiers):
-    for field in fields:
-        for quantifier in all_quantifiers:
-            if quantifier in record[field]:
-                return True
+def contains_quantifier_in_answer(record, all_quantifiers):
+    for quantifier in all_quantifiers:
+        if quantifier in record["answer"]:
+            return True
     return False
 
 if __name__ == "__main__":
@@ -53,6 +52,6 @@ if __name__ == "__main__":
 
     datasetdict = DatasetDict.load_from_disk(dataset_path)
 
-    filtered = datasetdict.filter(contains_quantifier_in, fn_kwargs={"fields": ["answer"], "all_quantifiers": all_quantifiers}, num_proc=cpu_count())
+    filtered = datasetdict.filter(contains_quantifier_in_answer, fn_kwargs={"all_quantifiers": all_quantifiers}, num_proc=cpu_count())
     print(f"Size {filtered.num_rows}")
     filtered.save_to_disk(dataset_dict_path=f"{dataset_path}_filtered")

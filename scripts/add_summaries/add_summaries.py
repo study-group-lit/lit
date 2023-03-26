@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 
 def add_summary_column(records, model):
     texts = records["text"]
+    # 1024 was taken from https://huggingface.co/docs/transformers/model_doc/bart#transformers.BartForConditionalGeneration.forward.example
     summaries = model([text[:1024] for text in texts])
     summaries = list(map(lambda summary_dict: summary_dict["summary_text"], summaries))
     return { "summary": summaries }
