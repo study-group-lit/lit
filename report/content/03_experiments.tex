@@ -81,13 +81,36 @@ To get additional training data containing quantifiers, we use the TODO
 
 \section{Experiments}
 \paragraph{Dataset generation}
-\autoref{par:models_datasets:datasets} describes external datasets. On the basis of these datasets and in accordance to our \autoref{sec:method} we generate new internal datasets. In the following, the internal datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:internal_datasets:classes} and \autoref{tab:internal_datasets:sizes}. \autoref{tab:internal_datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:internal_datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+Paragraph \ref{par:models_datasets:datasets} describes external datasets. On the basis of these datasets and in accordance to our method, we generate new internal datasets. In the following, the internal datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:internal_datasets:classes} and \autoref{tab:internal_datasets:sizes}. \autoref{tab:internal_datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:internal_datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
 
 % TODO explain generated dataset(s, different versions) from "detecting biased data"
 % TODO explain generated dataset from "recasted data"
 % TODO explain generated dataset from mitigating data bias
+\begin{table*}[ht]
+    \centering
+    \caption{Class distributions for the generated datasets}
+    \begin{tabular}{r || c | c | c | c}
+        & strongly biased \acs{e-SNLI} & weakly filtered \acs{MultiNLI} & strongly filtered \acs{MultiNLI} & recast dataset \\
+        \hline
+      Entailment & $2840$ & $72939$ & $54147$ & TODO\\
+      Neutral & $2202$ & $85664$ & $63768$ & TODO\\
+      Contradiction & $2877$ & $90628$ & $73408$ & TODO
+    \end{tabular}
+    \label{tab:internal_datasets:classes}
+\end{table*}
 
-
+\begin{table*}[h]
+    \centering
+    \caption{Generated dataset split sizes. The from \acs{MultiNLI} derivated datasets show matched/mismatched validation sizes.}
+    \begin{tabular}{r || c | c | c | c}
+        & strongly biased \acs{e-SNLI} & weakly filtered \acs{MultiNLI} & strongly filtered \acs{MultiNLI} & recast dataset \\
+        \hline
+      Train & $ - $ & $229584$ & $171676$ & TODO \\
+      Validation & $7929$ & $9815/9832$ & $9815$/$9832$ & TODO \\
+      Test & $ - $ & $ - $ & $ - $ & TODO
+    \end{tabular}
+    \label{tab:internal_datasets:sizes}
+\end{table*}
 \paragraph{Baseline}
 We use two models as baselines to compare against our results. A pre-trained \ac{RoBERTa} model will serve as a zero-shot baseline. Furthermore, we use a \ac{RoBERTa} model fine-tuned on the \ac{MultiNLI} dataset as a fine-tuned baseline. The comparison between our fine-tuned results and the zero-shot baseline is used to test \textbf{H1}.
 
