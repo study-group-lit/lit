@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name=filter
-#SBATCH --output=filter.txt
+#SBATCH --job-name=reduce_summaries
+#SBATCH --output=reduce_summaries.txt
 #SBATCH --ntasks=1
 #SBATCH --time=24:00:00
 #SBATCH --mem=32000
