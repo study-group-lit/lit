@@ -111,6 +111,11 @@ Paragraph \ref{par:models_datasets:datasets} describes external datasets. On the
     \end{tabular}
     \label{tab:internal_datasets:sizes}
 \end{table*}
+
+The strongly biased \acs{e-SNLI} dataset is derived from the \acs{e-SNLI} dataset in accordance with our method of detecting biased data. The dataset only includes samples, which are correctly predicted by the \acs{RoBERTa} model, which has been fine-tuned only on the \acs{MultiNLI} hypotheses.
+
+Both the weakly filtered \acs{MultiNLI} and strongly filtered \acs{MultiNLI} datasets are derived from the \acs{MultiNLI} dataset, as described in the method of mitigating data bias. The datasets are less biased than \acs{MultiNLI}, as samples are removed, which are predicted by at least three or two of the three different fine-tuned hypothesis only \acs{RoBERTa} models.
+
 \paragraph{Baseline}
 We use two models as baselines to compare against our results. A pre-trained \ac{RoBERTa} model will serve as a zero-shot baseline. Furthermore, we use a \ac{RoBERTa} model fine-tuned on the \ac{MultiNLI} dataset as a fine-tuned baseline. The comparison between our fine-tuned results and the zero-shot baseline is used to test \textbf{H1}.
 
