@@ -1,0 +1,97 @@
+\section{Models and Data Sets} \label{sec:models_datasets}
+\paragraph{Models}
+All experiments and variants of the \acs{NLI}-model are based on the pre-trained \acf{RoBERTa} \cite{roberta} in the variation \texttt{roberta-base}, as this provides a good tradeoff of high downstream performance and lower computational requirements. The default pre-trained model is used for the prompt task. All fine-tuned models are based on the pre-trained model with an additional classification head based on the pooled token representation. The classification head is a multilayer perceptron with a single hidden layer of size $768$ and the pooled representation is obtained from the first \texttt{<s>}-token in the output of the \acs{RoBERTa} model. This \texttt{<s>}-token is the equivalent of \acs{RoBERTa} to the \texttt{CLS}-token of other models.
+
+\begin{table}[ht]
+    \centering
+    \caption{Class distributions for the datasets used}
+    \begin{tabular}{r || c | c | c}
+        & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
+        \hline
+        Entailment & $137841$ & $2821$ & $190113$ \\
+        Neutral & $137152$ & $5595$ & $189218$ \\
+        Contradiction & $137356$ & $1424$ & $189702$
+    \end{tabular}
+    \label{tab:datasets:classes}
+\end{table}
+
+To create summaries of the articles in the data to be recast, we use a fine-tuned and distilled version of BART \cite{lewis-etal-2020-bart} for text summarization trained on CNN and Daily Mail articles \cite{cnn1,cnn2}. \cite{shleifer2020pretrained} We use a model with all six encoder layers from BART and just six decoder layers named \texttt{distilbart-6-6-cnn} (TODO:check). We use the version trained on CNN/Daily Mail, as it is closest to the articles we use in TODO, with CNN being the same source.
+
+\paragraph{Datasets}
+We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} \cite{sick}. In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+
+\begin{table}[h]
+    \centering
+    \caption{Dataset split sizes. \acs{MultiNLI} shows the matched/mismatched validation sizes.}
+    \begin{tabular}{r || c | c | c}
+        & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
+        \hline
+        Train & $392702$ & $4439$ & $549367$ \\
+        Validation & $9815$/$9832$ & $495$ & $9842$ \\
+        Test & - & $4906$ & $9824$
+    \end{tabular}
+    \label{tab:datasets:sizes}
+\end{table}
+
+\Acf{MultiNLI} \cite{multinli} is a very large corpus that improves upon the \acs{SNLI} corpus by collecting premise-hypothesis pairs from ten different domains. Additionally, only five genres are included in the training dataset and two different validation datasets are provided. One of the validation datasets consists of the same genres as the training dataset while the other validation dataset consists of pairs from five different genres. This allows for cross-domain evaluation and comparisons to in-domain evaluation. Furthermore, including training data from multiple genres is hypothesized to reduce linguistic bias.
+
+\begin{lstlisting}[
+    language=json,
+    caption={Relevant features of a random data sample from \acs{MultiNLI}.},
+    label=code:data:samples:multinli
+    ]
+{
+  "hypothesis": "Product and geography are what...",
+  "premise": "Conceptually cream skimming has...",
+  "label": 1,
+  ...
+}
+\end{lstlisting}
+
+\autoref{code:data:samples:multinli} shows relevant features of a random sample from the \ac{MultiNLI} dataset. Included are the hypothesis and premise as plain text and the expected label numerically encoded. Additional features such as parses of the premise and hypothesis and the genre of the pair are included in the dataset but irrelevant to this project.
+
+\Acf{SICK} \cite{sick} is a small corpus constructed specifically to address issues with crowd-sourced datasets. It is constructed from two source datasets that describe the same videos or images. The descriptions are first normalized and then expanded to include specific linguistic phenomena. The dataset is much smaller than \acs{SNLI} and \acs{MultiNLI} but is considered to have much higher data quality. The features present in \acs{SICK} are similar to the features present in \acs{MultiNLI}, this is the same numerical label, the premise and the hypothesis as plain text. No parses and genre indications are included, but no further interest is spent on this detail, as those features are not relevant to this project.
+
+\Acf{e-SNLI} \cite{esnli} is a variant of the \acs{SNLI} \cite{snli} corpus that adds up to three natural language explanations and for each explanation an annotation of which words in the premise and hypothesis sentences are deemed important for correct classifications.
+
+\begin{lstlisting}[
+    language=json,
+    caption={A random data sample from \acs{MultiNLI}.},
+    label=code:data:samples:esnli
+    ]
+{
+  "explanation_1": "the person is not neces...",
+  "explanation_2": "",
+  "explanation_3": "",
+  "hypothesis": "A person is training his horse...",
+  "label": 1,
+  "premise": "A person on a horse jumps over a...",
+  "sentence1_highlighted_1": "{}",
+  "sentence1_highlighted_2": "",
+  "sentence1_highlighted_3": "",
+  "sentence2_highlighted_1": "3,4,5",
+  "sentence2_highlighted_2": "",
+  "sentence2_highlighted_3": ""
+}
+\end{lstlisting}
+
+\autoref{code:data:samples:multinli} depicts a random sample from the \acs{e-SNLI} corpus including all available features. Comparing it to the features of \acs{MultiNLI} and \acs{SICK}, it is obvious that explanations and highlights of the sentences are added to the data. Up to three different explanations are included and for each explanation, the words in the premise and hypothesis that are relevant to this explanation are provided. The words are provided as indices into the premise and hypotheses starting at zero. For code simplicity, we only use the first explanation.
+
+To get additional training data containing quantifiers, we use the TODO
+
+\section{Experiments}
+
+\paragraph{Baseline}
+We use two models as baselines to compare against our results. A pre-trained \ac{RoBERTa} model will serve as a zero-shot baseline. Furthermore, we use a \ac{RoBERTa} model fine-tuned on the \ac{MultiNLI} dataset as a fine-tuned baseline. The comparison between our fine-tuned results and the zero-shot baseline is used to test \textbf{H1}.
+
+\paragraph{Obtaining models with lower bias}
+To pursue our two approaches to obtain a fine-tuned model with less bias we conduct the following experiments: For the first approach, we fine-tune a pre-trained \ac{RoBERTa} model on the \ac{MultiNLI} dataset after it has been preprocessed as described in \autoref{sec:method} to reduce the bias in the dataset. Optionally, we can add the training data from \ac{SICK} to increase our total amount of training data.
+
+For the second approach we need to conduct two experiments: First, we fine-tune a pre-trained \ac{RoBERTa} model only on the hypotheses of the entire \ac{MultiNLI} dataset to create a biased model. Then an ensemble consisting of the biased model we previously obtained and a standard \ac{RoBERTa} model is trained on the entire \ac{MultiNLI} dataset as described in \autoref{sec:method}.
+
+The comparisons between both approaches to the fine-tuned baseline are used to test \textbf{H2}.
+
+\paragraph{Test}
+To measure the quality of the models, they are tested in two different aspects: First, the predictive performance that the models achieve is measured by testing them on the SICK dataset as it is less biased than the \ac{e-SNLI} dataset. Additionally, it is ensured that the models come to their predictions for the right reasons by applying the interpretability methods described in \autoref{sec:analysis}. These tests are conducted on subsets of the \ac{e-SNLI} dataset. Each subset contains only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows for determining which linguistic phenomena the respective model copes better with or worse.
+
+The comparison between the models and the fine-tuned baseline on the \ac{e-SNLI} dataset is used to test \textbf{H3}. To test \textbf{H4}, we compare the models to the fine-tuned baseline on the \ac{SICK} dataset.

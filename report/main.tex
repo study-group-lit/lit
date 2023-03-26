@@ -1,0 +1,66 @@
+\documentclass[11pt]{article}
+
+\usepackage{ACL2023}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+
+\usepackage{listings}
+\usepackage[nolist]{acronym}
+\usepackage{subfig}
+\usepackage{placeins}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{etoolbox}
+\usepackage{csquotes}
+\usepackage{setspace}
+\usepackage{graphicx}
+
+
+\makeatletter
+\def\endthebibliography{%
+  \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist
+}
+\makeatother
+
+\widowpenalty=10000
+\clubpenalty=10000
+\parfillskip 0pt plus 0.75\textwidth
+\makeatletter
+\patchcmd{\@sect}{\begingroup}{\begingroup\parfillskip=0pt plus 1fil\relax}{}{}
+\patchcmd{\@ssect}{\begingroup}{\begingroup\parfillskip=0pt plus 1fil\relax}{}{}
+\makeatother
+
+
+\title{Project LIT - Debiasing \acs{NLI} models}
+
+\author{André Trump \And
+  Erik Imgrund \And
+  Niklas Loeser }
+
+\input{auxiliary/json.tex}
+
+\begin{document}
+
+\input{auxiliary/acronyms.tex}
+
+\maketitle
+\begin{abstract}
+TODO TODO TODO
+\end{abstract}
+
+\input{content/01_task_description.tex}
+\input{content/02_method.tex}
+\input{content/03_experiments.tex}
+\input{content/04_results.tex}
+\input{content/05_conclusion.tex}
+
+\bibliography{lib}
+\bibliographystyle{acl_natbib}
+
+\end{document}

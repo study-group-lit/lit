@@ -1,0 +1,15 @@
+\section{Motivation}
+
+\ac{NLI} is the task of deciding the truthiness of a hypothesis, given a premise. If the hypothesis is true, it can be said to be entailed by the premise. If it is false, it is contradictory to the premise. Otherwise, the truthiness of the hypothesis cannot be determined. For each case, respectively one of the three classes \texttt{entailment}, \texttt{contradiction} or \texttt{neutral} is chosen.
+
+% What is our aim?
+Our goal is to identify biases in \acp{LM} for \ac{NLI}, then mitigate those biases by removing biased data in the training procedure and recasting data from other domains to combat the specific biases.
+
+% What are our hypotheses?
+We pose the following hypotheses: \vspace*{-0.7em}
+\begin{description}
+  \item[H1] The fine-tuning procedure of \acp{LM} introduces biases for the \ac{NLI} task.\vspace{-0.7em}
+  \item[H2] Mitigating biases from the datasets results in less biased \acp{LM}.\vspace{-0.7em}
+  \item[H3] \acp{LM} with less bias make worse predictions for biased data. \vspace{-0.7em}
+  \item[H4] \acp{LM} with less bias make better predictions for data without the same bias.
+\end{description}
