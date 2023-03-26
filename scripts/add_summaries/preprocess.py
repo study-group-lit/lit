@@ -76,6 +76,5 @@ if __name__ == "__main__":
 
     datasetdict = DatasetDict.load_from_disk(dataset_path)
 
-    datasetdict_preprocessed = datasetdict["training"].select(range(0, 10)).map(preprocess, num_proc=cpu_count())
-    # datasetdict_preprocessed.save_to_disk(dataset_dict_path=f"{dataset_path}_preprocessed")
-    datasetdict_preprocessed.to_csv("/home/students/trump/lit/test.csv")
+    datasetdict_preprocessed = datasetdict.map(preprocess, num_proc=cpu_count())
+    datasetdict_preprocessed.save_to_disk(dataset_dict_path=f"{dataset_path}_preprocessed_fixed")
