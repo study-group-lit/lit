@@ -27,7 +27,7 @@ if __name__ == "__main__":
         raise IOError("Dataset path does not exist")
 
     datasetdict = DatasetDict.load_from_disk(dataset_path)
-    summarizer = pipeline("summarization", model="sshleifer/distilbart-6-6-cnn")
+    summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-6-6")
 
     with_summaries = datasetdict[split].select(range(start_index, end_index+1)).map(add_summary_column, fn_kwargs={"model": summarizer}, batched=True, batch_size=32)
     with_summaries.save_to_disk(dataset_path=f"/workspace/students/lit/datasets/cnn_dataset_summaries/{split}_chunk_{start_index}_{end_index}")
