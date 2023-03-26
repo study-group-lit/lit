@@ -2,8 +2,12 @@ import os
 from datasets import DatasetDict
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
+from nltk import word_tokenize, ngrams
+import nltk
 
-all_quantifiers = {
+nltk.download('punkt')
+
+all_quantifiers = [
     "a few",
     "a large number of",
     "a little",
@@ -31,13 +35,16 @@ all_quantifiers = {
     "some",
     "whole",
     "many of"
-}
+]
 
-def contains_quantifier_in_answer(record, all_quantifiers):
-    for quantifier in all_quantifiers:
-        if quantifier in record["answer"]:
-            return True
-    return False
+def contains_quantifier_in_answer(record):
+    shingles = []
+    tokens = word_tokenize(record["answer"])
+    for n in range(1, 5):
+        shingles.extend(ngrams(tokens, n))
+    shingles = map(lambda shingle: " ".join(shingle), shingles)
+    quantifiers = list(filter(lambda shingle: shingle in all_quantifiers, shingles))
+    return len(quantifiers) > 0
 
 if __name__ == "__main__":
     parser = ArgumentParser(
@@ -52,6 +59,6 @@ if __name__ == "__main__":
 
     datasetdict = DatasetDict.load_from_disk(dataset_path)
 
-    filtered = datasetdict.filter(contains_quantifier_in_answer, fn_kwargs={"all_quantifiers": all_quantifiers}, num_proc=cpu_count())
+    filtered = datasetdict.filter(contains_quantifier_in_answer, num_proc=cpu_count())
     print(f"Size {filtered.num_rows}")
     filtered.save_to_disk(dataset_dict_path=f"{dataset_path}_filtered")
