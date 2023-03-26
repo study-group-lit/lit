@@ -12,4 +12,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ~/lit/venv/bin/activate
-python3 filter.py -d /workspace/students/lit/datasets/cnn_dataset_preprocessed
+python3 filter.py -d /workspace/students/lit/datasets/cnn_dataset_preprocessed_fixed
