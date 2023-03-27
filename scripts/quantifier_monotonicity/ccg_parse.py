@@ -216,7 +216,7 @@ contradiction_mapping = {
     "both": "neither",
     "every": "none",
     "each": "just a few",
-    "enough": "insufficient many",
+    "enough": "insufficiently many",
     "few": "many",
     "fewer": "more",
     "less": "more",
