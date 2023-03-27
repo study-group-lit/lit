@@ -164,6 +164,13 @@ def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb
     if len(verbhyposim) > 0:
         synsetdict["verb_hyponym"] = verbhyponyms[verbhyposim.index(max(verbhyposim))]
     #print(synsetdict)
+    contradictiondeterminer = contradiction_mapping[determiner]
+    if contradictiondeterminer is None:
+        print(f"{contradictiondeterminer} could not be mapped to a contradicting quantifier")
+    
+    newsentence = re.sub(determiner, contradictiondeterminer, sentence)
+    record = pd.Series([contradictiondeterminer, nounmono, "contradiction", determiner, contradictiondeterminer, "quantifier_antonym", sentence, newsentence], index=results.columns)
+    results = results.append(record, ignore_index = True)
     for rel, synset in synsetdict.items():
         synsetwords = synset.lemma_names()
         #print(synsetwords)
@@ -198,15 +205,15 @@ def remove_duplicates(x):
 
 
 contradiction_mapping = {
-    "some": "no",
+    "some": "zero",
     "a": "no",
-    "every": "no",
-    "each": "no",
-    "all": "no",
+    "every": "none",
+    "each": "just a few",
+    "all": "a few",
     "both": "neither",
-    "most": "no",
+    "most": "least",
     "many": "few",
-    "several": "no",
+    "several": "just one",
     "this": "that",
     "that": "this",
     "the": "none of",
