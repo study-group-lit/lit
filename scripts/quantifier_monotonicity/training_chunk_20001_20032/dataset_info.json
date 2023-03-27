@@ -1,0 +1,44 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "url": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "answer_masked": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "correct_entity": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "entity_mapping": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "source": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "answer_entities": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "answer": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "summary": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

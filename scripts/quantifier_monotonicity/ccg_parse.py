@@ -67,10 +67,10 @@ def parse(sentence: str) -> "XML":
     xml = etree.fromstring(ps.stdout)
     return xml
 
-xml = parse("Bush says most of Congress \" acting like a teenager with a new credit card \"")
+xml = parse("Bush says most of Congress \"acting like a teenager with a new credit card\"")
 floating_list = ["both", "all", "each"]
 floating_flg = 0
-element_id = (etree.XPath(".//span[@base=\"all\"]/@id"))(xml)[0]
+element_id = (etree.XPath(".//span[@base=\"most\"]/@id"))(xml)[0]
 verb_id = []
 child_ids, child_verb_ids = [], []
 while True:
@@ -88,7 +88,7 @@ while True:
                 floating_flg = 1
             break
     else:
-        element_id = parent_id
+        element_id = parent_id[0]
 
 list_target_id = element_id.split(" ")
 while True:
