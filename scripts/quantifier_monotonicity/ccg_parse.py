@@ -205,21 +205,40 @@ def remove_duplicates(x):
 
 
 contradiction_mapping = {
-    "some": "zero",
     "a": "no",
+    "a few": "many",
+    "a large number of": "just a small number of",
+    "a little": "a high",
+    "a number of": "zero",
+    "a small number of": "a large number of",
+    "all": "a few",
+    "any": "all",
+    "both": "neither",
     "every": "none",
     "each": "just a few",
-    "all": "a few",
-    "both": "neither",
+    "enough": "insufficient many",
+    "few": "many",
+    "fewer": "more",
+    "less": "more",
+    "lots of": "no more than a few",
     "most": "least",
     "many": "few",
+    "many of": "few of",
+    "much": "limited amount of",
+    "neither": "both",
+    "no": "most",
+    "none of": "several",
+    "not many": "each",
+    "not much": "much",
+    "never": "sometimes",
+    "numerous": "limited amount of",
+    "plenty of": "42",
     "several": "just one",
+    "some": "zero",
     "this": "that",
     "that": "this",
     "the": "none of",
-    "neither": "both",
-    "never": "sometimes",
-    "few": "many"
+    "whole": "only a part"
 }
 
 def check_monotonicity(determiner):
