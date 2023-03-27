@@ -2,14 +2,12 @@ import os
 import os.path
 import re
 import subprocess
-from transformers import AutoTokenizer, AutoModelForTokenClassification
-from transformers import pipeline
 from lxml import etree
-from dataclasses import dataclass
 from typing import List
 from nltk.corpus import wordnet as wn
 import nltk
 from nltk.wsd import lesk
+from nltk.tokenize import word_tokenize
 nltk.download("wordnet")
 from pattern.en import *
 from datasets import load_from_disk
@@ -65,8 +63,6 @@ def keep_plurals(noun, newnoun):
 
 
 def keep_tenses(verb, newverb):
-    print(verb)
-    print(tenses(verb))
     ori_tense = tenses(verb)[0]
     ori_tense2 = [x for x in ori_tense if x is not None]
     #print(ori_tense2)
@@ -116,7 +112,6 @@ def keep_tenses(verb, newverb):
         aspect = PROGRESSIVE
     else:
         aspect = None
-
     newverb_tense = conjugate(newverb, 
         tense = tense,        # INFINITIVE, PRESENT, PAST, FUTURE
        person = person,              # 1, 2, 3 or None
@@ -126,21 +121,39 @@ def keep_tenses(verb, newverb):
       negated = False,          # True or False
         parse = True)
     #print(newverb, newverb_tense)
+    if newverb_tense is None:
+        return newverb
     return newverb_tense
 
 
 def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb, verbsense, sentence, results):
     nounsynset = nounsense
-    nounhypernyms = nounsynset.hypernyms()
-    nounhyponyms = nounsynset.hyponyms()
+    nounhypernyms = nounsynset.hypernyms() if nounsynset is not None else []
+    nounhyponyms = nounsynset.hyponyms() if nounsynset is not None else []
     verbsynset = verbsense
-    verbhypernyms = verbsynset.hypernyms()
-    verbhyponyms = verbsynset.hyponyms()
+    verbhypernyms = verbsynset.hypernyms() if verbsynset is not None else []
+    verbhyponyms = verbsynset.hyponyms() if verbsynset is not None else []
 
-    nounhypersim = [nounhypernym.wup_similarity(verbsynset) if nounhypernym.wup_similarity(verbsynset) is not None else 0 for nounhypernym in nounhypernyms]
-    nounhyposim = [nounhyponym.wup_similarity(verbsynset) if nounhyponym.wup_similarity(verbsynset) is not None else 0 for nounhyponym in nounhyponyms]
-    verbhypersim = [verbhypernym.wup_similarity(nounsynset) if verbhypernym.wup_similarity(nounsynset) is not None else 0 for verbhypernym in verbhypernyms]
-    verbhyposim = [verbhyponym.wup_similarity(nounsynset) if verbhyponym.wup_similarity(nounsynset) is not None else 0 for verbhyponym in verbhyponyms]
+    nounhypersim = [
+        nounhypernym.wup_similarity(verbsynset) \
+        if verbsynset is not None and nounhypernym.wup_similarity(verbsynset) is not None else 0 \
+        for nounhypernym in nounhypernyms
+    ]
+    nounhyposim = [
+        nounhyponym.wup_similarity(verbsynset) \
+        if verbsynset is not None and nounhyponym.wup_similarity(verbsynset) is not None else 0 \
+        for nounhyponym in nounhyponyms
+    ]
+    verbhypersim = [
+        verbhypernym.wup_similarity(nounsynset) 
+        if nounsynset is not None and verbhypernym.wup_similarity(nounsynset) is not None else 0
+        for verbhypernym in verbhypernyms
+    ]
+    verbhyposim = [
+        verbhyponym.wup_similarity(nounsynset) 
+        if nounsynset is not None and verbhyponym.wup_similarity(nounsynset) is not None else 0
+        for verbhyponym in verbhyponyms
+    ]
     synsetdict = {}
     if len(nounhypersim) > 0:
         synsetdict["noun_hypernym"] = nounhypernyms[nounhypersim.index(max(nounhypersim))]
@@ -158,8 +171,6 @@ def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb
             new_synsetword = re.sub("_", " ", synsetword)
             if re.search("noun", rel):
                 newnoun = keep_plurals(noun, new_synsetword)
-                pat = re.compile(noun)
-                newpat = re.compile(newnoun)
                 newsentence = re.sub(noun, newnoun, sentence)
                 gold_label = check_label(nounmono, rel)
                 record = pd.Series([determiner, nounmono, gold_label, noun, newnoun, rel, sentence, newsentence], index=results.columns)
@@ -168,8 +179,6 @@ def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb
                 results = results.append(record, ignore_index = True)
             else:
                 newverb = keep_tenses(verb, new_synsetword)
-                pat = re.compile(verb)
-                newpat = re.compile(newverb)
                 newsentence = re.sub(verb, newverb, sentence)
                 gold_label = check_label(verbmono, rel)
                 record = pd.Series([determiner, verbmono, gold_label, verb, newverb, rel, sentence, newsentence], index=results.columns)
@@ -271,8 +280,29 @@ def rev_mono(monotonicity):
     elif monotonicity == "upward_monotone":
         return "downward_monotone"
 
+def align_quotes(sentence):
+    left = True
+    skip_next = False
+    ret = ""
+    for c in sentence:
+        ret += c
+        if c == "\"":
+            if left:
+                skip_next = True
+            else:
+                ret = ret[:-2] + c
+                left = not left
+        elif skip_next:
+            if c == " " and left:
+                ret = ret[:-1]
+            left = not left
+            skip_next = False
+    return ret
+
 def parse(sentence: str, determiner: str) -> "XML":
     global results
+
+    sentence = align_quotes(sentence)
     sentence = sentence.replace("\"", "\\\"")
     ps = subprocess.run(
         f"echo \"{sentence}\" | "
@@ -286,7 +316,8 @@ def parse(sentence: str, determiner: str) -> "XML":
     nounmono, verbmono = check_monotonicity(determiner)
     floating_list = ["both", "all", "each"]
     floating_flg = 0
-    element_id = (etree.XPath(".//span[@base=\"all\"]/@id"))(xml)[0]
+    print(sentence, determiner)
+    element_id = (etree.XPath(f".//span[@base=\"{determiner}\"]/@id"))(xml)[0]
     verb_id = []
     child_ids, child_verb_ids = [], []
     while True:
@@ -297,9 +328,10 @@ def parse(sentence: str, determiner: str) -> "XML":
             tmp4 = xml.xpath("//ccg/span[contains(@child, '" + element_id + "')]/@child")
             if len(tmp4) > 0:
                 verb_id = tmp4[0].split(" ")
-                verb_id.remove(element_id)
+                if element_id in verb_id:
+                    verb_id.remove(element_id)
                 verb_base =  xml.xpath("//ccg/span[contains(@id, '" + element_id + "')]/@base")
-                if 'be' in verb_base and "all" in floating_list:
+                if 'be' in verb_base and determiner in floating_list:
                     #floating
                     floating_flg = "true"
                 break
@@ -339,6 +371,7 @@ def parse(sentence: str, determiner: str) -> "XML":
         tmp2 = xml.xpath("//ccg/span[@id='" + nounphrase + "']/@surf")
         if len(tmp2) > 0:
             nouns.extend(tmp2)
+    nouns = list(filter(lambda s: len(s) > 0, map(lambda s: ("".join(c for c in s if c.isalnum())).strip(), nouns)))
     print(nouns)
 
     for verbphrase in sorted(child_verb_ids, key=lambda x:int((re.search(r"sp([0-9]+)", x)).group(1))):
@@ -354,6 +387,7 @@ def parse(sentence: str, determiner: str) -> "XML":
     elif len(nouns) > 0 and len(verbs) > 0:
         noun = " ".join(nouns)
         newnoun = nouns[-1]
+        print(newnoun)
         newnounpos = xml.xpath("//ccg/span[@surf='" + newnoun + "']/@pos")[0]
         if re.search("^PRP", newnounpos):
             # remove pronouns
@@ -361,8 +395,9 @@ def parse(sentence: str, determiner: str) -> "XML":
             return
         if re.search("^NNP", newnounpos):
             # replace its specific hypernym if a proper noun exists
-            print(" contains koyumeishi\n")
-            print(nlp(newnoun))
+            # print(" contains koyumeishi\n")
+            # print(nlp(newnoun))
+            pass
             #semtag = tree2.xpath("//taggedtokens/tagtoken/tags/tag[@type='tok' and text()='" + newnoun + "']/following-sibling::tag[@type='sem']/text()")
             #if len(semtag) > 0:
             #    if semtag[0] == "PER" or semtag[0] == "GPO":
@@ -376,31 +411,32 @@ def parse(sentence: str, determiner: str) -> "XML":
             #    continue
         if len(nouns) > 2:
             newnewnoun = determiner + " " + nouns[-1]
-            results = replace_sentence(determiner, nounmono, noun, newnewnoun, sentence, results, "everything is all right")
+            results = replace_sentence(determiner, nounmono, noun, newnewnoun, sentence, results)
         verb = " ".join(verbs)
         verb_chunks = xml.xpath("//tokens/token[@chunk='I-VP']/@surf")
-        newverb = list(filter(lambda v: v in verb_chunks, verbs))[0]
+        newverb = next(filter(lambda v: v in verb_chunks, verbs))
         #newverb = verbs[-1]
         print()
         print(results)
         #print(etree.tostring(xml, pretty_print=True).decode("utf-8"))
 
         # replace hypernym and hyponym using senseid
-        from nltk.tokenize import word_tokenize
         words = word_tokenize(sentence)
         #nounsense = wn.synsets(newnoun, pos=wn.NOUN)
         #verbsense = wn.synsets(newverb, pos=wn.VERB)
         nounsense = lesk(words, newnoun, 'n')
         verbsense = lesk(words, newverb, 'v')
         print(newnoun, newverb)
-        print(verbsense)
+        print(newverb, verbsense)
         results = replace_sentence_WN_nv(determiner, nounmono, verbmono, newnoun, nounsense, newverb, verbsense, sentence, results)
         print(nounsense)
         print(verbsense)
         print(results)
     return xml, element_id, verb_id
 
-xml, element_id, verb_id = parse("all men love a woman", "all")
+
+if __name__ == "__main__":
+    xml, element_id, verb_id = parse("all men love a woman", "all")
 
 # print(element.get("pos"))
 # print(etree.tostring(element, pretty_print=True).decode("utf-8"))

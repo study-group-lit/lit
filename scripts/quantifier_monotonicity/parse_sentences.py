@@ -9,7 +9,7 @@ sentences = [
         "the owner of this estate is no ordinary Lord of the Manor -- it 's Russian tycoon Max", # 5
         "\" this wonderful couple is a danger to no one , \" writes Bourdain", # 6
         "while in prison , Mandela became most significant black leader in South Africa", # 7
-        "new : Winfrey : \" we need a president who can bring us all together \"", # 8
+        "new : Winfrey : \"we need a president who can bring us all together\"", # 8
         "Brazile : Norquist is the man most responsible for GOP gridlock in Washington", # 9
         "Earl Jr. believes Tiger has no one to keep him on the right path", # 10
         "world no. 3 Lee Westwood agrees with the move saying phones are key for business", # 11
@@ -18,7 +18,7 @@ sentences = [
         "Ban : \" i can not find any other better suited leader \""
 ]
 
-quantifiers = ["some", "a", "every", "each", "all", "some", "both", "most", "many", "several", "this", "that", "the", "never", "neither", "few", "no", "any"]
+quantifiers = ["never", "this", "neither", "every", "each", "any", "several", "some", "all", "few", "the", "no", "both", "many", "most", "that", "a"]
 
 def do_sentence(sentence):
     words = word_tokenize(sentence)
