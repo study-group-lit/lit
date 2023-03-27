@@ -2,7 +2,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def plot_confusion_heatmap(data, relative=True):
+def plot_confusion_heatmap(data, relative=True, save_path=None):
     data = pd.DataFrame(data, ["Entailment", "Neutral", "Contradiction"], ["Entailment", "Neutral", "Contradiction"])
     sns.set(font_scale=1.4)
     if relative:
@@ -12,9 +12,12 @@ def plot_confusion_heatmap(data, relative=True):
     ax.set(xlabel='Predicted Label', ylabel='True Label')
     ax.xaxis.set_label_position('top')
     plt.tick_params(axis='both', which='major', labelbottom=False, bottom=False, top=False, labeltop=True)
+
+    if save_path is not None:
+        plt.savefig(save_path)
     plt.show()
 
-def plot_metric_heatmap_phenomena(data):
+def plot_metric_heatmap_phenomena(data, save_path=None):
     phenomena = ["synonym", "antonym", "hypernym", "hyponym", "co_hyponym", "quantifiers", "numericals"]
     models = ["default", "filtered", "hypothesis-only"]
     data = pd.DataFrame(data, phenomena, models)
@@ -24,10 +27,13 @@ def plot_metric_heatmap_phenomena(data):
     ax.set(xlabel='Model', ylabel='Phenomenon')
     ax.xaxis.set_label_position('top')
     plt.tick_params(axis='both', which='major', labelbottom=False, bottom=False, top=False, labeltop=True)
+
+    if save_path is not None:
+        plt.savefig(save_path)
     plt.show()
 
 
-def plot_metric_heatmap_quantifiers(data):
+def plot_metric_heatmap_quantifiers(data, save_path=None):
     quantifiers = ["all", "any", "each", "few", "many", "much", "no", "several", "some", "whole"]
     models = ["default", "filtered", "hypothesis-only"]
     data = pd.DataFrame(data, quantifiers, models)
@@ -37,4 +43,7 @@ def plot_metric_heatmap_quantifiers(data):
     ax.set(xlabel='Model', ylabel='Quantifier')
     ax.xaxis.set_label_position('top')
     plt.tick_params(axis='both', which='major', labelbottom=False, bottom=False, top=False, labeltop=True)
+
+    if save_path is not None:
+        plt.savefig(save_path)
     plt.show()
