@@ -6,6 +6,9 @@ from ccg_parse import generate_samples
 
 import json
 
+def has_answer_entities(record):
+    return record["answer_entities_count"] > 0
+
 def expand_pair(batch):
     premises = []
     hypotheses = []
@@ -45,8 +48,8 @@ if __name__ == "__main__":
         raise IOError("Output path does not exist")
 
     ds = Dataset.load_from_disk(dataset_path=input_path)
-    augmented = ds.select(range(start_index, end_index+1)).map(expand_pair, num_proc=cpu_count(), batched=True, remove_columns=ds.column_names)
-    print(json.dumps(augmented[0]))
-    print(json.dumps(augmented[3]))
-    print(json.dumps(augmented[9]))
+    augmented = ds.select(range(start_index, end_index+1)) \
+        .filter(has_answer_entities, num_proc=cpu_count()) \
+        .map(expand_pair, num_proc=cpu_count(), batched=True, remove_columns=ds.column_names)
+
     augmented.save_to_disk(dataset_path=f"{output_path}/chunk_{start_index}_{end_index}")
