@@ -1,5 +1,7 @@
-from ccg_parse import parse, results
-from nltk.tokenize import word_tokenize
+from tqdm import tqdm
+
+from ccg_parse import generate_samples
+
 sentences = [
     "Bush says most of Congress \" acting like a teenager with a new credit card \"",
     "Shaun White is the most successful snowboarder", # 1
@@ -18,13 +20,10 @@ sentences = [
         "Ban : \" i can not find any other better suited leader \""
 ]
 
-quantifiers = ["never", "this", "neither", "every", "each", "any", "several", "some", "all", "few", "the", "no", "both", "many", "most", "that", "a"]
+
 
 def do_sentence(sentence):
-    words = word_tokenize(sentence)
-    quantifier = [quantifier for quantifier in quantifiers if quantifier in words][0]
-    parse(sentence, quantifier)
+    print(generate_samples(sentence))
 
 for sentence in sentences:
     do_sentence(sentence)
-print(results)

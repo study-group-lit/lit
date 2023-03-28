@@ -50,7 +50,6 @@ monkeypatch_pattern()
 CANDC_PATH = "bin/candc-1.00"
 SED_PATH = "scripts/quantifier_monotonicity/tokenizer.sed"
 CANDC2TRANSCCG_PATH = "scripts/quantifier_monotonicity/candc2transccg.py"
-results = pd.DataFrame(index=[], columns=['determiner', 'monotonicity', 'gold_label', 'replace_target', 'replace_source', 'replace_mode', 'ori_sentence', 'new_sentence'])
 
 
 def keep_plurals(noun, newnoun):
@@ -65,7 +64,6 @@ def keep_plurals(noun, newnoun):
 def keep_tenses(verb, newverb):
     ori_tense = tenses(verb)[0]
     ori_tense2 = [x for x in ori_tense if x is not None]
-    #print(ori_tense2)
     tense, person, number, mood, aspect = None, None, None, None, None
 
     if 'infinitive' in ori_tense2:
@@ -120,11 +118,20 @@ def keep_tenses(verb, newverb):
         aspect = aspect,
       negated = False,          # True or False
         parse = True)
-    #print(newverb, newverb_tense)
     if newverb_tense is None:
         return newverb
     return newverb_tense
 
+
+def generate_contradiction(determiner, sentence, results):
+    contradictiondeterminer = contradiction_mapping[determiner]
+    if contradictiondeterminer is None:
+        print(f"{contradictiondeterminer} could not be mapped to a contradicting quantifier")
+    
+    newsentence = re.sub(determiner, contradictiondeterminer, sentence)
+    results.append({"label": "2", "hypothesis": newsentence}) # contradiction
+
+    return results
 
 def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb, verbsense, sentence, results):
     nounsynset = nounsense
@@ -163,35 +170,23 @@ def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb
         synsetdict["verb_hypernym"] = verbhypernyms[verbhypersim.index(max(verbhypersim))]
     if len(verbhyposim) > 0:
         synsetdict["verb_hyponym"] = verbhyponyms[verbhyposim.index(max(verbhyposim))]
-    #print(synsetdict)
-    contradictiondeterminer = contradiction_mapping[determiner]
-    if contradictiondeterminer is None:
-        print(f"{contradictiondeterminer} could not be mapped to a contradicting quantifier")
     
-    newsentence = re.sub(determiner, contradictiondeterminer, sentence)
-    record = pd.Series([contradictiondeterminer, nounmono, "contradiction", determiner, contradictiondeterminer, "quantifier_antonym", sentence, newsentence], index=results.columns)
-    results = results.append(record, ignore_index = True)
     for rel, synset in synsetdict.items():
         synsetwords = synset.lemma_names()
-        #print(synsetwords)
         for synsetword in synsetwords:
             new_synsetword = re.sub("_", " ", synsetword)
             if re.search("noun", rel):
                 newnoun = keep_plurals(noun, new_synsetword)
                 newsentence = re.sub(noun, newnoun, sentence)
                 gold_label = check_label(nounmono, rel)
-                record = pd.Series([determiner, nounmono, gold_label, noun, newnoun, rel, sentence, newsentence], index=results.columns)
-                results = results.append(record, ignore_index = True)
-                record = pd.Series([determiner, nounmono, rev_label(gold_label, nounmono), noun, newnoun, rel, newsentence, sentence], index=results.columns)
-                results = results.append(record, ignore_index = True)
+                if gold_label == "neutral":
+                    results.append({"label": 1, "hypothesis": newsentence}) # neutral
             else:
                 newverb = keep_tenses(verb, new_synsetword)
                 newsentence = re.sub(verb, newverb, sentence)
                 gold_label = check_label(verbmono, rel)
-                record = pd.Series([determiner, verbmono, gold_label, verb, newverb, rel, sentence, newsentence], index=results.columns)
-                results = results.append(record, ignore_index = True)
-                record = pd.Series([determiner, verbmono, rev_label(gold_label, verbmono), verb, newverb, rel, newsentence, sentence], index=results.columns)
-                results = results.append(record, ignore_index = True)
+                if gold_label == "neutral":
+                    results.append({"label": 1, "hypothesis": newsentence}) # neutral
 
     return results
 
@@ -263,9 +258,9 @@ def replace_sentence(determiner, nounmono, noun, newnoun, sentence, results):
     newpat = re.compile(newnoun)
     newsentence = re.sub(noun, newnoun, sentence)
     gold_label = check_label(nounmono, 'simple')
-    record = pd.Series([determiner, nounmono, gold_label, noun, newnoun, 'simple', sentence, newsentence], index=results.columns)
-    record = pd.Series([determiner, nounmono, rev_label(gold_label, nounmono), noun, newnoun, 'simple', newsentence, sentence], index=results.columns)
-    results = results.append(record, ignore_index = True)
+    if gold_label == "neutral":
+        results.append({"label": 1, "hypothesis": newsentence})
+    
     return results
 
 
@@ -325,9 +320,7 @@ def align_quotes(sentence):
             skip_next = False
     return ret
 
-def parse(sentence: str, determiner: str) -> "XML":
-    global results
-
+def parse(sentence: str, determiner: str, results: list) -> list:
     sentence = align_quotes(sentence)
     sentence = sentence.replace("\"", "\\\"")
     ps = subprocess.run(
@@ -336,13 +329,13 @@ def parse(sentence: str, determiner: str) -> "XML":
         f"{CANDC_PATH}/bin/candc --models {CANDC_PATH}/models/ --candc-printer xml | "
         f"python {CANDC2TRANSCCG_PATH}",
         stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
         shell=True
         )
     xml = etree.fromstring(ps.stdout)
     nounmono, verbmono = check_monotonicity(determiner)
     floating_list = ["both", "all", "each"]
     floating_flg = 0
-    print(sentence, determiner)
     element_id = (etree.XPath(f".//span[@base=\"{determiner}\"]/@id"))(xml)[0]
     verb_id = []
     child_ids, child_verb_ids = [], []
@@ -398,13 +391,11 @@ def parse(sentence: str, determiner: str) -> "XML":
         if len(tmp2) > 0:
             nouns.extend(tmp2)
     nouns = list(filter(lambda s: len(s) > 0, map(lambda s: ("".join(c for c in s if c.isalnum())).strip(), nouns)))
-    print(nouns)
 
     for verbphrase in sorted(child_verb_ids, key=lambda x:int((re.search(r"sp([0-9]+)", x)).group(1))):
         tmp3 = xml.xpath("//ccg/span[@id='" + verbphrase + "']/@surf")
         if len(tmp3) > 0:
             verbs.extend(tmp3)
-    print(verbs)
 
     if floating_flg == "true":
         # remove floating
@@ -413,7 +404,6 @@ def parse(sentence: str, determiner: str) -> "XML":
     elif len(nouns) > 0 and len(verbs) > 0:
         noun = " ".join(nouns)
         newnoun = nouns[-1]
-        print(newnoun)
         newnounpos = xml.xpath("//ccg/span[@surf='" + newnoun + "']/@pos")[0]
         if re.search("^PRP", newnounpos):
             # remove pronouns
@@ -442,9 +432,6 @@ def parse(sentence: str, determiner: str) -> "XML":
         verb_chunks = xml.xpath("//tokens/token[@chunk='I-VP']/@surf")
         newverb = next(filter(lambda v: v in verb_chunks, verbs))
         #newverb = verbs[-1]
-        print()
-        print(results)
-        #print(etree.tostring(xml, pretty_print=True).decode("utf-8"))
 
         # replace hypernym and hyponym using senseid
         words = word_tokenize(sentence)
@@ -452,19 +439,20 @@ def parse(sentence: str, determiner: str) -> "XML":
         #verbsense = wn.synsets(newverb, pos=wn.VERB)
         nounsense = lesk(words, newnoun, 'n')
         verbsense = lesk(words, newverb, 'v')
-        print(newnoun, newverb)
-        print(newverb, verbsense)
         results = replace_sentence_WN_nv(determiner, nounmono, verbmono, newnoun, nounsense, newverb, verbsense, sentence, results)
-        print(nounsense)
-        print(verbsense)
-        print(results)
-    return xml, element_id, verb_id
+    return results
 
+def generate_samples(hypothesis):
+    results = [{"label": 0, "hypothesis": hypothesis}] # entailment
+    quantifiers = list(contradiction_mapping.keys())
+    try:
+        words = word_tokenize(hypothesis)
+        quantifier = next(quantifier for quantifier in quantifiers if quantifier in words)
+        results = generate_contradiction(quantifier, hypothesis, results)
+        results = parse(hypothesis, quantifier, results)
+    except Exception as e:
+        print(f"skipping with {e}")
+    return results
 
 if __name__ == "__main__":
     xml, element_id, verb_id = parse("all men love a woman", "all")
-
-# print(element.get("pos"))
-# print(etree.tostring(element, pretty_print=True).decode("utf-8"))
-#print(etree.tostring(xml, pretty_print=True).decode("utf-8"))
-#print(element_id, verb_id)
