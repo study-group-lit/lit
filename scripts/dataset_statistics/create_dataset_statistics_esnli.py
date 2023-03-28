@@ -20,7 +20,7 @@ LABELS = ["entailment", "neutral", "contradiction"]
 
 
 def count_label_occurence(dataset, label):
-    return len(dataset.filter(lambda record: record["label"] == label, num_proc=cpu_count()))
+    return dataset.filter(lambda record: record["label"] == label, num_proc=cpu_count()).num_rows
 
 def calculate_dataset_counts(dataset_path):
     if not os.path.exists(dataset_path):
