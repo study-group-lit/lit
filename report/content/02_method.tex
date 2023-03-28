@@ -27,7 +27,7 @@ By changing the fine-tuning process to only using the hypothesis as input of the
 
 We use this fact to find biased samples in the training datasets. We have fine-tuned three hypothesis-only models on the dataset and then used those to find all samples biased that at least two hypothesis-only models predict correctly.
 
-\paragraph{Mitigating data bias}
+\paragraph{Mitigating data bias} \label{par:method:mitigating_data_bias}
 
 We employ two methods to remove data bias from the training procedure. The naive method is, to simply remove all samples deemed biased from the training set. By completely removing them from the training procedure, the model cannot be biased by those samples.
 

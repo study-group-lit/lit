@@ -81,7 +81,7 @@ To get additional training data containing quantifiers, we use the TODO
 
 \section{Experiments}
 \paragraph{Dataset generation}
-Paragraph \ref{par:models_datasets:datasets} describes external datasets. On the basis of these datasets and in accordance to our method, we generate new internal datasets. In the following, the internal datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:internal_datasets:classes} and \autoref{tab:internal_datasets:sizes}. \autoref{tab:internal_datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:internal_datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+Paragraph \ref{par:models_datasets:datasets} describes known datasets. On the basis of these datasets and in accordance to our method, we generate new datasets. In the following, the new datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:new_datasets:classes} and \autoref{tab:new_datasets:sizes}. \autoref{tab:new_datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:new_datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
 
 % TODO explain generated dataset(s, different versions) from "detecting biased data"
 % TODO explain generated dataset from "recasted data"
@@ -96,7 +96,7 @@ Paragraph \ref{par:models_datasets:datasets} describes external datasets. On the
       Neutral & $2202$ & $85664$ & $63768$ & TODO\\
       Contradiction & $2877$ & $90628$ & $73408$ & TODO
     \end{tabular}
-    \label{tab:internal_datasets:classes}
+    \label{tab:new_datasets:classes}
 \end{table*}
 
 \begin{table*}[h]
@@ -109,12 +109,12 @@ Paragraph \ref{par:models_datasets:datasets} describes external datasets. On the
       Validation & $7929$ & $9815/9832$ & $9815$/$9832$ & TODO \\
       Test & $ - $ & $ - $ & $ - $ & TODO
     \end{tabular}
-    \label{tab:internal_datasets:sizes}
+    \label{tab:new_datasets:sizes}
 \end{table*}
 
-The strongly biased \acs{e-SNLI} dataset is derived from the \acs{e-SNLI} dataset in accordance with our method of detecting biased data. The dataset only includes samples, which are correctly predicted by the \acs{RoBERTa} model, which has been fine-tuned only on the \acs{MultiNLI} hypotheses.
+The strongly biased \acs{e-SNLI} dataset is derived from the \acs{e-SNLI} dataset in accordance with our \hyperref[par:method:mitigating_data_bias]{method} of detecting biased data. The dataset only includes samples, which are correctly predicted by the \acs{RoBERTa} model, which has been fine-tuned only on the \acs{MultiNLI} hypotheses.
 
-Both the weakly filtered \acs{MultiNLI} and strongly filtered \acs{MultiNLI} datasets are derived from the \acs{MultiNLI} dataset, as described in the method of mitigating data bias. The datasets are less biased than \acs{MultiNLI}, as samples are removed, which are predicted by at least three or two of the three different fine-tuned hypothesis only \acs{RoBERTa} models.
+Both the weakly filtered \acs{MultiNLI} and strongly filtered \acs{MultiNLI} datasets are derived from the \acs{MultiNLI} dataset, as described in the method of mitigating data bias. The datasets are less biased than \acs{MultiNLI}. For the weakly filtered \acs{MultiNLI} dataset samples are removed, which are correctly predicted by all three different seeds of the fine-tuned hypothesis only \acs{RoBERTa} model. For the strongly filtered \acs{MultiNLI} dataset, at least two correct predictions out of the three different versions of the model suffice.
 
 \paragraph{Baseline}
 We use two models as baselines to compare against our results. A pre-trained \ac{RoBERTa} model will serve as a zero-shot baseline. Furthermore, we use a \ac{RoBERTa} model fine-tuned on the \ac{MultiNLI} dataset as a fine-tuned baseline. The comparison between our fine-tuned results and the zero-shot baseline is used to test \textbf{H1}.
