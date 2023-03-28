@@ -9,7 +9,7 @@ import nltk
 from nltk.wsd import lesk
 from nltk.tokenize import word_tokenize
 nltk.download("wordnet")
-from pattern.en import *
+from pattern.text.en import *
 from datasets import load_from_disk
 from datasets import load_dataset
 import pandas as pd

@@ -1,0 +1,1 @@
+python augment_data.py -i ../../../lit-data/datasets/cnn_dataset_summaries_reduced_filtered_pos -o ../../../lit-data/datasets/cnn_dataset_augmented -s 0 -e 10
