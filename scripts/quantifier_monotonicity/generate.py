@@ -14,7 +14,9 @@ def expand_pair(batch):
 
     for index, answer in enumerate(batch["answer"]):
         correct_answer = answer.replace("@placeholder", batch["correct_entity"][index])        
-        results = generate_samples(correct_answer)
+        results = [ x for x in generate_samples(correct_answer) if x is not None ]
+        if len(results) == 0:
+            continue
 
         hypotheses.extend([ result["hypothesis"] for result in results ])
         labels.extend([ str(result["label"]) for result in results ])
