@@ -17,6 +17,8 @@ import inflect
 inflect = inflect.engine()
 import pattern.text
 from pattern.helpers import decode_string
+from nltk.tokenize.treebank import TreebankWordDetokenizer
+detokenizer = TreebankWordDetokenizer()
 
 def monkeypatch_pattern():
     from codecs import BOM_UTF8
@@ -51,6 +53,43 @@ CANDC_PATH = "bin/candc-1.00"
 SED_PATH = "scripts/quantifier_monotonicity/tokenizer.sed"
 CANDC2TRANSCCG_PATH = "scripts/quantifier_monotonicity/candc2transccg.py"
 
+
+contradiction_mapping = {
+    "a": "no",
+    "a few": "many",
+    "a large number of": "just a small number of",
+    "a little": "a lot",
+    "a number of": "zero",
+    "a small number of": "a large number of",
+    "all": "a few",
+    "any": "all",
+    "both": "neither",
+    "every": "none",
+    "each": "just a few",
+    "enough": "insufficiently many",
+    "few": "many",
+    "fewer": "more",
+    "less": "more",
+    "lots of": "no more than a few",
+    "most": "least",
+    "many": "few",
+    "many of": "few of",
+    "much": "limited amount of",
+    "neither": "both",
+    "no": "most",
+    "none of": "several",
+    "not many": "each",
+    "not much": "much",
+    "never": "sometimes",
+    "numerous": "limited amount of",
+    "plenty of": "shortage of",
+    "several": "just one",
+    "some": "zero",
+    "this": "that",
+    "that": "this",
+    "the": "none of",
+    "whole": "only a part"
+}
 
 def keep_plurals(noun, newnoun):
     if inflect.singular_noun(noun) is False:
@@ -122,13 +161,20 @@ def keep_tenses(verb, newverb):
         return newverb
     return newverb_tense
 
+def replace_word(sentence, original, replacement):
+    if " " in original:
+        return re.sub(original, replacement, sentence)
+    words = word_tokenize(sentence)
+    words[words.index(original)] = replacement
+    return detokenizer.detokenize(words)
+
 
 def generate_contradiction(determiner, sentence, results):
     contradictiondeterminer = contradiction_mapping[determiner]
     if contradictiondeterminer is None:
         print(f"{contradictiondeterminer} could not be mapped to a contradicting quantifier")
     
-    newsentence = re.sub(determiner, contradictiondeterminer, sentence)
+    newsentence = replace_word(sentence, determiner, contradictiondeterminer)
     results.append({"label": "2", "hypothesis": newsentence}) # contradiction
 
     return results
@@ -177,13 +223,13 @@ def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb
             new_synsetword = re.sub("_", " ", synsetword)
             if re.search("noun", rel):
                 newnoun = keep_plurals(noun, new_synsetword)
-                newsentence = re.sub(noun, newnoun, sentence)
+                newsentence = replace_word(sentence, noun, newnoun) # re.sub(noun, newnoun, sentence)
                 gold_label = check_label(nounmono, rel)
                 if gold_label == "neutral":
                     results.append({"label": 1, "hypothesis": newsentence}) # neutral
             else:
                 newverb = keep_tenses(verb, new_synsetword)
-                newsentence = re.sub(verb, newverb, sentence)
+                newsentence = replace_word(sentence, verb, newverb) # re.sub(verb, newverb, sentence)
                 gold_label = check_label(verbmono, rel)
                 if gold_label == "neutral":
                     results.append({"label": 1, "hypothesis": newsentence}) # neutral
@@ -198,43 +244,6 @@ def remove_duplicates(x):
             y.append(i)
     return y
 
-
-contradiction_mapping = {
-    "a": "no",
-    "a few": "many",
-    "a large number of": "just a small number of",
-    "a little": "a lot",
-    "a number of": "zero",
-    "a small number of": "a large number of",
-    "all": "a few",
-    "any": "all",
-    "both": "neither",
-    "every": "none",
-    "each": "just a few",
-    "enough": "insufficiently many",
-    "few": "many",
-    "fewer": "more",
-    "less": "more",
-    "lots of": "no more than a few",
-    "most": "least",
-    "many": "few",
-    "many of": "few of",
-    "much": "limited amount of",
-    "neither": "both",
-    "no": "most",
-    "none of": "several",
-    "not many": "each",
-    "not much": "much",
-    "never": "sometimes",
-    "numerous": "limited amount of",
-    "plenty of": "shortage of",
-    "several": "just one",
-    "some": "zero",
-    "this": "that",
-    "that": "this",
-    "the": "none of",
-    "whole": "only a part"
-}
 
 def check_monotonicity(determiner):
     nounmono, verbmono = "non_monotone", "non_monotone"
@@ -256,7 +265,7 @@ def check_monotonicity(determiner):
 def replace_sentence(determiner, nounmono, noun, newnoun, sentence, results):
     pat = re.compile(noun)
     newpat = re.compile(newnoun)
-    newsentence = re.sub(noun, newnoun, sentence)
+    newsentence = replace_word(sentence, noun, newnoun) # re.sub(noun, newnoun, sentence)
     gold_label = check_label(nounmono, 'simple')
     if gold_label == "neutral":
         results.append({"label": 1, "hypothesis": newsentence})
