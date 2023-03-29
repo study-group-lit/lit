@@ -79,7 +79,7 @@ We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} 
 
 Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge. We replace all placeholders with the original entities to provide sensible sentences and such that the model is able to use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
 
-\section{Experiments}
+\section{Experiments} \label{sec:experiments}
 
 \paragraph{Baseline}
 We use two models as baselines to compare against our results. A pre-trained \ac{RoBERTa} model will serve as a zero-shot baseline. Furthermore, we use a \ac{RoBERTa} model fine-tuned on the \ac{MultiNLI} dataset as a fine-tuned baseline. The comparison between our fine-tuned results and the zero-shot baseline is used to test \textbf{H1}.
