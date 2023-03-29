@@ -1,6 +1,6 @@
 # Debiasing NLI models
 
-Mitigating biases in language models by removing biased data and recasting data from other domains.
+Mitigating biases in language models by removing biased data and recasting data from other NLP tasks.
 
 ## Disclaimer
 This project is part of the lecture [Formale Semantik WS22/23](https://www.cl.uni-heidelberg.de/courses/ws22/semantik/). It will not receive any updates after 2023-03-31.
@@ -39,12 +39,12 @@ Processed datasets and trained models are not part of this repository.
 ```
 
 ### Text
-- `outline`: our initial outline as LaTex
-- `report`: our final report as LaTex
+- `outline`: our initial outline as LaTeX
+- `report`: our final report as LaTeX
 
 ### Code
 - `datasets`:
-    - various evaluation suite
+    - various evaluation suites
     - e-SNLI loading and preprocessing scripts
 - `models`: RoBERTa config for sequence classification
 - `notebooks`: Jupyter Notebook playground. The notebooks contain visualisations for datasets and evaluations of models, as well as early versions of code found in `scripts`.
@@ -56,14 +56,14 @@ Processed datasets and trained models are not part of this repository.
     - Ensembled model
   - miscellaneous scripts for calculating statistics / metrics
   - miscellaneous scripts for analyzing datasets on models by phenomena
-- `visualisation`: heatmap generation scripts
+- `visualisations`: heatmap generation scripts
 
 ## Installation
 
 **Requirements:**
 - Python3 (tested with version `3.8.10`)
 - C&C (required for recasting `scripts/quantifier_monotonicity/ccg_parse.py`)
-- Unix like system is highly recommended (looking at you Windows)
+- Linux, as `candc` does not run on MacOS
 
 **C&C installation:**
 Run `scripts/quantifier_monotonicity/install_candc.sh`. If necessary make the file executable. The script will show an error, which may be ignored.<br>
