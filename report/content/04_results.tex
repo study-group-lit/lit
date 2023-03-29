@@ -17,3 +17,36 @@ To analyze biases, we compare the words deemed important by the \ac{e-SNLI} expl
 To generate explanations we use the interpretability methods Integrated Gradients \cite{integratedgradients}, \ac{LIME} \cite{lime} and Partition SHAP Values \cite{shap}. We use the plausibility and faithfulness \cite{ferret} metrics to judge the model bias.
 
 To demonstrate the biases, we provide example sentences with important tokens highlighted. Furthermore, to provide a different view on the importance of certain tokens, we visualize the attention maps.
+
+\begin{table}[ht!]
+    \centering
+    \caption{Prediction performance when using prompting with different word groups on the \acs{SICK} dataset. The best result is shown in \textbf{bold} and the second-best is \underline{underlined}.}
+    \begin{tabular}{l c c}
+        \toprule
+        \multicolumn{1}{c}{Word Group} & \acs{MCC} & $\text{F}_1$ \\
+        \midrule
+        A Priori & $21.54\%$ & $\mathbf{52.87\%}$ \\
+        Simple & $\underline{22.71\%}$ & $\underline{36.99\%}$ \\
+        Tuned & $\mathbf{30.34\%}$ & $33.87\%$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[ht!]
+    \centering
+    \caption{Prediction performance of our fine-tuned models on the \acs{SICK} dataset. The best result is shown in \textbf{bold} and the second-best is \underline{underlined}.}
+    \begin{tabular}{l c c}
+        \toprule
+        \multicolumn{1}{c}{Model} & \acs{MCC} & $\text{F}_1$ \\
+        \midrule
+        Base & $49.49\%$ & $56.60\%$ \\
+        Hypothesis-Only\tablefootnote{Average of three runs with different seeds} & $14.13\%$ & $40.02\%$ \\
+        Filtered $2/3$ & $46.21\%$ & $54.12\%$ \\
+        Filtered $2/3$ longer & $36.17\%$ & $52.85\%$ \\
+        Filtered $3/3$ & $48.73\%$ & $56.94\%$ \\
+        Filtered $3/3$ longer & $\mathbf{52.31\%}$ & $\mathbf{62.04\%}$ \\
+        Ensembled & $\underline{51.65\%}$ & $\underline{59.88\%}$ \\
+        Recast & n/a & n/a \\
+        \bottomrule
+    \end{tabular}
+\end{table}
