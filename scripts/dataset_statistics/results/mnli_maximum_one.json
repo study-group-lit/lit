@@ -1,0 +1,1 @@
+{"splits": {"train": 171676, "validation_matched": 9815, "validation_mismatched": 9832}, "classes": {"entailment": 54147, "neutral": 63768, "contradiction": 73408}}

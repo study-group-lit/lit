@@ -57,7 +57,7 @@ We use this fact to find biased samples in the training datasets. A hypothesis-o
 
 % TODO: Mention how many are deemed biased by at least two and all
 
-\subsection{Mitigating data bias}
+\subsection{Mitigating data bias}\label{par:method:mitigating_data_bias}
 
 We employ two methods to remove data bias from the training procedure. The naive method is, to simply remove all samples deemed biased from the training set. By completely removing them from the training procedure, the model cannot be biased by those samples. We call the resulting dataset \texttt{filtered}.
 
@@ -117,7 +117,3 @@ From each question-answer pair, we try to create an example with gold labels \te
 The hypothesis is generated differently for each gold label but all have the same premise. The hypothesis for \texttt{entailment} is simply the correct answer provided by the dataset. The contradicting hypothesis is generated from the answer by replacing the quantifier with an opposing quantifier. We selected the opposing quantifiers based on replacement quantifiers not appearing too often and fitting as an antonym for each quantifier. The mapping from the original quantifier to its replacement can be found in \autoref{tab:contradiction:mapping}.
 
 Lastly, sentences with gold label \texttt{neutral} for the given premise are generated from the answer by using quantifier monotonicity properties similar to the approach chosen by \citet{yanaka-etal-2019-help}. Instead of identifying quantifiers by their semantic tags, we identify them using their part of speech tags, as previously described. Afterward, we also generate a \ac{CCG} derivation using the C\&C Tools \cite{curran-etal-2007-linguistically} and try to extract the nominal and verbal phrases that are part of the quantifier phrase. Next, based on the monotonicity we swap the verbs with either hypernyms or hyponyms found using WordNet \cite{miller-1994-wordnet}. If the quantifier is monotonically rising, we use a hypernym to create a situation, where it cannot be said, if the resulting sentence can be entailed by the original sentence. In the same way, for monotonically falling quantifiers, we use hyponyms to create the samples with \texttt{neutral} as the gold label.
-
-% TODO: how many examples contain quantifiers?
-% TODO: link to analysis of quantifiers being biased
-% TODO: maybe additionally describe recasting procedure as pseudo-code?

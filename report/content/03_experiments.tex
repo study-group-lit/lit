@@ -7,7 +7,7 @@ All experiments and variants of the \acs{NLI}-model are based on the pre-trained
     \caption{Class distributions for the datasets used}
     \begin{tabular}{r || c | c | c}
         & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
-        \hline
+        \midrule
         Entailment & $137841$ & $2821$ & $190113$ \\
         Neutral & $137152$ & $5595$ & $189218$ \\
         Contradiction & $137356$ & $1424$ & $189702$
@@ -17,15 +17,16 @@ All experiments and variants of the \acs{NLI}-model are based on the pre-trained
 
 To create summaries of the articles in the data to be recast, we use a fine-tuned and distilled version of BART \cite{lewis-etal-2020-bart} for text summarization trained on CNN and Daily Mail articles \cite{cnn1,cnn2}. \cite{shleifer2020pretrained} We use a model with all six encoder layers from BART and just six decoder layers named \texttt{distilbart-6-6-cnn}. We use the version trained on CNN/Daily Mail, as this dataset is based on the same data, that we use in our recasting. This implies that the model should work well for the data even when distilled, as there is no shift in domain shift.
 
-\paragraph{Datasets}
-We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} \cite{sick} for our \ac{NLI} tests. In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+\paragraph{Datasets} \label{par:models_datasets:datasets}
+We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} \cite{sick}. In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+
 
 \begin{table}[h]
     \centering
     \caption{Dataset split sizes. \acs{MultiNLI} shows the matched/mismatched validation sizes.}
     \begin{tabular}{r || c | c | c}
         & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
-        \hline
+        \midrule
         Train & $392702$ & $4439$ & $549367$ \\
         Validation & $9815$/$9832$ & $495$ & $9842$ \\
         Test & - & $4906$ & $9824$
@@ -80,6 +81,37 @@ We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} 
 Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge. We replace all placeholders with the original entities to provide sensible sentences and such that the model is able to use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
 
 \section{Experiments} \label{sec:experiments}
+\paragraph{Dataset generation}
+Paragraph \ref{par:models_datasets:datasets} describes known datasets. On the basis of these datasets and in accordance to our method, we generate new datasets. In the following, the new datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:new_datasets:classes} and \autoref{tab:new_datasets:sizes}. \autoref{tab:new_datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:new_datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+
+\begin{table*}[ht]
+    \centering
+    \caption{Class distributions for the generated datasets}
+    \begin{tabular}{r || c | c | c | c}
+        &  filtered \acs{MultiNLI} 3/3 & filtered \acs{MultiNLI} 2/3 & recast dataset \\
+        \midrule
+      Entailment  & $72939$ & $54147$ & $174531$ \\
+      Neutral  & $85664$ & $63768$ & $155324$\\
+      Contradiction  & $90628$ & $73408$ & $173908$
+    \end{tabular}
+    \label{tab:new_datasets:classes}
+\end{table*}
+
+\begin{table*}[h]
+    \centering
+    \caption{Generated dataset split sizes. The from \acs{MultiNLI} derivated datasets show matched/mismatched validation sizes.}
+    \begin{tabular}{r || c | c | c | c}
+        & filtered \acs{MultiNLI} 3/3 & filtered \acs{MultiNLI} 2/3 & recast dataset \\
+        \midrule
+      Train &  $229584$ & $171676$ & $484116$ \\
+      Validation  & $9815/9832$ & $9815$/$9832$ & $9815/9832$ \\
+      Test  & $ - $ & $ - $ & $ - $
+    \end{tabular}
+    \label{tab:new_datasets:sizes}
+\end{table*}
+
+Both the filtered \acs{MultiNLI} 3/3 and filtered \acs{MultiNLI} 2/3 datasets are derived from the \acs{MultiNLI} dataset, as described in the method of mitigating data bias. The datasets are less biased than \acs{MultiNLI}. For the filtered \acs{MultiNLI} 3/3 dataset samples are removed, which are correctly predicted by all three different seeds of the fine-tuned hypothesis only \acs{RoBERTa} model. For the filtered \acs{MultiNLI} 2/3 dataset, at least two correct predictions out of the three different versions of the model suffice.
+
 
 \paragraph{Baseline}
 We use two models as baselines to compare against our results. A pre-trained \ac{RoBERTa} model will serve as a zero-shot baseline. Furthermore, we use a \ac{RoBERTa} model fine-tuned on the \ac{MultiNLI} dataset as a fine-tuned baseline. The comparison between our fine-tuned results and the zero-shot baseline is used to test \textbf{H1}.
