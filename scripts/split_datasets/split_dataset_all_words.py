@@ -1,4 +1,6 @@
-from datasets import load_dataset
+from typing import List
+from attr import dataclass
+from datasets import load_dataset, DatasetDict
 import re
 import nltk
 import os
@@ -11,35 +13,59 @@ nltk.download('wordnet')
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
-all_quantifiers = {
-    "a few",
-    "a large number of",
-    "a little",
-    "a number of",
-    "a small number of",
-    "all",
-    "any",
-    "enough", 
-    "each",
-    "every",
-    "few",
-    "fewer",
-    "less",
-    "lots of",
-    "many",
-    "most",
-    "much",
-    "no",
-    "none of",
-    "not many",
-    "not much",
-    "numerous",
-    "plenty of",
-    "several",
-    "some",
-    "whole",
-    "many of"
-}
+@dataclass
+class Quantifier:
+    name: str
+    left_rising: bool
+    right_rising: bool
+    tags: List[List[str]]
+
+all_quantifiers = [
+    Quantifier("a few", True, True, [["DT", "JJ"]]),
+    Quantifier("a large number of", True, True, [["DT", "JJ", "NN", "IN"]]),
+    Quantifier("a little", True, True, [["DT", "JJ"]]),
+    Quantifier("a number of", True, True, [["DT", "NN", "IN"]]),
+    Quantifier("a small number of", True, True, [["DT", "JJ", "NN", "IN"]]),
+    Quantifier("all", False, True, [["DT"]]),
+    Quantifier("any", False, True, [["DT"]]),
+    Quantifier("enough", True, True, [["DT"]]),
+    Quantifier("each", False, True, [["DT"]]),
+    Quantifier("every", True, True, [["DT"]]),
+    Quantifier("few", False, False, [["DT"]]),
+    Quantifier("fewer", False, False, [["DT"]]),
+    Quantifier("less", False, False, [["DT"], ["RB"], ["IN"], ["JJR"]]), # Also adverb and preposition
+    Quantifier("lots of", True, True, [["RB", "IN"], ["NNS", "IN"]]), # Idiom: adverb + preposition
+    Quantifier("many", True, True, [["DT"], ["JJ"]]),
+    Quantifier("most", False, True, [["DT"]]),
+    Quantifier("most of", False, True, [["JJS", "IN"]]),
+    Quantifier("much", True, True, [["DT"]]),
+    Quantifier("much of", True, True, [["NN", "IN"]]),
+    Quantifier("no", False, False, [["DT"]]),
+    Quantifier("none of", False, False, [["NN", "IN"]]),
+    Quantifier("not many", False, False, [["RB", "JJ"]]),
+    Quantifier("not much", False, False, [["RB", "JJ"]]),
+    Quantifier("numerous", True, True, [["JJ"]]), # Adjective
+    Quantifier("plenty of", True, True, [["NN", "IN"]]), # Idiom: Pronoun + preposition
+    Quantifier("several", True, True, [["DT"], ["JJ"]]), # Also pronoun
+    Quantifier("some", True, True, [["DT"]]),
+    Quantifier("whole", False, True, [["RB"], ["JJ"]]), # Adverb
+    Quantifier("many of", True, True, [["NN", "IN"]]), # Noun + preposition
+]
+
+
+def contains_quantifier(sentence):
+    tokens = pos_tag(word_tokenize(sentence))
+    for quantifier in all_quantifiers:
+        s = " ".join(word for word, _ in tokens)
+        if quantifier.name + " " not in s:
+            continue
+        match = s.find(quantifier.name + " ") # character index
+        match = len(word_tokenize(s[:match])) # token index
+        word_tags = [pos for _, pos in tokens][match:]
+        for tags in quantifier.tags:
+            if all(t1 == t2 for t1, t2 in zip(tags, word_tags)):
+                return True
+    return False
 
 def parse_indices(indices):
     if indices in ["{}", ""]:
@@ -110,14 +136,7 @@ def add_co_hyponym_column(record: dict) -> dict:
     return { "co_hyponym": len(relation_pairs) }
 
 def add_quantifier_column(record: dict) -> dict:
-    shingles = []
-    for sentence in [record["premise"], record["hypothesis"]]:
-        tokens = word_tokenize(sentence)
-        for n in range(1, 5):
-            shingles.extend(ngrams(tokens, n))
-    shingles = map(lambda shingle: " ".join(shingle), shingles)
-    quantifiers = list(filter(lambda shingle: shingle in all_quantifiers, shingles))
-    return { "quantifiers": len(quantifiers) }
+    return { "quantifiers": contains_quantifier(record["premise"]) or contains_quantifier(record["hypothesis"]) }
 
 def add_numerical_column(record: dict) -> dict:
     tagged_tokens = []
@@ -143,7 +162,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     num_cpus = cpu_count()
-    dataset = load_dataset(args.dataset_path)
+    dataset = DatasetDict.load_from_disk(args.dataset_path)
 
     for key in simple_relation_functions.keys():
         print(f"Adding {key} column...")
