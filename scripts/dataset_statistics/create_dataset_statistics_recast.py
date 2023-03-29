@@ -1,5 +1,5 @@
 import os
-from datasets import load_from_disk, concatenate_datasets, ClassLabel, Value
+from datasets import load_from_disk, concatenate_datasets, ClassLabel, Value, load_dataset
 from evaluate import EvaluationSuite
 from argparse import ArgumentParser
 import json
@@ -23,14 +23,18 @@ if not os.path.exists(cnn_path) or not os.path.exists(dailymail_path):
 
 cnn = load_from_disk(cnn_path)
 dailymail = load_from_disk(dailymail_path)
+mnli = load_dataset("multi_nli")
 recast = concatenate_datasets([cnn, dailymail])
-dataset = recast.cast_column("label", Value("int64")).cast_column("label", ClassLabel(names= [
+recast = recast.cast_column("label", Value("int64")).cast_column("label", ClassLabel(names= [
     "entailment",
     "neutral",
     "contradiction"
 ]))
 
-splits = {"validation": dataset.num_rows}
+mnli["train"] = concatenate_datasets([mnli["train"], recast])
+dataset = mnli
+
+splits = dataset.num_rows
 classes = {
     name: count_label_occurence(dataset, index) for index, name in enumerate(LABELS)
 }
