@@ -14,10 +14,12 @@ def expand_pair(batch):
 
     for index, answer in enumerate(batch["answer"]):
         correct_answer = answer.replace("@placeholder", batch["correct_entity"][index])        
-        results = [ x for x in generate_samples(correct_answer) if x is not None ]
-        if len(results) == 0:
+        results = generate_samples(correct_answer)
+        if results is None:
             continue
-
+        results = [x for x in results if x is not None]
+        if results is None or len(results) == 0:
+            continue
         hypotheses.extend([ result["hypothesis"] for result in results ])
         labels.extend([ str(result["label"]) for result in results ])
         premises.extend([ batch["reduced_summary"][index] ] * len(results))
@@ -41,10 +43,10 @@ if __name__ == "__main__":
         raise IOError("Dataset path does not exist")
     output_path = args.output_path
     if not os.path.exists(output_path):
-        raise IOError("Output path does not exist")
+        os.makedirs(output_path)
 
     ds = Dataset.load_from_disk(dataset_path=input_path)
     augmented = ds.filter(has_answer_entities, num_proc=cpu_count()) \
-        .map(expand_pair, num_proc=cpu_count(), batched=True, remove_columns=ds.column_names)
+        .map(expand_pair, num_proc=cpu_count(), batched=True, batch_size=1, remove_columns=ds.column_names)
 
     augmented.save_to_disk(dataset_path=f"{output_path}")

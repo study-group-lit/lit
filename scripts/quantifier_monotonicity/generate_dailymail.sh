@@ -1,1 +1,1 @@
-python generate.py -i ../../../lit-data/datasets/dailymail_dataset_filtered_pos_summaries_reduced -o ../../../lit-data/datasets/dailymail_dataset_augmented
+python scripts/quantifier_monotonicity/generate.py -i ~/lit-data/datasets/dailymail_dataset_filtered_pos_summaries_reduced -o ~/lit-data/datasets/dailymail_dataset_augmented
