@@ -14,4 +14,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ~/lit/venv/bin/activate
-python3 test.py
+python3 generate_samples.py

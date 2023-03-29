@@ -1,9 +1,9 @@
-from datasets import load_dataset
+from datasets import DatasetDict
 from transformers import RobertaForSequenceClassification, RobertaTokenizer
 from ferret import Benchmark
 from multiprocessing import cpu_count
 
-esnli = load_dataset("/workspace/students/lit/datasets/esnli_phenomena_all_words", split='validation')
+esnli = DatasetDict.load_from_disk("/workspace/students/lit/datasets/esnli_phenomena")
 model = RobertaForSequenceClassification.from_pretrained("/workspace/students/lit/models/roberta-base-finetuned-mnli")
 tokenizer = RobertaTokenizer.from_pretrained("/workspace/students/lit/models/roberta-base-finetuned-mnli")
 
@@ -14,12 +14,18 @@ def explain(record, index):
     label = int(record["label"])
     explanation = bench.explain(query, target=label)
     explanation_html = bench.show_table(explanation).to_html()
-    with open(f"./results/{index}.html", "w") as f:
+    with open(f"/home/students/trump/lit/scripts/ferret_samples/results/{index}_explanation.html", "w") as f:
         f.write(explanation_html)
+
+    evaluation = bench.evaluate_explanations(explanation, target=label)
+    evalutation_html = bench.show_evaluation_table(evaluation).to_html()
+    with open(f"/home/students/trump/lit/scripts/ferret_samples/results/{index}_evaluation.html" , "w" ) as f:
+        f.write(evalutation_html)
+
     return record
 
-esnli.filter(lambda r: r["quantifier"] > 0, num_proc=cpu_count()) \
-    .select(range(9)) \
-    .map(explain, num_proc=cpu_count, with_indices=True)
+esnli["validation"].filter(lambda r: r["quantifiers"] > 0, num_proc=cpu_count()) \
+    .select(range(0, 44)) \
+    .map(explain, with_indices=True)
 
 
