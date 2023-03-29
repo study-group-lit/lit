@@ -9,6 +9,7 @@ The ultimate goal of research in natural language semantics is to represent the 
 For \ac{NLI}, complex reasoning is needed in many cases, as minute differences can change the label from \texttt{entailment} to \texttt{neutral} or vice-versa. Furthermore, it has been shown multiple times, that current approaches to \ac{NLI} have many biases in models and datasets and can be easily fooled \cite{hyponly,gururangan-etal-2018-annotation,glockner-etal-2018-breaking}.
 
 Considering the importance of \ac{NLI} for natural language understanding and the current limitations, we set out to improve the state of the art.
+
 \subsection{Research Goals}
 As \ac{NLI} is an important task to verify the reasoning capability of \acp{LM}, we want to further analyze it. To this end, we want to show limitations in the current approach to \ac{NLI} and then investigate mitigations to obtain better models.
 
@@ -23,7 +24,7 @@ We pose the following hypotheses: \vspace*{-0.5em}
   \item[H2] Fine-tuned models are biased for some linguistic phenomena.
   \item[H3] The chosen training data is biased and the found bias is not distributed uniformly over linguistic phenomena.
   \item[H4] Mitigating biased data during training results in models with greater predictive performance and less bias.
-  \item[H5] Using additional data during training for a specific biased linguistic phenomenon results in models with greater predictive performance and less bias.
+  \item[H5] Using additional data during training for a specific linguistic phenomenon the model is biased for results in models with greater predictive performance and less bias.
 \end{description}
 
 \subsection{Structure of our report}
