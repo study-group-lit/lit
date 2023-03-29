@@ -1,5 +1,5 @@
 \section{Method} \label{sec:method}
-\subsection{Probing for \acs{NLI}}
+\subsection{Probing for \acs{NLI}} \label{sec:meth:probing}
 To test the inherent classification performance of \acp{PLM} on \acs{NLI}, a zero-shot baseline is tested. As the \ac{PLM} we plan to use (see \autoref{sec:models_datasets} for further information) is a \ac{MLM}, a mask prediction task is used for zero-shot testing. The template used for that task is \texttt{<premise> <mask> <hypothesis>}, where \texttt{<premise>} is the entire premise sentence with the full stop removed, \texttt{<hypothesis>} is the hypothesis sentence with the first word not capitalized and \texttt{<mask>} is the token that will be predicted.
 
 \begin{table}[ht]
@@ -49,7 +49,7 @@ Moreover, to test possible improvements by choosing other words, two additional 
 
 Fine-tuning for \acs{NLI} is performed by supervised training on a corpus containing premises, hypotheses and the expected labels. To predict on a single sample, both the premise and hypothesis are fed into the network separated by a separator token. The prediction is then computed by a classification head based on the pooled representation of the complete input. Classification is performed by predicting a vector with three dimensions where each dimension corresponds to one of the labels. The predicted label is the index of the maximum value in that vector. Thus the model is fine-tuned by training it to predict the correct label on the training dataset using the cross-entropy between the predicted class vector and the real class vector as the loss function.
 
-\subsection{Detecting biased data}
+\subsection{Detecting biased data} \label{sec:method:detecting_biased_data}
 
 By changing the fine-tuning process to only using the hypothesis as input of the model, biases in the data can be found. Such a hypothesis-only model can only correctly predict the labels either by chance or by abusing biases in the data -- it is never correct for the right reasons. It has been shown that for datasets currently used for fine-tuning for \acs{NLI}, hypothesis-only models can be trained that are better than a majority baseline \citep{hyponly}. Thus, it can be concluded that biases in the data must exist that facilitate correct predictions based only on the hypothesis.
 

@@ -1,35 +1,41 @@
 \section{Models and Data Sets} \label{sec:models_datasets}
-\paragraph{Models}
+This section describes the existing models and datasets we use, to perform our experiments and as bases from which we create our models and datasets.
+
+\subsection{Models}
 All experiments and variants of the \acs{NLI}-model are based on the pre-trained \acf{RoBERTa} \cite{roberta} in the variation \texttt{roberta-base}, as this provides a good tradeoff of high downstream performance and lower computational requirements. The default pre-trained model is used for the prompt task. All fine-tuned models are based on the pre-trained model with an additional classification head based on the pooled token representation. The classification head is a multilayer perceptron with a single hidden layer of size $768$ and the pooled representation is obtained from the first \texttt{<s>}-token in the output of the \acs{RoBERTa} model. This \texttt{<s>}-token is the equivalent of \acs{RoBERTa} to the \texttt{CLS}-token of other models.
 
 \begin{table}[ht]
     \centering
     \caption{Class distributions for the datasets used}
-    \begin{tabular}{r || c | c | c}
-        & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
+    \begin{tabular}{l c c c}
+        \toprule
+        \multicolumn{1}{c}{Gold Label} & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
         \midrule
         Entailment & $137841$ & $2821$ & $190113$ \\
         Neutral & $137152$ & $5595$ & $189218$ \\
-        Contradiction & $137356$ & $1424$ & $189702$
+        Contradiction & $137356$ & $1424$ & $189702$ \\
+        \bottomrule
     \end{tabular}
     \label{tab:datasets:classes}
 \end{table}
 
 To create summaries of the articles in the data to be recast, we use a fine-tuned and distilled version of BART \cite{lewis-etal-2020-bart} for text summarization trained on CNN and Daily Mail articles \cite{cnn1,cnn2}. \cite{shleifer2020pretrained} We use a model with all six encoder layers from BART and just six decoder layers named \texttt{distilbart-6-6-cnn}. We use the version trained on CNN/Daily Mail, as this dataset is based on the same data, that we use in our recasting. This implies that the model should work well for the data even when distilled, as there is no shift in domain shift.
 
-\paragraph{Datasets} \label{par:models_datasets:datasets}
+\subsection{Datasets} \label{par:models_datasets:datasets}
 We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} \cite{sick}. In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
 
 
 \begin{table}[h]
     \centering
     \caption{Dataset split sizes. \acs{MultiNLI} shows the matched/mismatched validation sizes.}
-    \begin{tabular}{r || c | c | c}
-        & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
+    \begin{tabular}{l  c c c}
+        \toprule
+        \multicolumn{1}{c}{Split} & \acs{MultiNLI} & \acs{SICK} & \acs{e-SNLI} \\
         \midrule
         Train & $392702$ & $4439$ & $549367$ \\
         Validation & $9815$/$9832$ & $495$ & $9842$ \\
-        Test & - & $4906$ & $9824$
+        Test & - & $4906$ & $9824$ \\
+        \bottomrule
     \end{tabular}
     \label{tab:datasets:sizes}
 \end{table}
@@ -78,52 +84,91 @@ We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} 
 
 \autoref{code:data:samples:multinli} depicts a random sample from the \acs{e-SNLI} corpus including all available features. Comparing it to the features of \acs{MultiNLI} and \acs{SICK}, it is obvious that explanations and highlights of the sentences are added to the data. Up to three different explanations are included and for each explanation, the words in the premise and hypothesis that are relevant to this explanation are provided. The words are provided as indices into the premise and hypotheses starting at zero. For code simplicity, we only use the first explanation.
 
+% TODO: sample of rc-data
+
 Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge. We replace all placeholders with the original entities to provide sensible sentences and such that the model is able to use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
 
 \section{Experiments} \label{sec:experiments}
-\paragraph{Dataset generation}
-Paragraph \ref{par:models_datasets:datasets} describes known datasets. On the basis of these datasets and in accordance to our method, we generate new datasets. In the following, the new datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:new_datasets:classes} and \autoref{tab:new_datasets:sizes}. \autoref{tab:new_datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:new_datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+This section will describe all experiments we conduct to evaluate our proposed hypotheses as well as the specific setup we use to perform the experiments including the metrics we use and the splits of our datasets.
 
-\begin{table*}[ht]
+\subsection{Testing H1}
+\textbf{H1}: \textit{\acp{PLM} do not contain enough inherent information without fine-tuning for \ac{NLI}.}
+
+We test this hypothesis by comparing the predictive performance of a \ac{PLM} and comparing it to the performance of a fine-tuned \ac{LM} for \ac{NLI}. We do that by first evaluating the prompting approach using the pre-trained \ac{RoBERTa} and our three different word groups that map to the different classes, as explained in \autoref{sec:meth:probing}. Additionally, we fine-tune a pre-trained \ac{RoBERTa} model specifically on \ac{NLI} data. 
+
+By comparing the predictive performance of both approaches we can show that fine-tuning is necessary as well as that most of the predictive performance is obtained during fine-tuning. If the hypothesis is confirmed, we would conclude that the fine-tuning procedure should be adjusted instead of the pre-training procedure to obtain better results on \ac{NLI}.
+
+\subsection{Testing H2}
+\textbf{H2}: \textit{Fine-tuned models are biased for some linguistic phenomena.}
+
+To test this hypothesis, we evaluate the predictive performance and bias of the model for different subsets of an evaluation dataset. The dataset as well as the metrics for measuring bias are described in \autoref{sec:exp:eval:bias}. Each subset contains only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows for determining which linguistic phenomena the respective model copes better with or worse. If the model performance is significantly better or worse for some linguistic phenomena, we can conclude that differences and biases based on the linguistic phenomena might exist.
+
+The dataset is split into subsets of linguistic phenomena by us using data from WordNet \cite{miller-1994-wordnet}. We consider the linguistic phenomena of synonyms, antonyms, hypernyms, hyponyms, co-hyponyms, quantifiers and numbers. We classify a sample as corresponding to a subset when the phenomenon occurs at least once in words deemed important. We detect synonyms and antonyms by considering, for each important word, all of its synonyms or antonyms respectively and counting occurrences of those in all other words. Hypernyms, hyponyms and co-hyponyms are detected in the same way, where co-hyponyms are words with a common hypernym. Quantifiers are detected in the same way as in our method for recasting data, as described in \autoref{sec:meth:recasting}. Lastly, numbers and words representing numerical quantities are found by considering the part of speech tags produced by \texttt{nltk} \cite{nltk}.
+
+% TODO: only in important words or all words?
+
+\subsection{Testing H3}
+\textbf{H3}: \textit{The chosen training data is biased and the found bias is not distributed uniformly over linguistic phenomena.}
+
+To test for biases in the training data, we train multiple hypothesis-only models, as described in \autoref{sec:method:detecting_biased_data}. The training data is said to be biased if the hypothesis-only models achieve better performance than could be explained by a majority-only baseline. The bias might manifest in particular words in the hypothesis correlating with specific labels or other structures or phenomena being correlated with a label. This is a data bias, as this is never based on reasoning if the premise can be entailed by the hypothesis, but are always based on statistical correlations only present in this particular data. By comparing the predictive performance of the hypothesis-only model for different linguistic phenomena, as described in the previous section, we can further analyze, for which linguistic phenomena the data is most biased. We hope that by doing that analysis, we can learn what linguistic phenomena our mitigation needs to be focussed on.
+
+\subsection{Testing H4}
+\textbf{H4}: \textit{Mitigating biased data during training results in models with greater predictive performance and less bias.}
+% - train on filtered 2/3 and filtered 3/3
+% - train longer to mitigate less data
+% - evaluate predictive performance + bias
+
+To test \textbf{H4}, we train three different models and evaluate their predictive performance and bias for different linguistic phenomena. All of the models are based on the methods for mitigating data bias described in \autoref{sec:method:detecting_biased_data}. 
+
+We train two models with filtered datasets. The dataset with all samples removed that are correctly classified by two out of three hypothesis-only models is called \enquote{Filtered 2/3}, the model trained on this dataset is called the same in the following. In the same manner, the dataset and with all samples removed that are correctly classified by all three of the three hypothesis-only models the model trained on it are called \enquote{Filtered 3/3}. As the filtered datasets are smaller and thus, training for the same amount of epochs results in fewer training iterations, we also test the performance of models trained for double the amount of epochs. Those models are called \enquote{Filtered 2/3 longer} and \enquote{Filtered 3/3 longer} in the following.
+
+The third variant we try is based on an ensemble of a frozen biased hypothesis-only model and the fine-tuning model, as previously described. The resulting model is called \enquote{Ensembled}.
+
+\subsection{Testing H5}
+\textbf{H5}: \textit{Using additional data during training for a specific linguistic phenomenon the model is biased for results in models with greater predictive performance and less bias.}
+
+To test the effect of additional training data for a specific linguistic phenomenon, we add the recast data obtained using the method described in \autoref{sec:meth:recasting} to the original training dataset. We do not use the filtered dataset from the previous section to test these hypotheses independently of each other. More specifically, we are interested in the performance improvements that can be obtained for that specific linguistic phenomenon, for which we add data and the effects on performance for other linguistic phenomena. To this end, we measure both predictive performance and bias per linguistic phenomenon.
+
+\autoref{tab:new_datasets:classes} gives an overview of the class distributions of our modified datasets, including the filtered datasets from the previous section. \enquote{Recast} is the name of our training dataset with recast data added. Later, the model trained on that dataset will be identified using the name.
+
+\begin{table}[ht]
     \centering
     \caption{Class distributions for the generated datasets}
-    \begin{tabular}{r || c | c | c | c}
-        &  filtered \acs{MultiNLI} 3/3 & filtered \acs{MultiNLI} 2/3 & recast dataset \\
+    \small
+    \begin{tabular}{l c c c}
+        \toprule
+        \multicolumn{1}{c}{Gold Label} &  Filtered 2/3 & Filtered 3/3 & Recast \\
         \midrule
-      Entailment  & $72939$ & $54147$ & $174531$ \\
-      Neutral  & $85664$ & $63768$ & $155324$\\
-      Contradiction  & $90628$ & $73408$ & $173908$
+        Entailment & $54147$ & $72939$ & $174531$ \\
+        Neutral & $63768$ & $85664$ & $155324$ \\
+        Contradiction & $73408$ & $90628$ & $173908$ \\
+        \bottomrule
     \end{tabular}
     \label{tab:new_datasets:classes}
-\end{table*}
+\end{table}
 
-\begin{table*}[h]
-    \centering
-    \caption{Generated dataset split sizes. The from \acs{MultiNLI} derivated datasets show matched/mismatched validation sizes.}
-    \begin{tabular}{r || c | c | c | c}
-        & filtered \acs{MultiNLI} 3/3 & filtered \acs{MultiNLI} 2/3 & recast dataset \\
-        \midrule
-      Train &  $229584$ & $171676$ & $484116$ \\
-      Validation  & $9815/9832$ & $9815$/$9832$ & $9815/9832$ \\
-      Test  & $ - $ & $ - $ & $ - $
-    \end{tabular}
-    \label{tab:new_datasets:sizes}
-\end{table*}
+\subsection{Evaluation}
+To measure the quality of the models, they are tested in two different aspects: The predictive performance and the biases are measured. In the following, we describe our evaluation procedure in more detail.
 
-Both the filtered \acs{MultiNLI} 3/3 and filtered \acs{MultiNLI} 2/3 datasets are derived from the \acs{MultiNLI} dataset, as described in the method of mitigating data bias. The datasets are less biased than \acs{MultiNLI}. For the filtered \acs{MultiNLI} 3/3 dataset samples are removed, which are correctly predicted by all three different seeds of the fine-tuned hypothesis only \acs{RoBERTa} model. For the filtered \acs{MultiNLI} 2/3 dataset, at least two correct predictions out of the three different versions of the model suffice.
+In general, all models are trained on the train split of \acs{MultiNLI}, unless specified otherwise. All hyperparameters are chosen using short test runs and using the predictive performance on the validation data of \acs{MultiNLI}. The models are trained for three full epochs with a learning rate of $2 \cdot 10^-5$, no weight decay and an effective batch size of $16$.
 
+\paragraph{Predictive Performance}
+% TODO: formulate sentences and stitch a coherent text from them
+MCC, F1 -> Predictive performance based on the validation split of SICK
+MCC because it is better for imbalanced data than F1 (citation needed)
+F1 because it is popular and better for imbalanced data than Accuracy
+Our data is imbalanced, as can be seen in \autoref{tab:datasets:classes}
 
-\paragraph{Baseline}
-We use two models as baselines to compare against our results. A pre-trained \ac{RoBERTa} model will serve as a zero-shot baseline. Furthermore, we use a \ac{RoBERTa} model fine-tuned on the \ac{MultiNLI} dataset as a fine-tuned baseline. The comparison between our fine-tuned results and the zero-shot baseline is used to test \textbf{H1}.
+that the models achieve is measured by testing them on the SICK dataset as it is less biased than the \ac{e-SNLI} dataset
 
-\paragraph{Obtaining models with lower bias}
-To pursue our two approaches to obtain a fine-tuned model with less bias we conduct the following experiments: For the first approach, we fine-tune a pre-trained \ac{RoBERTa} model on the \ac{MultiNLI} dataset after it has been preprocessed as described in \autoref{sec:method} to reduce the bias in the dataset. Optionally, we can add the training data from \ac{SICK} to increase our total amount of training data.
+\paragraph{Measuring Bias} \label{sec:exp:eval:bias}
+% TODO: formulate sentences and stitch a coherent text from them
 
-For the second approach we need to conduct two experiments: First, we fine-tune a pre-trained \ac{RoBERTa} model only on the hypotheses of the entire \ac{MultiNLI} dataset to create a biased model. Then an ensemble consisting of the biased model we previously obtained and a standard \ac{RoBERTa} model is trained on the entire \ac{MultiNLI} dataset as described in \autoref{sec:method}.
+Defining bias as the plausibility of explanation using explanation methods
 
-The comparisons between both approaches to the fine-tuned baseline are used to test \textbf{H2}.
+Why those explanation methods? Because it is not clear, which is best and we want to use every possible angle
+Plausibility+Faithfulness metrics based on validation split of e-SNLI
+What metrics? All
+Why? No clear best metric, get the full picture
 
-\paragraph{Test}
-To measure the quality of the models, they are tested in two different aspects: First, the predictive performance that the models achieve is measured by testing them on the SICK dataset as it is less biased than the \ac{e-SNLI} dataset. Additionally, it is ensured that the models come to their predictions for the right reasons by applying the interpretability methods described in \autoref{sec:analysis}. These tests are conducted on subsets of the \ac{e-SNLI} dataset. Each subset contains only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows for determining which linguistic phenomena the respective model copes better with or worse.
-
-The comparison between the models and the fine-tuned baseline on the \ac{e-SNLI} dataset is used to test \textbf{H3}. To test \textbf{H4}, we compare the models to the fine-tuned baseline on the \ac{SICK} dataset.
+Additionally, it is ensured that the models come to their predictions for the right reasons by applying the interpretability methods described here. These tests are conducted on subsets of the \ac{e-SNLI} dataset. 
