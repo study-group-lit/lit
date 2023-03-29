@@ -9,7 +9,7 @@ import nltk
 from nltk.wsd import lesk
 from nltk.tokenize import word_tokenize
 nltk.download("wordnet")
-from pattern.en import *
+from pattern.text.en import *
 from datasets import load_from_disk
 from datasets import load_dataset
 import pandas as pd
@@ -460,7 +460,8 @@ def generate_samples(hypothesis):
         results = generate_contradiction(quantifier, hypothesis, results)
         results = parse(hypothesis, quantifier, results)
     except Exception as e:
-        print(f"skipping with {e}")
+        pass
+        # print(f"skipping with {e}")
     return results
 
 if __name__ == "__main__":
