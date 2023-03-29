@@ -86,6 +86,9 @@ Run `bootstrap.sh`, it will create a Python virtual environment at `venv`, activ
 **Q:** The script cannot find a certain package?
 **A:** Verify that the `venv` is active. Else run `source venv/bin/activate` from the project root. If the problem still persists, try manually installing the package.
 
+**Q:** Cannot generate recasted samples? Cannot find `pattern`?
+**A:** Install `Pattern` (with a big `P`!) on your home machine. The install on the cluster does not work.
+
 ## Authors
 - Niklas Loeser
 - Erik Imgrund
