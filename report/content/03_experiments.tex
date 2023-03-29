@@ -15,10 +15,10 @@ All experiments and variants of the \acs{NLI}-model are based on the pre-trained
     \label{tab:datasets:classes}
 \end{table}
 
-To create summaries of the articles in the data to be recast, we use a fine-tuned and distilled version of BART \cite{lewis-etal-2020-bart} for text summarization trained on CNN and Daily Mail articles \cite{cnn1,cnn2}. \cite{shleifer2020pretrained} We use a model with all six encoder layers from BART and just six decoder layers named \texttt{distilbart-6-6-cnn} (TODO:check). We use the version trained on CNN/Daily Mail, as it is closest to the articles we use in TODO, with CNN being the same source.
+To create summaries of the articles in the data to be recast, we use a fine-tuned and distilled version of BART \cite{lewis-etal-2020-bart} for text summarization trained on CNN and Daily Mail articles \cite{cnn1,cnn2}. \cite{shleifer2020pretrained} We use a model with all six encoder layers from BART and just six decoder layers named \texttt{distilbart-6-6-cnn}. We use the version trained on CNN/Daily Mail, as this dataset is based on the same data, that we use in our recasting. This implies that the model should work well for the data even when distilled, as there is no shift in domain shift.
 
 \paragraph{Datasets}
-We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} \cite{sick}. In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
+We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} \cite{sick} for our \ac{NLI} tests. In the following, the datasets are described in more detail. Statistics of the datasets can be seen in \autoref{tab:datasets:classes} and \autoref{tab:datasets:sizes}. \autoref{tab:datasets:classes} gives an overview of the distribution of the classes for the datasets and \autoref{tab:datasets:sizes} an overview of the dataset sizes with their respective dataset splits.
 
 \begin{table}[h]
     \centering
@@ -77,7 +77,7 @@ We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} 
 
 \autoref{code:data:samples:multinli} depicts a random sample from the \acs{e-SNLI} corpus including all available features. Comparing it to the features of \acs{MultiNLI} and \acs{SICK}, it is obvious that explanations and highlights of the sentences are added to the data. Up to three different explanations are included and for each explanation, the words in the premise and hypothesis that are relevant to this explanation are provided. The words are provided as indices into the premise and hypotheses starting at zero. For code simplicity, we only use the first explanation.
 
-To get additional training data containing quantifiers, we use the TODO
+Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge. We replace all placeholders with the original entities to provide sensible sentences and such that the model is able to use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
 
 \section{Experiments}
 

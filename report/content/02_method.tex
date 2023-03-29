@@ -1,12 +1,13 @@
 \section{Method} \label{sec:method}
-\paragraph{Probing for \acs{NLI}}
+\subsection{Probing for \acs{NLI}}
 To test the inherent classification performance of \acp{PLM} on \acs{NLI}, a zero-shot baseline is tested. As the \ac{PLM} we plan to use (see \autoref{sec:models_datasets} for further information) is a \ac{MLM}, a mask prediction task is used for zero-shot testing. The template used for that task is \texttt{<premise> <mask> <hypothesis>}, where \texttt{<premise>} is the entire premise sentence with the full stop removed, \texttt{<hypothesis>} is the hypothesis sentence with the first word not capitalized and \texttt{<mask>} is the token that will be predicted.
 
 \begin{table}[ht]
     \centering
-    \caption{The discourse markers chosen for the zero-shot task with their associated predicted labels.}
-    \begin{tabular}{c | c | c}
-        Entailment & Neutral & Contradiction \\
+    \caption{The discourse markers that were chosen a priori for the zero-shot task with their associated labels.}
+    \small
+    \begin{tabular}{l | l | l}
+        \multicolumn{1}{c|}{Entailment} & \multicolumn{1}{c|}{Neutral} & \multicolumn{1}{c}{Contradiction} \\
         \hline
         as & and  & but \\
         because & also & although \\
@@ -15,24 +16,108 @@ To test the inherent classification performance of \acp{PLM} on \acs{NLI}, a zer
     \label{tab:discourse:markers}
 \end{table}
 
-This task is inspired by the discourse prediction task introduced by \cite{dissent}, where a word to relate two sentences to each other is to be predicted. In the same way, we constrain the number of words that are relevant for this task to a short list of typical discourse markers shown in \autoref{tab:discourse:markers} and only compare predictions between those. The predicted class is then obtained by summing the probability of all discourse markers associated with a class and choosing the class with the maximum probability.
+This task is inspired by the discourse prediction task introduced by \cite{dissent}, where a word to relate two sentences to each other is to be predicted. In the same way, we constrain the number of words that are relevant for this task to a short list of typical discourse markers shown in \autoref{tab:discourse:markers} and only compare predictions between those. Each discourse marker is associated with a class. The predicted class is then obtained by taking the class of the discourse marker with maximum probability. As the chosen model tokenizes the start of words with an additional \texttt{Ġ}, we add that to all words but do not show it in the table. We ensured that all words are exactly one single token so that simple masked language modeling can be used.
 
-\paragraph{Fine-tuning for \acs{NLI}}
+\begin{table}[ht]
+    \centering
+    \caption{The words chosen by tuning for the zero-shot task with their associated labels.}
+    \small
+    \begin{tabular}{l | l | l}
+        \multicolumn{1}{c|}{Entailment} & \multicolumn{1}{c|}{Neutral} & \multicolumn{1}{c}{Contradiction} \\
+        \hline
+        Also & Apparently & Yet \\
+        Yes & Perhaps & However \\
+        More & Clearly & but \\
+        Certainly & Obviously & Unfortunately \\
+        yes & Presumably & Otherwise \\
+        by &  & Except \\
+        Specifically &  & no \\
+        Indeed &  & Nearly \\
+        Yeah &  & Currently \\
+        &  & Sadly \\
+        &  & Instead \\
+        &  & Not \\
+        &  & Previously \\
+        &  & Until \\
+    \end{tabular}
+    \label{tab:discourse:markers:tuned}
+\end{table}
 
-Fine-tuning for \acs{NLI} is performed by supervised training on a corpus containing premises, hypotheses and the expected labels. To predict on a single sample, both the premise and hypothesis are fed into the network separated by a separator token. The prediction is then computed by a classification head based on the pooled representation of the complete input. Classification is performed by predicting a vector with three dimensions where each dimension corresponds to one of the labels. The predicted label is the index of the maximum value in that vector. Thus the model is fine-tuned by training it to predict the correct label on the training dataset.
+Moreover, to test possible improvements by choosing other words, two additional methods are tested. First, we test the simplest possible baseline of just the words \enquote{yes} for \texttt{entailment}, \enquote{maybe} for \texttt{neutral} and \enquote{no} for \texttt{contradiction}. This method does not result in grammatical discourses or sentences, but should still provide a viable baseline, as all words result in similarly ungrammatical sentences, but their embeddings differ. The last method is based on tuning the probing, based on a subset of the training set, that is not used during testing. We tune by obtaining, for each label separately, a count of how many times each token occurs in the top three tokens to be predicted with the chosen template. Then we subtract, for each label and each token, the count of the token for the other labels to filter common words. Lastly, we take all sensible words that have a final count of 15 or more, which are shown in \autoref{tab:discourse:markers:tuned}. This way we account for possibly worse performance that is caused by our choice of discourse markers and choose a potentially better set.
 
-\paragraph{Detecting biased data}
+\subsection{Fine-tuning for \acs{NLI}}
+
+Fine-tuning for \acs{NLI} is performed by supervised training on a corpus containing premises, hypotheses and the expected labels. To predict on a single sample, both the premise and hypothesis are fed into the network separated by a separator token. The prediction is then computed by a classification head based on the pooled representation of the complete input. Classification is performed by predicting a vector with three dimensions where each dimension corresponds to one of the labels. The predicted label is the index of the maximum value in that vector. Thus the model is fine-tuned by training it to predict the correct label on the training dataset using the cross-entropy between the predicted class vector and the real class vector as the loss function.
+
+\subsection{Detecting biased data}
 
 By changing the fine-tuning process to only using the hypothesis as input of the model, biases in the data can be found. Such a hypothesis-only model can only correctly predict the labels either by chance or by abusing biases in the data -- it is never correct for the right reasons. It has been shown that for datasets currently used for fine-tuning for \acs{NLI}, hypothesis-only models can be trained that are better than a majority baseline \citep{hyponly}. Thus, it can be concluded that biases in the data must exist that facilitate correct predictions based only on the hypothesis.
 
-We use this fact to find biased samples in the training datasets. We have fine-tuned three hypothesis-only models on the dataset and then used those to find all samples biased that at least two hypothesis-only models predict correctly.
+We use this fact to find biased samples in the training datasets. A hypothesis-only model can correctly classify samples based on random chance. This does not indicate bias and must be mitigated. We fine-tune three hypothesis-only models on the dataset with different random seeds. Afterward, we declare all samples biased, that are predicted correctly by at least two of the three hypothesis-only models. We also test only declaring samples biased that are predicted correctly by all three hypothesis-only models.
 
-\paragraph{Mitigating data bias}
+% TODO: Mention how many are deemed biased by at least two and all
 
-We employ two methods to remove data bias from the training procedure. The naive method is, to simply remove all samples deemed biased from the training set. By completely removing them from the training procedure, the model cannot be biased by those samples.
+\subsection{Mitigating data bias}
 
-An additional method is introduced by \citet{ensemble}. This method is based on using an ensemble of a frozen biased model and a main model during training and only using the fine-tuned main model during testing. By using the frozen biased model in an ensemble with the main model, the main model can learn to predict based on patterns other than those based on biases. The ensembling is done by multiplying the prediction of the biased model with the prediction of the main model. The influence of the prediction of the biased model can be reduced by a learned value that is predicted by a secondary head of the main model. By learning to always completely discount the biased model, the model might then learn the biases itself. To prevent this, an additional entropy term is added to the loss function, which punishes the model for discounting the biased prediction too much. \footnote{For more information and justification of this procedure compare with section 3.2 of \cite{ensemble}.}
+We employ two methods to remove data bias from the training procedure. The naive method is, to simply remove all samples deemed biased from the training set. By completely removing them from the training procedure, the model cannot be biased by those samples. We call the resulting dataset \texttt{filtered}.
 
-\paragraph{Getting data specific to quantifiers}
+An additional method is introduced by \citet{ensemble}. This method is based on using an ensemble of a frozen biased model and a main model during training and only using the fine-tuned main model during testing. By using the frozen biased model in an ensemble with the main model, the main model can learn to predict based on patterns other than those based on biases. The ensembling can be done by multiplying the prediction of the biased model with the prediction of the main model. The influence of the prediction of the biased model can be reduced by a learned value that is predicted by a secondary head of the main model. By learning to always completely discount the biased model, the model might then learn the biases itself. To prevent this, an additional entropy term is added to the loss function, which punishes the model for discounting the biased prediction too much. As mentioned in the paper, we can also sum the logarithms of the probabilities. We use this, as it should be stabler. \footnote{For more information and justification of this procedure compare with section 3.2 of \cite{ensemble}.}
 
-As we will show in TODO, the model is especially biased for samples on quantifiers. To fight this bias, we create additional training data by recasting question-answering-data to the task of \ac{NLI}. The dataset consists of articles and single sentences that can be entailed when the placeholder is replaced by a particular entity but cannot be entailed when it is replaced with a different entity. We use those to create premise-hypothesis-pairs that are examples of entailment containing quantifiers. To ensure that the new examples help with the understanding of quantifiers, we only select those containing quantifiers. The proportion of examples containing quantifiers is shown in TODO. To create neutral and contradictory examples, we use the monotonicity of quantifiers to change either to change TODO.
+\subsection{Getting data specific to quantifiers} \label{sec:meth:recasting}
+
+As we will show in TODO, the model is especially biased for samples on quantifiers. To fight this bias, we create additional training data by recasting question-answering-data to the task of \ac{NLI}. The dataset consists of news articles and single sentences that can be entailed when the placeholder is replaced by a particular entity, but cannot be entailed when it is replaced with a different entity. To ensure that the new examples help with the understanding of quantifiers, we only select those containing quantifiers in both the question and the answer. We detect quantifiers by first checking if the word or words the quantifier is consisting of are contained in the sentence. Then, we check if the words have the correct part of speech tags. We do that, as some words we identify as quantifiers can be used in a different sense, such as \enquote{most}, which can be used as an adjective or as a determiner but is not a quantifier when used as an adjective. We use \texttt{nltk} \cite{nltk} for part of speech tagging. The proportion of examples containing quantifiers identified that way is shown in TODO.
+
+From each question-answer pair, we try to create an example with gold labels \texttt{entailment}, \texttt{contradiction} and \texttt{neutral} respectively. The premise for each sample is generated by summarizing the question using a fine-tuned \ac{LM}. If the summary returned contains more than one sentence, then one of those needs to be selected, as the premise should always contain exactly one sentence. We select the sentence by first identifying all named entities in the answer and then selecting the summary sentence with the biggest number of entities contained. If no sentence contains a sufficient amount of answer entities, we do not use this sample.
+
+\begin{table}[ht!]
+    \centering
+    \caption{Corresponding original and replacement quantifier used for generating contradicting sentences.}
+    \small
+    \begin{tabular}{l | l}
+        \multicolumn{1}{c|}{Original} & \multicolumn{1}{c}{Replacement} \\
+        \hline
+        a &  no \\
+        a few &  many \\
+        a large number of &  just a small number of \\
+        a little &  a lot \\
+        a number of &  zero \\
+        a small number of &  a large number of \\
+        all &  a few \\
+        any &  all \\
+        both &  neither \\
+        every &  none \\
+        each &  just a few \\
+        enough &  insufficiently many \\
+        few &  many \\
+        fewer &  more \\
+        less &  more \\
+        lots of &  no more than a few \\
+        most &  least \\
+        many &  few \\
+        many of &  few of \\
+        much &  limited amount of \\
+        neither &  both \\
+        no &  most \\
+        none of &  several \\
+        not many &  each \\
+        not much &  much \\
+        never &  sometimes \\
+        numerous &  limited amount of \\
+        plenty of &  shortage of \\
+        several &  just one \\
+        some &  zero \\
+        this &  that \\
+        that &  this \\
+        the &  none of \\
+        whole &  only a part
+    \end{tabular}
+    \label{tab:contradiction:mapping}
+\end{table}
+
+The hypothesis is generated differently for each gold label but all have the same premise. The hypothesis for \texttt{entailment} is simply the correct answer provided by the dataset. The contradicting hypothesis is generated from the answer by replacing the quantifier with an opposing quantifier. We selected the opposing quantifiers based on replacement quantifiers not appearing too often and fitting as an antonym for each quantifier. The mapping from the original quantifier to its replacement can be found in \autoref{tab:contradiction:mapping}.
+
+Lastly, sentences with gold label \texttt{neutral} for the given premise are generated from the answer by using quantifier monotonicity properties similar to the approach chosen by \citet{yanaka-etal-2019-help}. Instead of identifying quantifiers by their semantic tags, we identify them using their part of speech tags, as previously described. Afterward, we also generate a \ac{CCG} derivation using the C\&C Tools \cite{curran-etal-2007-linguistically} and try to extract the nominal and verbal phrases that are part of the quantifier phrase. Next, based on the monotonicity we swap the verbs with either hypernyms or hyponyms found using WordNet \cite{miller-1994-wordnet}. If the quantifier is monotonically rising, we use a hypernym to create a situation, where it cannot be said, if the resulting sentence can be entailed by the original sentence. In the same way, for monotonically falling quantifiers, we use hyponyms to create the samples with \texttt{neutral} as the gold label.
+
+% TODO: how many examples contain quantifiers?
+% TODO: link to analysis of quantifiers being biased
+% TODO: maybe additionally describe recasting procedure as pseudo-code?
