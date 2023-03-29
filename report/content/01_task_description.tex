@@ -1,15 +1,30 @@
-\section{Motivation}
+\section{Introduction}
+
 
 \ac{NLI} is the task of deciding the truthiness of a hypothesis, given a premise. If the hypothesis is true, it can be said to be entailed by the premise. If it is false, it is contradictory to the premise. Otherwise, the truthiness of the hypothesis cannot be determined. For each case, respectively one of the three classes \texttt{entailment}, \texttt{contradiction} or \texttt{neutral} is chosen.
 
-% What is our aim?
-Our goal is to identify biases in \acp{LM} for \ac{NLI}, then mitigate those biases by removing biased data in the training procedure and recasting data from other domains to combat the specific biases.
+\subsection{Motivation}
+The ultimate goal of research in natural language semantics is to represent the meaning of language and how conclusions can be drawn from that. From this point of view, the task of deciding if a sentence in natural language can be entailed by another sentence in natural language is useful and methods to perform such a task could be used as building blocks for many other natural language processing tasks. It has been shown, that a model pre-trained on \ac{NLI} can be used as an effective zero-shot text classifier \cite{yin-etal-2019-benchmarking}.
 
-% What are our hypotheses?
-We pose the following hypotheses: \vspace*{-0.7em}
+For \ac{NLI}, complex reasoning is needed in many cases, as minute differences can change the label from \texttt{entailment} to \texttt{neutral} or vice-versa. Furthermore, it has been shown multiple times, that current approaches to \ac{NLI} have many biases in models and datasets and can be easily fooled \cite{hyponly,gururangan-etal-2018-annotation,glockner-etal-2018-breaking}.
+
+Considering the importance of \ac{NLI} for natural language understanding and the current limitations, we set out to improve the state of the art.
+\subsection{Research Goals}
+As \ac{NLI} is an important task to verify the reasoning capability of \acp{LM}, we want to further analyze it. To this end, we want to show limitations in the current approach to \ac{NLI} and then investigate mitigations to obtain better models.
+
+Thus, our goal is to identify linguistic biases in \acp{LM} for \ac{NLI}, then mitigate those biases by removing biased data in the training procedure and recasting data from other domains to combat the specific biases.
+\vspace{1em}
+
+\noindent
+We pose the following hypotheses: \vspace*{-0.5em}
 \begin{description}
-  \item[H1] The fine-tuning procedure of \acp{LM} introduces biases for the \ac{NLI} task.\vspace{-0.7em}
-  \item[H2] Mitigating biases from the datasets results in less biased \acp{LM}.\vspace{-0.7em}
-  \item[H3] \acp{LM} with less bias make worse predictions for biased data. \vspace{-0.7em}
-  \item[H4] \acp{LM} with less bias make better predictions for data without the same bias.
+  \setlength\itemsep{-0.3em}
+  \item[H1] \acp{PLM} do not contain enough inherent information without fine-tuning for \ac{NLI}.
+  \item[H2] Fine-tuned models are biased for some linguistic phenomena.
+  \item[H3] The chosen training data is biased and the found bias is not distributed uniformly over linguistic phenomena.
+  \item[H4] Mitigating biased data during training results in models with greater predictive performance and less bias.
+  \item[H5] Using additional data during training for a specific biased linguistic phenomenon results in models with greater predictive performance and less bias.
 \end{description}
+
+\subsection{Structure of our report}
+In the rest of this report, we describe our methods in \autoref{sec:method} and thoroughly describe the used models and datasets in \autoref{sec:models_datasets}. We present our experimental setup in \autoref{sec:experiments} and analyze the results in \autoref{sec:results}. Lastly, we formulate our findings regarding the posed hypotheses in \autoref{sec:conclusion}.

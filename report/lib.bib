@@ -315,3 +315,54 @@ series = {NIPS'15}
     year = "1994",
     url = "https://aclanthology.org/H94-1111",
 }
+
+@inproceedings{yin-etal-2019-benchmarking,
+    title = "Benchmarking Zero-shot Text Classification: Datasets, Evaluation and Entailment Approach",
+    author = "Yin, Wenpeng  and
+      Hay, Jamaal  and
+      Roth, Dan",
+    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
+    month = nov,
+    year = "2019",
+    address = "Hong Kong, China",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/D19-1404",
+    doi = "10.18653/v1/D19-1404",
+    pages = "3914--3923",
+    abstract = "Zero-shot text classification (0Shot-TC) is a challenging NLU problem to which little attention has been paid by the research community. 0Shot-TC aims to associate an appropriate label with a piece of text, irrespective of the text domain and the aspect (e.g., topic, emotion, event, etc.) described by the label. And there are only a few articles studying 0Shot-TC, all focusing only on topical categorization which, we argue, is just the tip of the iceberg in 0Shot-TC. In addition, the chaotic experiments in literature make no uniform comparison, which blurs the progress. This work benchmarks the 0Shot-TC problem by providing unified datasets, standardized evaluations, and state-of-the-art baselines. Our contributions include: i) The datasets we provide facilitate studying 0Shot-TC relative to conceptually different and diverse aspects: the {``}topic{''} aspect includes {``}sports{''} and {``}politics{''} as labels; the {``}emotion{''} aspect includes {``}joy{''} and {``}anger{''}; the {``}situation{''} aspect includes {``}medical assistance{''} and {``}water shortage{''}. ii) We extend the existing evaluation setup (label-partially-unseen) {--} given a dataset, train on some labels, test on all labels {--} to include a more challenging yet realistic evaluation label-fully-unseen 0Shot-TC (Chang et al., 2008), aiming at classifying text snippets without seeing task specific training data at all. iii) We unify the 0Shot-TC of diverse aspects within a textual entailment formulation and study it this way.",
+}
+
+@inproceedings{glockner-etal-2018-breaking,
+    title = "Breaking {NLI} Systems with Sentences that Require Simple Lexical Inferences",
+    author = "Glockner, Max  and
+      Shwartz, Vered  and
+      Goldberg, Yoav",
+    booktitle = "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers)",
+    month = jul,
+    year = "2018",
+    address = "Melbourne, Australia",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/P18-2103",
+    doi = "10.18653/v1/P18-2103",
+    pages = "650--655",
+    abstract = "We create a new NLI test set that shows the deficiency of state-of-the-art models in inferences that require lexical and world knowledge. The new examples are simpler than the SNLI test set, containing sentences that differ by at most one word from sentences in the training set. Yet, the performance on the new test set is substantially worse across systems trained on SNLI, demonstrating that these systems are limited in their generalization ability, failing to capture many simple inferences.",
+}
+
+@inproceedings{gururangan-etal-2018-annotation,
+    title = "Annotation Artifacts in Natural Language Inference Data",
+    author = "Gururangan, Suchin  and
+      Swayamdipta, Swabha  and
+      Levy, Omer  and
+      Schwartz, Roy  and
+      Bowman, Samuel  and
+      Smith, Noah A.",
+    booktitle = "Proceedings of the 2018 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 2 (Short Papers)",
+    month = jun,
+    year = "2018",
+    address = "New Orleans, Louisiana",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/N18-2017",
+    doi = "10.18653/v1/N18-2017",
+    pages = "107--112",
+    abstract = "Large-scale datasets for natural language inference are created by presenting crowd workers with a sentence (premise), and asking them to generate three new sentences (hypotheses) that it entails, contradicts, or is logically neutral with respect to. We show that, in a significant portion of such data, this protocol leaves clues that make it possible to identify the label by looking only at the hypothesis, without observing the premise. Specifically, we show that a simple text categorization model can correctly classify the hypothesis alone in about 67{\%} of SNLI (Bowman et. al, 2015) and 53{\%} of MultiNLI (Williams et. al, 2017). Our analysis reveals that specific linguistic phenomena such as negation and vagueness are highly correlated with certain inference classes. Our findings suggest that the success of natural language inference models to date has been overestimated, and that the task remains a hard open problem.",
+}
