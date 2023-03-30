@@ -4,7 +4,7 @@
 % Visualisierungen:
 % - Confusion Matrix (Gentrennt nach Phänomenen)
 % - Tabellen Interpretability Metriken (siehe ferret)
-In this section the results of our experiments are described and analyzed.
+In this section the results of our experiments are described and thoroughly analyzed. The results are grouped according to the hypotheses they support.
 
 \subsection{Testing H1}
 
@@ -42,7 +42,7 @@ In this section the results of our experiments are described and analyzed.
 \end{table}
 
 \subsection{Testing H2}
-Figure~\ref{fig:ferret-sample} shows the explanations for the Base model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not well captured by the model: The usage of quantifiers in this sample makes it a contradiction but the model only attaches comparably high importance to the quantifier \enquote{all} whereas \enquote{several} only has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers shows that the model is biased after the fine-tuning on \ac{MultiNLI}.
+Figure~\ref{fig:ferret-sample} shows the explanations for the finetuned model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not considered by the model: The usage of quantifiers in this sample makes it a contradiction but the model attaches high importance only to the quantifier \enquote{all} whereas \enquote{several} has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers shows that the model is biased after fine-tuning on \ac{MultiNLI}.
 
 \begin{figure*}[h!]
     \centering
@@ -52,7 +52,7 @@ Figure~\ref{fig:ferret-sample} shows the explanations for the Base model's class
 \end{figure*}
 
 \subsection{Testing H4}
-Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the Matthews Correlation Coefficients separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4}.
+Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4} to show the different predictive performance of the models.
 
 \begin{figure}[ht]
     \centering
