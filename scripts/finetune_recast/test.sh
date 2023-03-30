@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=test_mnli
+#SBATCH --job-name=test_recast
 #SBATCH --output=test.txt
 #SBATCH --ntasks=1
 #SBATCH --time=2:00:00
