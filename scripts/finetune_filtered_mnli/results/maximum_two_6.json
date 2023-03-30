@@ -3,9 +3,26 @@
         "accuracy": 0.6181818181818182,
         "matthews_correlation": 0.5230666139750516,
         "f1": 0.6203740234049411,
-        "total_time_in_seconds": 43.07043613214046,
-        "samples_per_second": 11.492802127225643,
-        "latency_in_seconds": 0.08701098208513224,
+        "confusion_matrix": [
+            [
+                129,
+                11,
+                3
+            ],
+            [
+                44,
+                108,
+                129
+            ],
+            [
+                0,
+                2,
+                69
+            ]
+        ],
+        "total_time_in_seconds": 57.85423792526126,
+        "samples_per_second": 8.55598514043973,
+        "latency_in_seconds": 0.11687724833386112,
         "task_name": "sick/validation",
         "data_preprocessor": null
     },
@@ -13,9 +30,26 @@
         "accuracy": 0.832603158430973,
         "matthews_correlation": 0.749055343074234,
         "f1": 0.831717347142714,
-        "total_time_in_seconds": 932.7777214739472,
-        "samples_per_second": 10.522335358192983,
-        "latency_in_seconds": 0.09503593698155345,
+        "confusion_matrix": [
+            [
+                2903,
+                414,
+                162
+            ],
+            [
+                297,
+                2467,
+                359
+            ],
+            [
+                119,
+                292,
+                2802
+            ]
+        ],
+        "total_time_in_seconds": 1243.5815554196015,
+        "samples_per_second": 7.89252619357826,
+        "latency_in_seconds": 0.12670214522869094,
         "task_name": "multi_nli/validation_matched",
         "data_preprocessor": null
     },
@@ -23,9 +57,26 @@
         "accuracy": 0.8397070789259561,
         "matthews_correlation": 0.7593700981642765,
         "f1": 0.8384592757956005,
-        "total_time_in_seconds": 1072.4011650430039,
-        "samples_per_second": 9.168210852890795,
-        "latency_in_seconds": 0.10907253509387753,
+        "confusion_matrix": [
+            [
+                2961,
+                362,
+                140
+            ],
+            [
+                385,
+                2437,
+                307
+            ],
+            [
+                112,
+                270,
+                2858
+            ]
+        ],
+        "total_time_in_seconds": 1261.0031889630482,
+        "samples_per_second": 7.796966800762082,
+        "latency_in_seconds": 0.12825500294579414,
         "task_name": "multi_nli/validation_mismatched",
         "data_preprocessor": null
     }

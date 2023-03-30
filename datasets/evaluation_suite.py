@@ -40,6 +40,7 @@ class Suite(evaluate.EvaluationSuite):
             evaluate.load("accuracy"),
             evaluate.load("matthews_correlation"),
             ConfiguredMetric(evaluate.load("f1"), average="macro"),
+            evaluate.load("BucketHeadP65/confusion_matrix")
         ])
 
         return SubTask(

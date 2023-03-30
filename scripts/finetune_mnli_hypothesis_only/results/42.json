@@ -1,0 +1,83 @@
+[
+    {
+        "accuracy": 0.42424242424242425,
+        "matthews_correlation": 0.1469960422665056,
+        "f1": 0.4092888186526554,
+        "confusion_matrix": [
+            [
+                61,
+                45,
+                37
+            ],
+            [
+                86,
+                108,
+                87
+            ],
+            [
+                18,
+                12,
+                41
+            ]
+        ],
+        "total_time_in_seconds": 27.370277754962444,
+        "samples_per_second": 18.08531153507394,
+        "latency_in_seconds": 0.055293490414065546,
+        "task_name": "sick/validation",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.6018339276617423,
+        "matthews_correlation": 0.40893953408985784,
+        "f1": 0.6017122013121976,
+        "confusion_matrix": [
+            [
+                1724,
+                1183,
+                572
+            ],
+            [
+                518,
+                2095,
+                510
+            ],
+            [
+                448,
+                677,
+                2088
+            ]
+        ],
+        "total_time_in_seconds": 596.4163574110717,
+        "samples_per_second": 16.456624433650717,
+        "latency_in_seconds": 0.06076580309842808,
+        "task_name": "multi_nli/validation_matched",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5915378356387306,
+        "matthews_correlation": 0.4000972416163105,
+        "f1": 0.5910621978928581,
+        "confusion_matrix": [
+            [
+                1543,
+                1460,
+                460
+            ],
+            [
+                491,
+                2246,
+                392
+            ],
+            [
+                400,
+                813,
+                2027
+            ]
+        ],
+        "total_time_in_seconds": 621.6797392256558,
+        "samples_per_second": 15.8152170315964,
+        "latency_in_seconds": 0.06323024198796336,
+        "task_name": "multi_nli/validation_mismatched",
+        "data_preprocessor": null
+    }
+]
