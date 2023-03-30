@@ -7,20 +7,23 @@
 In this section the results of our experiments are described and thoroughly analyzed. The results are grouped according to the hypotheses they support.
 
 \subsection{Testing H1}
-
+To test the knowledge contained in \acp{PLM}, we devise prompts that allow for \ac{NLI} predictions, as described in \autoref{sec:meth:probing}. The results obtained using the prompting methods are shown in \autoref{tab:res:prompting}. The word group chosen a priori from the list of discourse markers performs best in F$_1$-Score and second best in \ac{MCC}. The simple word group performs worst in \ac{MCC} but second best in F$_1$-Score. The tuned word group performs best in \ac{MCC} and slightly worse than the simple word group in F$_1$-Score. The difference in F$_1$-Score between a priori and the other word groups is far bigger than the gaps in the \ac{MCC} scores. As the discrepancy is great, we added a metric, the balanced accuracy, to the evaluation that should also be better for imbalanced data than the F$_1$-Score and sometimes more informative than the \ac{MCC} \cite{mccBad}. The balanced accuracy is calculated as the macro-average of the true positive rate of each class \cite{bacc}. Looking at the results in the additional metric, they confirm the ranking obtained by using the \ac{MCC} values. Using this additional fact, we conclude that the \ac{MCC} values are more trustworthy than the F$_1$-Scores for this task.
 \begin{table}[ht!]
     \centering
     \caption{Prediction performance when using prompting with different word groups on the \acs{SICK} dataset. The best result is shown in \textbf{bold} and the second-best is \underline{underlined}.}
-    \begin{tabular}{l c c}
+    \begin{tabular}{l c c c}
         \toprule
-        \multicolumn{1}{c}{Word Group} & \acs{MCC} & $\text{F}_1$ \\
+        \multicolumn{1}{c}{Word Group} & \acs{MCC} & $\text{F}_1$ & BAcc\\
         \midrule
-        A Priori & $\underline{25.51}\%$ & $\mathbf{54.31\%}$ \\
-        Simple & $20.56\%$ & $\underline{34.40\%}$ \\
-        Tuned & $\mathbf{29.11\%}$ & $34.08\%$ \\
+        A Priori & $\underline{25.51}\%$ & $\mathbf{54.31\%}$ & $\underline{54.11}\%$ \\
+        Simple & $20.56\%$ & $\underline{34.40\%}$ & $45.67\%$ \\
+        Tuned & $\mathbf{29.11\%}$ & $34.08\%$ & $\mathbf{55.73\%}$\\
         \bottomrule
     \end{tabular}
+    \label{tab:res:prompting}
 \end{table}
+
+Looking at the resulting \ac{MCC} scores, we can see the expected ordering: The a priori chosen word group is better than the simple words that do not fit into the sentence and the tuned words perform best, as they are tuned on \ac{MultiNLI} to perform better. Interestingly, all approaches, even the simple approach, perform much better than random, which would be an \ac{MCC} of $0$. Nonetheless, compared to the \ac{MCC} score of the fine-tuned model, which is $49.49\%$, the results of using prompting are far worse, even when specifically tuning the prompt words.
 
 \subsection{Testing H2}
 Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \acs{MCC} scores for our Base model separated by linguistic phenomena. As can be seen in the figure, there are disparities between different phenomena. Antonyms and numerals have the largest disparity of $\geq 0.1$. The Base model detects the phenomena antonyms, co-hyponyms and quantifiers best, while it detects numerals, hypernyms and hyponyms worst. The smallest difference between phenomena is between hypernyms and hyponyms, with a difference of $0.0077$.
@@ -37,7 +40,40 @@ Figure~\ref{fig:ferret-sample} shows the explanations for the fine-tuned model's
 \end{figure*}
 
 \subsection{Testing H3}
+Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4} to show the different predictive performance of the models. The results for the hypothesis-only model were measured on the validation-matched split of \ac{MultiNLI}.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/important_words/hypothesis_only_matthews_correlation.pdf}
+    \caption{Matthews Correlation Coefficients for the model trained on different datasets separated by linguistic phenomena}
+    \label{fig:metric-heatmap-phenomena-mcc}
+\end{figure}
+
+In general, the hypothesis-only model shows the expected poor performance: For the phenomena of synonym, hypernym, hyponym and co-hyponym the \ac{MCC} is around $0.4$. The exceptions are antonym, quantifiers and numerals. The model performs particularly poorly on samples that contain antonyms and even worse for numerals. This behavior can be explained by the distribution of phenomena in the dataset shown in \autoref{tab:mnli:phenomena}: Antonyms are found in only $18874$ samples in the training split of \ac{MultiNLI} and numerals only in the hypotheses of $38168$ samples. This makes them the two rarest phenomena in the dataset. 
+
+\begin{table}[ht]
+    \centering
+    \caption{Phenomena distribution of the hypothesis of the training split of \ac{MultiNLI}}
+    \small
+    \begin{tabular}{l r}
+        \toprule
+        \multicolumn{1}{c}{Phenomenon} &  \multicolumn{1}{c}{Number of Samples} \\
+        \midrule
+        Synonym & $339763$ \\
+        Antonym & $18874$ \\
+        Hypernym & $117645$ \\
+        Hyponym & $124984$ \\
+        Co-Hyponym & $381690$ \\
+        Quantifier & $48526$ \\
+        Numeral & $38168$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:mnli:phenomena}
+\end{table}
+
+Also comparably rare are samples which contain quantifiers. Nevertheless, the model performs best on samples with an \ac{MCC} of about $0.46$. Since the model cannot possibly determine the meaning of the quantifier for the classification without knowledge of the premise this result is a clear indicator of a bias in the samples that contain quantifiers.
+
+\subsection{Testing H4}
 \begin{table}[ht!]
     \centering
     \caption{Prediction performance of our fine-tuned models on the \acs{SICK} dataset. The best result is shown in \textbf{bold} and the second-best is \underline{underlined}.}
@@ -55,20 +91,24 @@ Figure~\ref{fig:ferret-sample} shows the explanations for the fine-tuned model's
         Recast & n/a & n/a \\
         \bottomrule
     \end{tabular}
+    \label{tab:res:finetuned}
 \end{table}
 
-\subsection{Testing H4}
-Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4} to show the different predictive performance of the models.
+To test this hypothesis, we trained multiple models and evaluated their predictive performance in general and further analyzed the best model. The predictive performance of all models can be seen in \autoref{tab:res:finetuned}, the names follow the names of the datasets introduced in \autoref{sec:experiments}. In this case, a high correlation between the F$_1$-Score and \ac{MCC} can be seen, so we do not need to consult additional metrics. The differences in \ac{MCC} are bigger and the \ac{MCC} was more meaningful when comparing the results of the different prompting methods, therefore we mainly analyze the \ac{MCC} scores.
+
+Unexpectedly, the filtered models perform worse than the base fine-tuned model, even though the data quality should be better. As the models trained on the filtered datasets have been trained for fewer iterations in three epochs, we interpret the inferior results as being because of less training. When evaluating the models trained for more epochs, we can see an improvement for \enquote{Filtered 3/3} and deterioration for \enquote{Filtered 2/3}. This result is only slightly unexpected and can be attributed to \enquote{Filtered 2/3} being more harshly filtered and therefore have even fewer samples which cannot be balanced out by the higher data quality achieved by filtering biased samples more easily. \enquote{Filtered 3/3} shows better performance when trained longer, which indicates it providing a better tradeoff between data quality and data quantity. Therefore, we further analyze \enquote{Filtered 3/3 longer} and use it to compare to the ensembled model.
+
+The ensembled model performs better than the baseline and slightly worse than the filtered model trained longer. This indicates that bias is successfully mitigated during training, as predictive performance on the less biased out-of-domain evaluation set is improved. The performance is still slightly better for the filtered model, we further analyze that instead of the ensemble.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/important_words/matthews_correlation.pdf}
-    \caption{Matthews Correlation Coefficients for the model trained on different datasets separated by linguistic phenomena}
+    \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/all_words/matthews_correlation.pdf}
+    \caption{\ac{MCC} scores for the models trained on different datasets separated by linguistic phenomena}
     \label{fig:metric-heatmap-phenomena-mcc}
 \end{figure}
 
-The Hypothesis-Only model shows the expected poor performance but performs comparably well on samples that contain antonyms which indicates a bias in these samples as the model cannot detetct the presence of an antoymn for the right reasons without knowing the premise. The improved performance of the Filtered 3/3 longer model shows that this bias can be mitigated by the naive approach of removing the biased samples.
+Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separated by linguistic phenomena for the filtered model compared to the base fine-tuned model. We can see slightly improved performance for antonyms with harshly decreased performance for quantifiers and similar performance for all other phenomena. The decreased performance for quantifiers can be explained by the hypothesis-only model being more accurate on quantifiers and therefore more examples of quantifiers being discarded as biased during filtering. The decreased performance might be explained by either fewer samples of this phenomenon existing after filtering or the evaluation set having the same biases as the training set and thus decreased performance for it that would not exist for a less biased dataset. The increased performance on antonyms but decreased performance on numerals is surprising, as both have poor prediction performance for the hypothesis-only model and thus should not be filtered too much. We interpret that result as random noise or just a general decrease in bias that is randomly effective for antonyms but is not for numerals. Nonetheless, the filtering is beneficial for overall prediction performance, which can be explained by samples not being detected as part of any of our phenomena.
 
-The Hypothesis-Only model also performs better on samples that contain quantifiers which indicates a bias also in these samples. As opposed to antonyms, the Filtered 3/3 longer model performs slightly worse on quantifiers than the Base model. Thus, it is not sufficient to remove the biased samples to increase performance on quantifiers. A reason for this behavior might be the greater complexity of quantifiers compared to antonyms. To increase the model's performance on quantifiers nevertheless, we collect additional training samples containing quantifiers.
+% TODO: description of bias plots
 
 \subsection{Testing H5}
