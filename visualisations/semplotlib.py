@@ -18,8 +18,9 @@ def plot_confusion_heatmap(data, relative=True, save_path=None):
     plt.show()
 
 def plot_metric_heatmap_phenomena(data, save_path=None):
-    phenomena = ["synonym", "antonym", "hypernym", "hyponym", "co_hyponym", "quantifiers", "numericals"]
-    models = ["Base", "Filtered 3/3\nlonger", "Hypothesis-Only"]
+    phenomena = ["Synonyms", "Antonyms", "Hypernyms", "Hyponyms", "Co-Hyponyms", "Quantifiers", "Numerals"]
+    # models = ["Base", "Filtered 3/3\nlonger", "Hypothesis-Only"]
+    models = ["Base", "Filtered 3/3\nlonger"]
     data = pd.DataFrame(data, phenomena, models)
     
     sns.set(font_scale=1.4)
