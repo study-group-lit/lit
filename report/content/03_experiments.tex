@@ -110,7 +110,7 @@ The dataset is split into subsets of linguistic phenomena by us using data from 
 
 To test for biases in the training data, we train multiple hypothesis-only models, as described in \autoref{sec:method:detecting_biased_data}. The training data is said to be biased if the hypothesis-only models achieve better performance than could be explained by a majority-only baseline. The bias might manifest in particular words in the hypothesis correlating with specific labels or other structures or phenomena being correlated with a label. This is a data bias, as this is never based on reasoning if the premise can be entailed by the hypothesis, but are always based on statistical correlations only present in this particular data. By comparing the predictive performance of the hypothesis-only model for different linguistic phenomena, as described in the previous section, we can further analyze, for which linguistic phenomena the data is most biased. By analyzing in the described manner, we can learn what linguistic phenomena our mitigation needs to be focussed on.
 
-\subsection{Testing H4}
+\subsection{Testing H4} \label{sub:experiments-h4}
 \textbf{H4}: \textit{Mitigating biased data during training results in models with greater predictive performance and less bias.}
 
 To test \textbf{H4}, we train three different models and evaluate their predictive performance and bias for different linguistic phenomena. All of the models are based on the methods for mitigating data bias described in \autoref{sec:method:detecting_biased_data}. 

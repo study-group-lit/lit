@@ -4,9 +4,9 @@
 % Visualisierungen:
 % - Confusion Matrix (Gentrennt nach Phänomenen)
 % - Tabellen Interpretability Metriken (siehe ferret)
+In this section the results of our experiments are described and analyzed.
 
 \subsection{Testing H1}
-\textbf{H1}: \textit{\acp{PLM} do not contain enough inherent information without fine-tuning for \ac{NLI}.}
 
 \begin{table}[ht!]
     \centering
@@ -42,20 +42,7 @@
 \end{table}
 
 \subsection{Testing H2}
-\textbf{H2}: \textit{Fine-tuned models are biased for some linguistic phenomena.}
-
-Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the Matthews Correlation Coefficients for our model trained on different datasets separated by linguistic phenomena: \enquote{default} is the model trained on the regular \ac{MultiNLI} dataset, \enquote{filtered} trained on samples which where correctly classified of maximum two hypothesis only models and \enquote{hypothesis-only} is the model trained only on the hypotheses of \ac{MultiNLI}.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/important_words/matthews_correlation.pdf}
-    \caption{Matthews Correlation Coefficients for the model trained on different datasets separated by linguistic phenomena}
-    \label{fig:metric-heatmap-phenomena-mcc}
-\end{figure}
-
-The hypothesis-only model performs poorly as expected but also comparably well on samples that contain antonyms which indicates a bias in these samples and thus proves \textbf{H2}. The improved performance of the filtered model also shows that this bias can be mitigated by filtering the biased samples and thus proves \textbf{H4}.
-
-The hypothesis-only model also performs better on samples that contain quantifiers which indicates a bias also in these samples. The filtered model performs slightly worse on quantifiers than the default model. Thus, it is not sufficient to filter out the biased samples to increase performance on quantifiers. A reason for this behavior might be the greater complexity of quantifiers compared to antonyms. To increase the model's performance on quantifiers nevertheless, we collect additional training samples containing quantifiers.
+Figure~\ref{fig:ferret-sample} shows the explanations for the Base model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not well captured by the model: The usage of quantifiers in this sample makes it a contradiction but the model only attaches comparably high importance to the quantifier \enquote{all} whereas \enquote{several} only has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers shows that the model is biased after the fine-tuning on \ac{MultiNLI}.
 
 \begin{figure*}[h!]
     \centering
@@ -64,10 +51,18 @@ The hypothesis-only model also performs better on samples that contain quantifie
     \label{fig:ferret-sample}
 \end{figure*}
 
-Figure~\ref{fig:ferret-sample} shows the explanations for the default model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not well captured by the model: The usage of quantifiers in this sample makes it a contradiction but the model only attaches comparably high importance to the quantifier \enquote{all} whereas \enquote{several} only has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers proves \textbf{H2}.
-
 \subsection{Testing H4}
-\textbf{H4}: \textit{Mitigating biased data during training results in models with greater predictive performance and less bias.}
+Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the Matthews Correlation Coefficients separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/important_words/matthews_correlation.pdf}
+    \caption{Matthews Correlation Coefficients for the model trained on different datasets separated by linguistic phenomena}
+    \label{fig:metric-heatmap-phenomena-mcc}
+\end{figure}
+
+The Hypothesis-Only model shows the expected poor performance but performs comparably well on samples that contain antonyms which indicates a bias in these samples as the model cannot detetct the presence of an antoymn for the right reasons without knowing the premise. The improved performance of the Filtered 3/3 longer model shows that this bias can be mitigated by the naive approach of removing the biased samples.
+
+The Hypothesis-Only model also performs better on samples that contain quantifiers which indicates a bias also in these samples. As opposed to antonyms, the Filtered 3/3 longer model performs slightly worse on quantifiers than the Base model. Thus, it is not sufficient to remove the biased samples to increase performance on quantifiers. A reason for this behavior might be the greater complexity of quantifiers compared to antonyms. To increase the model's performance on quantifiers nevertheless, we collect additional training samples containing quantifiers.
 
 \subsection{Testing H5}
-\textbf{H5}: \textit{Using additional data during training for a specific linguistic phenomenon the model is biased for results in models with greater predictive performance and less bias.}
