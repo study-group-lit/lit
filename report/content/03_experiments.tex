@@ -89,7 +89,7 @@ We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} 
 Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge. We replace all placeholders with the original entities to provide sensible sentences and such that the model is able to use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
 
 \section{Experiments} \label{sec:experiments}
-This section will describe all experiments we conduct to evaluate our proposed hypotheses as well as the specific setup we use to perform the experiments including the metrics we use and the splits of our datasets.
+This section describes all experiments we conduct to evaluate our proposed hypotheses as well as the specific setup we use to perform the experiments including the metrics we use and the splits of our datasets.
 
 \subsection{Testing H1}
 \textbf{H1}: \textit{\acp{PLM} do not contain enough inherent information without fine-tuning for \ac{NLI}.}
@@ -103,20 +103,15 @@ By comparing the predictive performance of both approaches we can show that fine
 
 To test this hypothesis, we evaluate the predictive performance and bias of the model for different subsets of an evaluation dataset. The dataset as well as the metrics for measuring bias are described in \autoref{sec:exp:eval:bias}. Each subset contains only records that represent a particular linguistic phenomenon. This partitioning of the dataset allows for determining which linguistic phenomena the respective model copes better with or worse. If the model performance is significantly better or worse for some linguistic phenomena, we can conclude that differences and biases based on the linguistic phenomena might exist.
 
-The dataset is split into subsets of linguistic phenomena by us using data from WordNet \cite{miller-1994-wordnet}. We consider the linguistic phenomena of synonyms, antonyms, hypernyms, hyponyms, co-hyponyms, quantifiers and numbers. We classify a sample as corresponding to a subset when the phenomenon occurs at least once in words deemed important. We detect synonyms and antonyms by considering, for each important word, all of its synonyms or antonyms respectively and counting occurrences of those in all other words. Hypernyms, hyponyms and co-hyponyms are detected in the same way, where co-hyponyms are words with a common hypernym. Quantifiers are detected in the same way as in our method for recasting data, as described in \autoref{sec:meth:recasting}. Lastly, numbers and words representing numerical quantities are found by considering the part of speech tags produced by \texttt{nltk} \cite{nltk}.
-
-% TODO: only in important words or all words?
+The dataset is split into subsets of linguistic phenomena by us using data from WordNet \cite{miller-1994-wordnet}. We consider the linguistic phenomena of synonyms, antonyms, hypernyms, hyponyms, co-hyponyms, quantifiers and numerals. We classify a sample as corresponding to a subset when the phenomenon occurs at least once in words deemed important. We detect synonyms and antonyms by considering, for each important word, all of its synonyms or antonyms respectively and counting occurrences of those in all other words. Hypernyms, hyponyms and co-hyponyms are detected in the same way, where co-hyponyms are words with a common hypernym. Quantifiers are detected in the same way as in our method for recasting data, as described in \autoref{sec:meth:recasting}. Lastly, numerals, that is, numbers and words representing numerical quantities are found by considering the part of speech tags produced by \texttt{nltk} \cite{nltk}.
 
 \subsection{Testing H3}
 \textbf{H3}: \textit{The chosen training data is biased and the found bias is not distributed uniformly over linguistic phenomena.}
 
-To test for biases in the training data, we train multiple hypothesis-only models, as described in \autoref{sec:method:detecting_biased_data}. The training data is said to be biased if the hypothesis-only models achieve better performance than could be explained by a majority-only baseline. The bias might manifest in particular words in the hypothesis correlating with specific labels or other structures or phenomena being correlated with a label. This is a data bias, as this is never based on reasoning if the premise can be entailed by the hypothesis, but are always based on statistical correlations only present in this particular data. By comparing the predictive performance of the hypothesis-only model for different linguistic phenomena, as described in the previous section, we can further analyze, for which linguistic phenomena the data is most biased. We hope that by doing that analysis, we can learn what linguistic phenomena our mitigation needs to be focussed on.
+To test for biases in the training data, we train multiple hypothesis-only models, as described in \autoref{sec:method:detecting_biased_data}. The training data is said to be biased if the hypothesis-only models achieve better performance than could be explained by a majority-only baseline. The bias might manifest in particular words in the hypothesis correlating with specific labels or other structures or phenomena being correlated with a label. This is a data bias, as this is never based on reasoning if the premise can be entailed by the hypothesis, but are always based on statistical correlations only present in this particular data. By comparing the predictive performance of the hypothesis-only model for different linguistic phenomena, as described in the previous section, we can further analyze, for which linguistic phenomena the data is most biased. By analyzing in the described manner, we can learn what linguistic phenomena our mitigation needs to be focussed on.
 
 \subsection{Testing H4}
 \textbf{H4}: \textit{Mitigating biased data during training results in models with greater predictive performance and less bias.}
-% - train on filtered 2/3 and filtered 3/3
-% - train longer to mitigate less data
-% - evaluate predictive performance + bias
 
 To test \textbf{H4}, we train three different models and evaluate their predictive performance and bias for different linguistic phenomena. All of the models are based on the methods for mitigating data bias described in \autoref{sec:method:detecting_biased_data}. 
 
@@ -157,9 +152,15 @@ We define predictive performance as a measure of how often the prediction made b
 
 We use the validation split of \ac{SICK} as our evaluation set. We use \ac{SICK} for all main testing of predictive performance instead of \ac{e-SNLI} or \ac{MultiNLI}, as it is a harder test set and less biased than both of those. We use the validation split instead of the training split, as we wanted to leave us the option to extend our training dataset by the training split of \ac{SICK}. For tests split by linguistic phenomena, we are using the validation split of \ac{e-SNLI}. As we only want to detect a linguistic phenomenon if it was deemed important for the task, we need a dataset with annotated important words and our only dataset with such annotations is \ac{e-SNLI}.
 
-As the metrics for evaluation, we use the F$_1$-Score and the \ac{MCC} \cite{mcc}. The F$_1$-Score is defined as the harmonic mean of the precision $P$ and recall $R$ for a particular class. So, based on the true positives $\mathrm{TP}$, true negatives $\mathrm{TN}$, false positives $\mathrm{FP}$ and false negatives $\mathrm{FN}$, the F$_1$-Score can be calculated as $$\text{F}_1 = 2\cdot \frac{P \cdot R}{P + R} = \frac{2 \cdot \mathrm{TP}}{2\cdot \mathrm{TP} + \mathrm{FP} + \mathrm{FN}}.$$ For multi-class problems such as ours, we compute the macro-average, as this treats each class the same way, independently of their number of samples. The macro-average is computed by first computing the F$_1$-Score for each class and then averaging those. The \ac{MCC} is a measure similar to the Pearson correlation between the prediction and the true label. For the case of two classes it is defined as 
+As the metrics for evaluation, we use the F$_1$-Score and the \ac{MCC} \cite{mcc}. The F$_1$-Score is defined as the harmonic mean of the precision $P$ and recall $R$ for a particular class. So, based on the true positives $\mathrm{TP}$, true negatives $\mathrm{TN}$, false positives $\mathrm{FP}$ and false negatives $\mathrm{FN}$, the F$_1$-Score can be calculated as 
+
+$$\text{F}_1 = 2\cdot \frac{P \cdot R}{P + R} = \frac{2 \cdot \mathrm{TP}}{2\cdot \mathrm{TP} + \mathrm{FP} + \mathrm{FN}}.$$
+
+For multi-class problems such as ours, we compute the macro-average, as this treats each class the same way, independently of their number of samples. The macro-average is computed by first computing the F$_1$-Score for each class and then averaging those. The \ac{MCC} is a measure similar to the Pearson correlation between the prediction and the true label. For the case of two classes, it is defined as 
+
 {\small $$\text{MCC} = \frac{\mathrm
-{TP} \cdot \mathrm{TN} - \mathrm{FP} \cdot \mathrm{FN}}{\sqrt{(\mathrm{TP}+\mathrm{FP})(\mathrm{TP}+\mathrm{FN})(\mathrm{TN}+\mathrm{FP})(\mathrm{TN}+\mathrm{FN})}},$$} 
+{TP} \cdot \mathrm{TN} - \mathrm{FP} \cdot \mathrm{FN}}{\sqrt{(\mathrm{TP}+\mathrm{FP})(\mathrm{TP}+\mathrm{FN})(\mathrm{TN}+\mathrm{FP})(\mathrm{TN}+\mathrm{FN})}},$$}
+
 and we refer the reader to \citet{mccMultiClass} for the definition of the multi-class variant, as it is not a simple micro- or macro-average but generalized differently. The value range of the \ac{MCC} is $[-1, 1]$, where $-1$ is perfect disagreement, $0$ shows no correlation between prediction and label and $1$ is perfect agreement. Only a perfect classifier can achieve a score of $1$ and any large negative score indicates implementation errors or huge transferability problems between training and test set.
 
 We use the \ac{MCC} and F$_1$-Score, as our evaluation set is heavily imbalanced and biased towards the class \texttt{neutral}, as can be seen in \autoref{tab:datasets:classes}. For imbalanced datasets, metrics such as accuracy might provide a flawed picture of the predictive performance. The macro F$_1$-Score is a popular metric for imbalanced datasets, that we use to alleviate that. Additionally, we use the \ac{MCC}, as it was shown that it is better suited for imbalanced datasets \cite{mccGood}. We use two metrics to provide a more complete picture of the predictive performance than can be summed up into a single number.
@@ -167,6 +168,8 @@ We use the \ac{MCC} and F$_1$-Score, as our evaluation set is heavily imbalanced
 % TODO: do we have enough time to do additional tests on the SICK test split?
 
 \paragraph{Measuring Bias} \label{sec:exp:eval:bias}
+To assess the bias of our models, we define bias as making predictions for wrong reasons. As we cannot truthfully know the reasons for a prediction, 
+
 % TODO: formulate sentences and stitch a coherent text from them
 
 Defining bias as the plausibility of explanation using explanation methods
