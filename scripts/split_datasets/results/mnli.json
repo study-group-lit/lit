@@ -1,0 +1,92 @@
+{
+    "train": [
+        {
+            "phenomenon": "synonym",
+            "count": 339763
+        },
+        {
+            "phenomenon": "antonym",
+            "count": 18874
+        },
+        {
+            "phenomenon": "hypernym",
+            "count": 117645
+        },
+        {
+            "phenomenon": "hyponym",
+            "count": 124984
+        },
+        {
+            "phenomenon": "co_hyponym",
+            "count": 381690
+        },
+        {
+            "phenomenon": "quantifiers",
+            "count": 123927
+        },
+        {
+            "phenomenon": "numericals",
+            "count": 90555
+        }
+    ],
+    "validation_matched": [
+        {
+            "phenomenon": "synonym",
+            "count": 8474
+        },
+        {
+            "phenomenon": "antonym",
+            "count": 472
+        },
+        {
+            "phenomenon": "hypernym",
+            "count": 2896
+        },
+        {
+            "phenomenon": "hyponym",
+            "count": 3059
+        },
+        {
+            "phenomenon": "co_hyponym",
+            "count": 9530
+        },
+        {
+            "phenomenon": "quantifiers",
+            "count": 2892
+        },
+        {
+            "phenomenon": "numericals",
+            "count": 2322
+        }
+    ],
+    "validation_mismatched": [
+        {
+            "phenomenon": "synonym",
+            "count": 8812
+        },
+        {
+            "phenomenon": "antonym",
+            "count": 426
+        },
+        {
+            "phenomenon": "hypernym",
+            "count": 3196
+        },
+        {
+            "phenomenon": "hyponym",
+            "count": 3516
+        },
+        {
+            "phenomenon": "co_hyponym",
+            "count": 9666
+        },
+        {
+            "phenomenon": "quantifiers",
+            "count": 3009
+        },
+        {
+            "phenomenon": "numericals",
+            "count": 2591
+        }
+    ]
+}

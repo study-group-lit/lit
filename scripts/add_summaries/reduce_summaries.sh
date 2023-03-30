@@ -11,5 +11,5 @@
 PATH=/opt/slurm/bin:$PATH
 
 
-source ~/lit/venv/bin/activate
+source ../../venv/bin/activate
 python3 reduce_summaries.py -i /workspace/students/lit/datasets/cnn_dataset_fixed_summaries -o /workspace/students/lit/datasets/cnn_dataset_fixed_summaries_reduced

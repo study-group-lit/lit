@@ -13,5 +13,5 @@
 PATH=/opt/slurm/bin:$PATH
 
 
-source ~/lit/venv/bin/activate
+source ../../venv/bin/activate
 python3 add_summaries.py -d /workspace/students/lit/datasets/dailymail_dataset_filtered_filtered_pos -o /workspace/students/lit/datasets/dailymail_dataset_filtered_pos_summaries -p training -s 37001 -e 39000

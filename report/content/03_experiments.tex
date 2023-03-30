@@ -84,9 +84,46 @@ We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} 
 
 \autoref{code:data:samples:multinli} depicts a random sample from the \acs{e-SNLI} corpus including all available features. Comparing it to the features of \acs{MultiNLI} and \acs{SICK}, it is obvious that explanations and highlights of the sentences are added to the data. Up to three different explanations are included and for each explanation, the words in the premise and hypothesis that are relevant to this explanation are provided. The words are provided as indices into the premise and hypotheses starting at zero. For code simplicity, we only use the first explanation.
 
-% TODO: sample of rc-data
+Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge.
+\begin{lstlisting}[
+    language=plain,
+    caption={Fomrat of the CNN/Dailymail dataset.},
+    label=code:data:samples:cnn-format
+]
+<URL>
 
-Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge. We replace all placeholders with the original entities to provide sensible sentences and such that the model is able to use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
+<Article>
+
+<Question>
+
+<Correct Entity>
+
+<Entity Mapping>
+\end{lstlisting}
+
+Each sample in the dataset is provided in the format shown in \autoref{code:data:samples:cnn-format} as illustrated by the sample from the CNN dataset in \autoref{code:data:samples:cnn}.
+
+\begin{lstlisting}[
+    language=plain,
+    caption={A random data sample from the CNN dataset.},
+    label=code:data:samples:cnn
+]
+the job by both @entity25 and @entity26 majority leaders , @entity2 explained . @entity27 leader @entity27 of @entity28 praised @entity9 's smarts and his devotion to the @entity13 . the soft - spoken and bookish...
+
+@placeholder will replace @entity9 , who was parliamentarian for 18 years
+
+@entity8
+
+@entity31:Frumin
+@entity2:Reid
+@entity1:CNN
+@entity0:Washington
+@entity13:Senate
+@entity27:Mitch McConnell
+...
+\end{lstlisting}
+
+We replace all placeholders in the article and question with the original entities to provide sensible sentences and such that the model is able to use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
 
 \section{Experiments} \label{sec:experiments}
 This section describes all experiments we conduct to evaluate our proposed hypotheses as well as the specific setup we use to perform the experiments including the metrics we use and the splits of our datasets.
@@ -110,7 +147,7 @@ The dataset is split into subsets of linguistic phenomena by us using data from 
 
 To test for biases in the training data, we train multiple hypothesis-only models, as described in \autoref{sec:method:detecting_biased_data}. The training data is said to be biased if the hypothesis-only models achieve better performance than could be explained by a majority-only baseline. The bias might manifest in particular words in the hypothesis correlating with specific labels or other structures or phenomena being correlated with a label. This is a data bias, as this is never based on reasoning if the premise can be entailed by the hypothesis, but are always based on statistical correlations only present in this particular data. By comparing the predictive performance of the hypothesis-only model for different linguistic phenomena, as described in the previous section, we can further analyze, for which linguistic phenomena the data is most biased. By analyzing in the described manner, we can learn what linguistic phenomena our mitigation needs to be focussed on.
 
-\subsection{Testing H4}
+\subsection{Testing H4} \label{sub:experiments-h4}
 \textbf{H4}: \textit{Mitigating biased data during training results in models with greater predictive performance and less bias.}
 
 To test \textbf{H4}, we train three different models and evaluate their predictive performance and bias for different linguistic phenomena. All of the models are based on the methods for mitigating data bias described in \autoref{sec:method:detecting_biased_data}. 
@@ -150,7 +187,7 @@ In general, all models are trained on the train split of \acs{MultiNLI}, unless 
 \paragraph{Predictive Performance}
 We define predictive performance as a measure of how often the prediction made by the model is correct. We measure predictive performance based on a dataset of samples, each containing a hypothesis and premise with the gold label known. The gold label is the correct entailment class of the sample.
 
-We use the validation split of \ac{SICK} as our evaluation set. We use \ac{SICK} for all main testing of predictive performance instead of \ac{e-SNLI} or \ac{MultiNLI}, as it is a harder test set and less biased than both of those. We use the validation split instead of the training split, as we wanted to leave us the option to extend our training dataset by the training split of \ac{SICK}. For tests split by linguistic phenomena, we are using the validation split of \ac{e-SNLI}. As we only want to detect a linguistic phenomenon if it was deemed important for the task, we need a dataset with annotated important words and our only dataset with such annotations is \ac{e-SNLI}.
+We use the validation split of \ac{SICK} as our evaluation set during development and the test split of \ac{SICK} for all final results reported here. We use \ac{SICK} for all main testing of predictive performance instead of \ac{e-SNLI} or \ac{MultiNLI}, as it is a harder test set and less biased than both of those. We use the validation split instead of the training split, as we wanted to leave us the option to extend our training dataset by the training split of \ac{SICK}. For tests split by linguistic phenomena, we are using the validation split of \ac{e-SNLI}. As we only want to detect a linguistic phenomenon if it was deemed important for the task, we need a dataset with annotated important words and our only dataset with such annotations is \ac{e-SNLI}.
 
 As the metrics for evaluation, we use the F$_1$-Score and the \ac{MCC} \cite{mcc}. The F$_1$-Score is defined as the harmonic mean of the precision $P$ and recall $R$ for a particular class. So, based on the true positives $\mathrm{TP}$, true negatives $\mathrm{TN}$, false positives $\mathrm{FP}$ and false negatives $\mathrm{FN}$, the F$_1$-Score can be calculated as 
 
@@ -165,18 +202,17 @@ and we refer the reader to \citet{mccMultiClass} for the definition of the multi
 
 We use the \ac{MCC} and F$_1$-Score, as our evaluation set is heavily imbalanced and biased towards the class \texttt{neutral}, as can be seen in \autoref{tab:datasets:classes}. For imbalanced datasets, metrics such as accuracy might provide a flawed picture of the predictive performance. The macro F$_1$-Score is a popular metric for imbalanced datasets, that we use to alleviate that. Additionally, we use the \ac{MCC}, as it was shown that it is better suited for imbalanced datasets \cite{mccGood}. We use two metrics to provide a more complete picture of the predictive performance than can be summed up into a single number.
 
-% TODO: do we have enough time to do additional tests on the SICK test split?
-
 \paragraph{Measuring Bias} \label{sec:exp:eval:bias}
-To assess the bias of our models, we define bias as making predictions for wrong reasons. As we cannot truthfully know the reasons for a prediction, 
+To assess the bias of our models, we define bias as making predictions for wrong reasons. As we cannot truthfully know the reasons for a prediction, we use interpretability methods to infer what words might have been important for the prediction. Using the interpretability methods we define bias in the model as assigning importance to words that are not important or not assigning importance to important words. We measure the importance assigned to the words by the model through interpretability methods and control for senseless explanations by also measuring the faithfulness of the explanation.
 
-% TODO: formulate sentences and stitch a coherent text from them
+\ac{e-SNLI} provides natural language explanations for all samples and important words of the hypothesis and premise as annotated by a human annotator. \ac{e-SNLI} provides up to three different explanations for each sample but to simplify our analysis, we select only the first and discard all others. Our analysis is based on the validation split of \ac{e-SNLI}.
 
-Defining bias as the plausibility of explanation using explanation methods
+We begin the analysis by feeding all samples into our model and calculating the explanations of all explainers provided by ferret \cite{ferret} for each sample individually. Those are Gradients \cite{gradients}, Integrated Gradients \cite{integratedgradients}, \ac{LIME} \cite{lime} and Partition SHAP Values \cite{shap}. We do not limit ourselves to a subset of these explainers as it is not clear which explainer is best suited for all samples and we want to provide a holistic analysis covering every possible angle. 
 
-Why those explanation methods? Because it is not clear, which is best and we want to use every possible angle
-Plausibility+Faithfulness metrics based on validation split of e-SNLI
-What metrics? All
-Why? No clear best metric, get the full picture
+Afterward, we evaluate the explanations. We differentiate between two aspects of the evaluation of explanations and provide different metrics to measure each of them. The first aspect is plausibility which assesses how well the explanation aligns with human reasoning. We use the plausibility to measure the bias of the model which is present by the definition above if the reasoning of the model differs from human reasoning. The metrics provided by ferret for this aspect are token-level \ac{IOU} and F$_1$-Score as well as \ac{AUPRC} calculated between the computed explanation and the human explanation provided by \ac{e-SNLI} \cite{ferret}. 
 
-Additionally, it is ensured that the models come to their predictions for the right reasons by applying the interpretability methods described here. These tests are conducted on subsets of the \ac{e-SNLI} dataset. 
+The second aspect is faithfulness which is determined by how closely the explanation represents the internal functioning of the model. We use the faithfulness metrics to determine if the calculated explanations are sensible at all. For this aspect, ferret provides the metrics of Comprehensiveness, Sufficiency and Correlation with Leave-One-Out scores.
+
+Here, too, we do not restrict our analysis to a subset of metrics for the same reasons as above: It is not clear which metric is best suited and we want to get the full picture of metrics as every metric covers a different aspect of the quality of an explanation.
+
+As the last step, we calculate the sum, minimum, maximum, median and mean for every explainer and metric over the whole evaluation dataset. These results allow us to make an informed assessment of which explainer yields the best results and how close the reasoning of the model is to human reasoning.

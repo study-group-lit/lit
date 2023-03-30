@@ -1,0 +1,191 @@
+[
+    {
+        "accuracy": 0.5986547085201793,
+        "matthews_correlation": 0.4077907853487364,
+        "f1": 0.59961349620204,
+        "confusion_matrix": [
+            [
+                1549,
+                1114,
+                495
+            ],
+            [
+                421,
+                1765,
+                409
+            ],
+            [
+                368,
+                594,
+                1759
+            ]
+        ],
+        "total_time_in_seconds": 373.320346458,
+        "samples_per_second": 22.699003899465623,
+        "latency_in_seconds": 0.04405479660821336,
+        "task_name": "synonym",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5889830508474576,
+        "matthews_correlation": 0.37117404885137933,
+        "f1": 0.5569915591654722,
+        "confusion_matrix": [
+            [
+                52,
+                39,
+                25
+            ],
+            [
+                13,
+                67,
+                14
+            ],
+            [
+                43,
+                60,
+                159
+            ]
+        ],
+        "total_time_in_seconds": 20.644116583000027,
+        "samples_per_second": 22.86365696988369,
+        "latency_in_seconds": 0.043737535133474635,
+        "task_name": "antonym",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5953038674033149,
+        "matthews_correlation": 0.407897918764637,
+        "f1": 0.5984858395572681,
+        "confusion_matrix": [
+            [
+                540,
+                448,
+                144
+            ],
+            [
+                140,
+                618,
+                122
+            ],
+            [
+                108,
+                210,
+                566
+            ]
+        ],
+        "total_time_in_seconds": 127.46686787499999,
+        "samples_per_second": 22.71962940863938,
+        "latency_in_seconds": 0.04401480244302486,
+        "task_name": "hypernym",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5897352075841779,
+        "matthews_correlation": 0.3992951270940422,
+        "f1": 0.5925946940081047,
+        "confusion_matrix": [
+            [
+                564,
+                469,
+                142
+            ],
+            [
+                146,
+                643,
+                136
+            ],
+            [
+                124,
+                238,
+                597
+            ]
+        ],
+        "total_time_in_seconds": 134.60587933299996,
+        "samples_per_second": 22.725604670152443,
+        "latency_in_seconds": 0.04400322959561947,
+        "task_name": "hyponym",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.6011542497376705,
+        "matthews_correlation": 0.4085653818294581,
+        "f1": 0.6011584828826377,
+        "confusion_matrix": [
+            [
+                1670,
+                1175,
+                549
+            ],
+            [
+                496,
+                2054,
+                483
+            ],
+            [
+                430,
+                668,
+                2005
+            ]
+        ],
+        "total_time_in_seconds": 428.96729633300004,
+        "samples_per_second": 22.216145802877296,
+        "latency_in_seconds": 0.04501230811469045,
+        "task_name": "co_hyponym",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.6611842105263158,
+        "matthews_correlation": 0.4682147418604647,
+        "f1": 0.6149938914954495,
+        "confusion_matrix": [
+            [
+                106,
+                121,
+                56
+            ],
+            [
+                48,
+                252,
+                68
+            ],
+            [
+                40,
+                79,
+                446
+            ]
+        ],
+        "total_time_in_seconds": 52.645811458000026,
+        "samples_per_second": 23.097753958453183,
+        "latency_in_seconds": 0.04329425284375002,
+        "task_name": "quantifiers",
+        "data_preprocessor": null
+    },
+    {
+        "accuracy": 0.5613682092555332,
+        "matthews_correlation": 0.3455659903639586,
+        "f1": 0.5583842711782564,
+        "confusion_matrix": [
+            [
+                192,
+                137,
+                47
+            ],
+            [
+                52,
+                226,
+                53
+            ],
+            [
+                56,
+                91,
+                140
+            ]
+        ],
+        "total_time_in_seconds": 41.95439920900003,
+        "samples_per_second": 23.692390279462465,
+        "latency_in_seconds": 0.04220764507947689,
+        "task_name": "numericals",
+        "data_preprocessor": null
+    }
+]
