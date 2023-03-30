@@ -30,13 +30,13 @@ for model in models:
     print("")
 
 
-model = "/workspace/students/lit/models/roberta-base-finetuned-mnli-hypothesis-only/"
+model_path = "/workspace/students/lit/models/roberta-base-finetuned-mnli-hypothesis-only/"
 seeds = [
     "42", "69", "1337"
 ]
 for seed in seeds:
-    print(model+seed)
-    model = pipeline("text-classification", model=model+seed)
+    print(model_path+seed)
+    model = pipeline("text-classification", model=model_path+seed)
     print("sick test")
     suite = EvaluationSuite.load("../../datasets/evaluation_suite_sick_test_hypothesis_only.py")
     print(suite.run(model))
