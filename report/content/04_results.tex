@@ -7,20 +7,24 @@
 In this section the results of our experiments are described and thoroughly analyzed. The results are grouped according to the hypotheses they support.
 
 \subsection{Testing H1}
+To test the knowledge contained in \acp{PLM}, we devise prompts that allow for \ac{NLI} predictions, as described in \autoref{sec:meth:probing}. The results obtained using the prompting methods are shown in \autoref{tab:res:prompting}. The word group chosen a priori from the list of discourse markers performs best in F$_1$-Score and second best in \ac{MCC}, the simple word group performs worst in \ac{MCC} but second best in F$_1$-Score and the tuned word group performs best in \ac{MCC} and slightly worse than the simple word group in F$_1$-Score. The difference in F$_1$-Score between a priori and the other word groups is far bigger than the gaps in the \ac{MCC} scores. As the discrepancy is great, we added a metric, the balanced accuracy, to the evaluation that should also be better for imbalanced data than the F$_1$-Score and sometimes more informative than the \ac{MCC} \cite{mccBad}. The balanced accuracy is calculated as the macro-average of the accuracy of each class. Looking at the results in the additional metric, they confirm the ranking obtained by using the \ac{MCC} values. Using this additional fact, we conclude that the \ac{MCC} values are more trustworthy than the F$_1$-Scores for this task.
 
 \begin{table}[ht!]
     \centering
     \caption{Prediction performance when using prompting with different word groups on the \acs{SICK} dataset. The best result is shown in \textbf{bold} and the second-best is \underline{underlined}.}
-    \begin{tabular}{l c c}
+    \begin{tabular}{l c c c}
         \toprule
-        \multicolumn{1}{c}{Word Group} & \acs{MCC} & $\text{F}_1$ \\
+        \multicolumn{1}{c}{Word Group} & \acs{MCC} & $\text{F}_1$ & BAcc\\
         \midrule
-        A Priori & $\underline{25.51}\%$ & $\mathbf{54.31\%}$ \\
-        Simple & $20.56\%$ & $\underline{34.40\%}$ \\
-        Tuned & $\mathbf{29.11\%}$ & $34.08\%$ \\
+        A Priori & $\underline{25.51}\%$ & $\mathbf{54.31\%}$ & $\underline{54.11}\%$ \\
+        Simple & $20.56\%$ & $\underline{34.40\%}$ & $45.67\%$ \\
+        Tuned & $\mathbf{29.11\%}$ & $34.08\%$ & $\mathbf{55.73\%}$\\
         \bottomrule
     \end{tabular}
+    \label{tab:res:prompting}
 \end{table}
+
+Looking at the resulting \ac{MCC} scores, we can see the expected ordering: The a priori chosen word group is better than the simple words that do not fit into the sentence and the tuned words perform best, as they are tuned on \ac{MultiNLI} to perform better. Interestingly, all approaches, even the simple approach, perform much better than random, which would be an \ac{MCC} of $0$. Nonetheless, compared to the \ac{MCC} score of the fine-tuned model, which is $49.49\%$, the results of using prompting are far worse, even when specifically tuning the prompt words.
 
 \subsection{Testing H2}
 Figure~\ref{fig:ferret-sample} shows the explanations for the finetuned model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not considered by the model: The usage of quantifiers in this sample makes it a contradiction but the model attaches high importance only to the quantifier \enquote{all} whereas \enquote{several} has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers shows that the model is biased after fine-tuning on \ac{MultiNLI}.
@@ -63,7 +67,7 @@ Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separa
     \label{fig:metric-heatmap-phenomena-mcc}
 \end{figure}
 
-The Hypothesis-Only model shows the expected poor performance but performs comparably well on samples that contain antonyms which indicates a bias in these samples as the model cannot detetct the presence of an antoymn for the right reasons without knowing the premise. The improved performance of the Filtered 3/3 longer model shows that this bias can be mitigated by the naive approach of removing the biased samples.
+The Hypothesis-Only model shows the expected poor performance but performs comparably well on samples that contain antonyms which indicates a bias in these samples as the model cannot detect the presence of an antonym for the right reasons without knowing the premise. The improved performance of the Filtered 3/3 longer model shows that this bias can be mitigated by the naive approach of removing the biased samples.
 
 The Hypothesis-Only model also performs better on samples that contain quantifiers which indicates a bias also in these samples. As opposed to antonyms, the Filtered 3/3 longer model performs slightly worse on quantifiers than the Base model. Thus, it is not sufficient to remove the biased samples to increase performance on quantifiers. A reason for this behavior might be the greater complexity of quantifiers compared to antonyms. To increase the model's performance on quantifiers nevertheless, we collect additional training samples containing quantifiers.
 
