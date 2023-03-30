@@ -1,2 +1,35 @@
 \section{Conclusion} \label{sec:conclusion}
+Following the structure of the previous sections, we conclude our findings for each of the posed hypotheses.
+
+\paragraph{H1:} \textit{\acp{PLM} do not contain enough inherent information without fine-tuning for \ac{NLI}.}
+
+Our results clearly show that using prompting of \acp{PLM} for \ac{NLI} is not sufficient to get good predictive performance. We have tuned the prompt on a training dataset achieving better results and showing that the prompting can be improved. Our results are still far worse than simple fine-tuned models, indicating that the information contained in the \acp{PLM} is not sufficient to complete this complex task, but additional training is needed to learn the correct reasoning patterns. With further tuning of the prompts, better results might be achieved, but our current results indicate that most of the predictive performance for \ac{NLI} is obtained from fine-tuning. This indicates that the fine-tuning procedure should be changed to change the properties of the resulting model.
+
+\paragraph{H2:} \textit{Fine-tuned models are biased for some linguistic phenomena.}
+
+By comparing the predictive performance across different linguistic phenomena, we show differences in accuracy for certain linguistic phenomena. This indicates a clear difference in accuracy depending on the linguistic phenomenon, which is a bias of the model. Furthermore, we analyze the plausibility of explanations of the model's predictions, showing that the predictions are mostly plausibly explained but with a clear difference between linguistic phenomena. Plausibility is low for classes with low predictive performance, indicating a correlation between predictive performance and bias of the model in some cases. From the evidence gathered, we conclude that the model is indeed biased for numerals and quantifiers.
+
+\paragraph{H3:} \textit{The chosen training data is biased and the found bias is not distributed uniformly over linguistic phenomena.}
+
+By training a hypothesis-only model and showing better performance than could be explained by a majority-only baseline, we clearly show bias in the chosen training data. By analyzing it for different linguistic phenomena, we show that the examples are most biased for quantifiers and focus our efforts on mitigating bias on this phenomenon. 
+
+\paragraph{H4:} \textit{Mitigating biased data during training results in models with greater predictive performance and less bias.}
+
 TODO
+
+\paragraph{H5:} \textit{Using additional data during training for a specific linguistic phenomenon the model is biased for results in models with greater predictive performance and less bias.}
+
+TODO
+
+\paragraph{Summary of our Results}
+
+We pose the following learnings from our results:
+
+\begin{enumerate}
+    \item \acp{LM} for \ac{NLI} need to be fine-tuned for this task.
+    \item \ac{NLI} models get their performance from the fine-tuning procedure that can be adjusted to adjust the final predictive performance and biases of the model.
+    \item Higher plausibility of the explanations of the model results in higher predictive performance on out-of-domain datasets.
+    \item Current \acp{LM} are biased for quantifiers and numerals, as those phenomena sometimes require complex reasoning.
+    \item Training data for \ac{NLI} is biased in multiple ways.
+    \item TODO: Learnings from H4+H5
+\end{enumerate}
