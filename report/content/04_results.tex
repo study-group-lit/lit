@@ -23,7 +23,11 @@ In this section the results of our experiments are described and thoroughly anal
 \end{table}
 
 \subsection{Testing H2}
-Figure~\ref{fig:ferret-sample} shows the explanations for the finetuned model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not considered by the model: The usage of quantifiers in this sample makes it a contradiction but the model attaches high importance only to the quantifier \enquote{all} whereas \enquote{several} has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers shows that the model is biased after fine-tuning on \ac{MultiNLI}.
+Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \acs{MCC} scores for our Base model separated by linguistic phenomena. As can be seen in the figure, there are disparities between different phenomena. Antonyms and numerals have the largest disparity of $\geq 0.1$. The Base model detects the phenomena antonyms, co-hyponyms and quantifiers best, while it detects numerals, hypernyms and hyponyms worst. The smallest difference between phenomena is between hypernyms and hyponyms, with a difference of $0.0077$.
+
+Disparities between phenomena indicate a bias of the model towards certain phenomena. As can be clearly seen in figure~\ref{fig:metric-heatmap-phenomena-mcc}, the Base model is biased towards antonyms, co-hyponyms and quantifiers.
+
+Figure~\ref{fig:ferret-sample} shows the explanations for the fine-tuned model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not considered by the model: The usage of quantifiers in this sample makes it a contradiction but the model attaches high importance only to the quantifier \enquote{all} whereas \enquote{several} has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers shows that the model is biased after fine-tuning on \ac{MultiNLI}.
 
 \begin{figure*}[h!]
     \centering
