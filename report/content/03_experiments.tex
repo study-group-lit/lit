@@ -153,13 +153,18 @@ To measure the quality of the models, they are tested in two different aspects: 
 In general, all models are trained on the train split of \acs{MultiNLI}, unless specified otherwise. All hyperparameters are chosen using short test runs and using the predictive performance on the validation data of \acs{MultiNLI}. The models are trained for three full epochs with a learning rate of $2 \cdot 10^-5$, no weight decay and an effective batch size of $16$.
 
 \paragraph{Predictive Performance}
-% TODO: formulate sentences and stitch a coherent text from them
-MCC, F1 -> Predictive performance based on the validation split of SICK
-MCC because it is better for imbalanced data than F1 (citation needed)
-F1 because it is popular and better for imbalanced data than Accuracy
-Our data is imbalanced, as can be seen in \autoref{tab:datasets:classes}
+We define predictive performance as a measure of how often the prediction made by the model is correct. We measure predictive performance based on a dataset of samples, each containing a hypothesis and premise with the gold label known. The gold label is the correct entailment class of the sample.
 
-that the models achieve is measured by testing them on the SICK dataset as it is less biased than the \ac{e-SNLI} dataset
+We use the validation split of \ac{SICK} as our evaluation set. We use \ac{SICK} for all main testing of predictive performance instead of \ac{e-SNLI} or \ac{MultiNLI}, as it is a harder test set and less biased than both of those. We use the validation split instead of the training split, as we wanted to leave us the option to extend our training dataset by the training split of \ac{SICK}. For tests split by linguistic phenomena, we are using the validation split of \ac{e-SNLI}. As we only want to detect a linguistic phenomenon if it was deemed important for the task, we need a dataset with annotated important words and our only dataset with such annotations is \ac{e-SNLI}.
+
+As the metrics for evaluation, we use the F$_1$-Score and the \ac{MCC} \cite{mcc}. The F$_1$-Score is defined as the harmonic mean of the precision $P$ and recall $R$ for a particular class. So, based on the true positives $\mathrm{TP}$, true negatives $\mathrm{TN}$, false positives $\mathrm{FP}$ and false negatives $\mathrm{FN}$, the F$_1$-Score can be calculated as $$\text{F}_1 = 2\cdot \frac{P \cdot R}{P + R} = \frac{2 \cdot \mathrm{TP}}{2\cdot \mathrm{TP} + \mathrm{FP} + \mathrm{FN}}.$$ For multi-class problems such as ours, we compute the macro-average, as this treats each class the same way, independently of their number of samples. The macro-average is computed by first computing the F$_1$-Score for each class and then averaging those. The \ac{MCC} is a measure similar to the Pearson correlation between the prediction and the true label. For the case of two classes it is defined as 
+{\small $$\text{MCC} = \frac{\mathrm
+{TP} \cdot \mathrm{TN} - \mathrm{FP} \cdot \mathrm{FN}}{\sqrt{(\mathrm{TP}+\mathrm{FP})(\mathrm{TP}+\mathrm{FN})(\mathrm{TN}+\mathrm{FP})(\mathrm{TN}+\mathrm{FN})}},$$} 
+and we refer the reader to \citet{mccMultiClass} for the definition of the multi-class variant, as it is not a simple micro- or macro-average but generalized differently. The value range of the \ac{MCC} is $[-1, 1]$, where $-1$ is perfect disagreement, $0$ shows no correlation between prediction and label and $1$ is perfect agreement. Only a perfect classifier can achieve a score of $1$ and any large negative score indicates implementation errors or huge transferability problems between training and test set.
+
+We use the \ac{MCC} and F$_1$-Score, as our evaluation set is heavily imbalanced and biased towards the class \texttt{neutral}, as can be seen in \autoref{tab:datasets:classes}. For imbalanced datasets, metrics such as accuracy might provide a flawed picture of the predictive performance. The macro F$_1$-Score is a popular metric for imbalanced datasets, that we use to alleviate that. Additionally, we use the \ac{MCC}, as it was shown that it is better suited for imbalanced datasets \cite{mccGood}. We use two metrics to provide a more complete picture of the predictive performance than can be summed up into a single number.
+
+% TODO: do we have enough time to do additional tests on the SICK test split?
 
 \paragraph{Measuring Bias} \label{sec:exp:eval:bias}
 % TODO: formulate sentences and stitch a coherent text from them
