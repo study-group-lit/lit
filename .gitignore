@@ -15,10 +15,7 @@
 venv
 __pycache__/
 .ipynb_checkpoints/
-<<<<<<< HEAD
 
+bin/
 main.pdf
 imgrund-loeser-trump-outline.pdf
-=======
-bin/
->>>>>>> origin/master
