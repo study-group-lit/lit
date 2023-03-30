@@ -22,6 +22,18 @@ In this section the results of our experiments are described and thoroughly anal
     \end{tabular}
 \end{table}
 
+\subsection{Testing H2}
+Figure~\ref{fig:ferret-sample} shows the explanations for the finetuned model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not considered by the model: The usage of quantifiers in this sample makes it a contradiction but the model attaches high importance only to the quantifier \enquote{all} whereas \enquote{several} has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers shows that the model is biased after fine-tuning on \ac{MultiNLI}.
+
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{./images/ferret_sample.pdf}
+    \caption{Expamle of a bad explanation}
+    \label{fig:ferret-sample}
+\end{figure*}
+
+\subsection{Testing H3}
+
 \begin{table}[ht!]
     \centering
     \caption{Prediction performance of our fine-tuned models on the \acs{SICK} dataset. The best result is shown in \textbf{bold} and the second-best is \underline{underlined}.}
@@ -40,16 +52,6 @@ In this section the results of our experiments are described and thoroughly anal
         \bottomrule
     \end{tabular}
 \end{table}
-
-\subsection{Testing H2}
-Figure~\ref{fig:ferret-sample} shows the explanations for the finetuned model's classification of a sample from the validation split of the \ac{e-SNLI} dataset obtained using ferret \cite{ferret}. It can be seen that the meaning of the quantifiers in this sample is not considered by the model: The usage of quantifiers in this sample makes it a contradiction but the model attaches high importance only to the quantifier \enquote{all} whereas \enquote{several} has very low importance to the model. The existence of such samples where the model only poorly captures the importance of quantifiers shows that the model is biased after fine-tuning on \ac{MultiNLI}.
-
-\begin{figure*}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{./images/ferret_sample.pdf}
-    \caption{Expamle of a bad explanation}
-    \label{fig:ferret-sample}
-\end{figure*}
 
 \subsection{Testing H4}
 Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4} to show the different predictive performance of the models.
