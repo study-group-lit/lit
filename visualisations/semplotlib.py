@@ -14,7 +14,7 @@ def plot_confusion_heatmap(data, relative=True, save_path=None):
     plt.tick_params(axis='both', which='major', labelbottom=False, bottom=False, top=False, labeltop=True)
 
     if save_path is not None:
-        plt.savefig(save_path)
+        plt.savefig(save_path, format="pdf", dpi=300, bbox_inches = "tight")
     plt.show()
 
 def plot_metric_heatmap_phenomena(data, save_path=None):
@@ -29,7 +29,7 @@ def plot_metric_heatmap_phenomena(data, save_path=None):
     plt.tick_params(axis='both', which='major', labelbottom=False, bottom=False, top=False, labeltop=True)
 
     if save_path is not None:
-        plt.savefig(save_path)
+        plt.savefig(save_path, format="pdf", dpi=300, bbox_inches = "tight")
     plt.show()
 
 
@@ -45,5 +45,5 @@ def plot_metric_heatmap_quantifiers(data, save_path=None):
     plt.tick_params(axis='both', which='major', labelbottom=False, bottom=False, top=False, labeltop=True)
 
     if save_path is not None:
-        plt.savefig(save_path)
+        plt.savefig(save_path, format="pdf", dpi=300, bbox_inches = "tight")
     plt.show()

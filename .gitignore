@@ -11,8 +11,10 @@
 *.blg
 *.run.xml
 *.out
-*.pdf
 
 venv
 __pycache__/
 .ipynb_checkpoints/
+
+main.pdf
+imgrund-loeser-trump-outline.pdf
