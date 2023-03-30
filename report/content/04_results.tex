@@ -33,7 +33,40 @@ Figure~\ref{fig:ferret-sample} shows the explanations for the finetuned model's 
 \end{figure*}
 
 \subsection{Testing H3}
+Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4} to show the different predictive performance of the models. The results for the Hypothesis-Only model were measured on the validation-matched split of \ac{MultiNLI}.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/important_words/matthews_correlation.pdf}
+    \caption{Matthews Correlation Coefficients for the model trained on different datasets separated by linguistic phenomena}
+    \label{fig:metric-heatmap-phenomena-mcc}
+\end{figure}
+
+In general, the Hypothesis-Only model shows the expected poor performance: For the phenomena of synonym, hypernym, hyponym and co-hyponym the \ac{MCC} around $0.4$. The exceptions are antonym, quantifiers and numerals. The model performs particularly badly on samples that contain antonyms and even worse for numerals. This behavior can be explained by the distribution of phenomena in the dataset shown in \autoref{tab:mnli:phenomena}: Antonyms are found in only $18874$ samples in the training split of \ac{MultiNLI} and numerals only in the hypotheses of $38168$ samples. This makes them the two rarest phenomena in the dataset. 
+
+\begin{table}[ht]
+    \centering
+    \caption{Phenomena distribution of the hypothesis of the training split of \ac{MultiNLI}}
+    \small
+    \begin{tabular}{l r}
+        \toprule
+        \multicolumn{1}{c}{Phenomenon} &  \multicolumn{1}{c}{Number of Samples} \\
+        \midrule
+        Synonym & $339763$ \\
+        Antonym & $18874$ \\
+        Hypernym & $117645$ \\
+        Hyponym & $124984$ \\
+        Co-Hyponym & $381690$ \\
+        Quantifier & $48526$ \\
+        Numeral & $38168$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:mnli:phenomena}
+\end{table}
+
+Also comparably rare are samples which contain quantifiers. Nevertheless, the model performs best on samples with an \ac{MCC} of about $0.46$. Since the model cannot possibly determine the meaning of the quantifier for the classification without knowledge of the premise this result is a clear indicator of a bias in the samples that contain quantifiers.
+
+\subsection{Testing H4}
 \begin{table}[ht!]
     \centering
     \caption{Prediction performance of our fine-tuned models on the \acs{SICK} dataset. The best result is shown in \textbf{bold} and the second-best is \underline{underlined}.}
@@ -53,18 +86,6 @@ Figure~\ref{fig:ferret-sample} shows the explanations for the finetuned model's 
     \end{tabular}
 \end{table}
 
-\subsection{Testing H4}
-Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4} to show the different predictive performance of the models.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/important_words/matthews_correlation.pdf}
-    \caption{Matthews Correlation Coefficients for the model trained on different datasets separated by linguistic phenomena}
-    \label{fig:metric-heatmap-phenomena-mcc}
-\end{figure}
-
 The Hypothesis-Only model shows the expected poor performance but performs comparably well on samples that contain antonyms which indicates a bias in these samples as the model cannot detetct the presence of an antoymn for the right reasons without knowing the premise. The improved performance of the Filtered 3/3 longer model shows that this bias can be mitigated by the naive approach of removing the biased samples.
-
-The Hypothesis-Only model also performs better on samples that contain quantifiers which indicates a bias also in these samples. As opposed to antonyms, the Filtered 3/3 longer model performs slightly worse on quantifiers than the Base model. Thus, it is not sufficient to remove the biased samples to increase performance on quantifiers. A reason for this behavior might be the greater complexity of quantifiers compared to antonyms. To increase the model's performance on quantifiers nevertheless, we collect additional training samples containing quantifiers.
 
 \subsection{Testing H5}
