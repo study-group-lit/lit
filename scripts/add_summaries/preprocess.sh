@@ -11,5 +11,5 @@
 PATH=/opt/slurm/bin:$PATH
 
 
-source ~/lit/venv/bin/activate
+source ../../venv/bin/activate
 python3 preprocess.py -d /workspace/students/lit/datasets/cnn_dataset

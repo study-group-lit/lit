@@ -13,5 +13,5 @@
 PATH=/opt/slurm/bin:$PATH
 
 
-source ~/lit/venv/bin/activate
+source ../../venv/bin/activate
 python3 evaluate_model.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli-hypothesis-only/42 --hypothesis_only
