@@ -1,0 +1,191 @@
+[
+       {
+              "accuracy": 0.8727084947069456,
+              "matthews_correlation": 0.7461921812097561,
+              "f1": 0.5964899620097368,
+              "confusion_matrix": [
+                     [
+                            2328,
+                            167,
+                            171
+                     ],
+                     [
+                            0,
+                            0,
+                            0
+                     ],
+                     [
+                            47,
+                            108,
+                            1052
+                     ]
+              ],
+              "total_time_in_seconds": 340.83460595365614,
+              "samples_per_second": 11.363282754588067,
+              "latency_in_seconds": 0.08800273843368349,
+              "task_name": "synonym",
+              "data_preprocessor": null
+       },
+       {
+              "accuracy": 0.936768149882904,
+              "matthews_correlation": 0.7995246063476211,
+              "f1": 0.6148346014786035,
+              "confusion_matrix": [
+                     [
+                            62,
+                            7,
+                            5
+                     ],
+                     [
+                            0,
+                            0,
+                            0
+                     ],
+                     [
+                            6,
+                            9,
+                            338
+                     ]
+              ],
+              "total_time_in_seconds": 37.74000788666308,
+              "samples_per_second": 11.314253067522472,
+              "latency_in_seconds": 0.08838409341138893,
+              "task_name": "antonym",
+              "data_preprocessor": null
+       },
+       {
+              "accuracy": 0.8790252393385553,
+              "matthews_correlation": 0.7282416374051667,
+              "f1": 0.5928195128043554,
+              "confusion_matrix": [
+                     [
+                            769,
+                            53,
+                            50
+                     ],
+                     [
+                            0,
+                            0,
+                            0
+                     ],
+                     [
+                            13,
+                            23,
+                            241
+                     ]
+              ],
+              "total_time_in_seconds": 102.34214778803289,
+              "samples_per_second": 11.227045990668131,
+              "latency_in_seconds": 0.0890706247067301,
+              "task_name": "hypernym",
+              "data_preprocessor": null
+       },
+       {
+              "accuracy": 0.8683304647160068,
+              "matthews_correlation": 0.7340545082266738,
+              "f1": 0.597753233636334,
+              "confusion_matrix": [
+                     [
+                            726,
+                            69,
+                            43
+                     ],
+                     [
+                            0,
+                            0,
+                            0
+                     ],
+                     [
+                            10,
+                            31,
+                            283
+                     ]
+              ],
+              "total_time_in_seconds": 103.4408326651901,
+              "samples_per_second": 11.233474925333196,
+              "latency_in_seconds": 0.08901964945369199,
+              "task_name": "hyponym",
+              "data_preprocessor": null
+       },
+       {
+              "accuracy": 0.8723782438677569,
+              "matthews_correlation": 0.7694349640532216,
+              "f1": 0.6030818863160506,
+              "confusion_matrix": [
+                     [
+                            2683,
+                            206,
+                            238
+                     ],
+                     [
+                            0,
+                            0,
+                            0
+                     ],
+                     [
+                            71,
+                            203,
+                            2225
+                     ]
+              ],
+              "total_time_in_seconds": 497.4848638223484,
+              "samples_per_second": 11.30888678054141,
+              "latency_in_seconds": 0.08842603338470466,
+              "task_name": "co_hyponym",
+              "data_preprocessor": null
+       },
+       {
+              "accuracy": 0.8620689655172413,
+              "matthews_correlation": 0.7845512628207425,
+              "f1": 0.8279471788715487,
+              "confusion_matrix": [
+                     [
+                            22,
+                            2,
+                            3
+                     ],
+                     [
+                            0,
+                            6,
+                            2
+                     ],
+                     [
+                            0,
+                            1,
+                            22
+                     ]
+              ],
+              "total_time_in_seconds": 5.314970208331943,
+              "samples_per_second": 10.912572926387634,
+              "latency_in_seconds": 0.09163741738503349,
+              "task_name": "quantifiers",
+              "data_preprocessor": null
+       },
+       {
+              "accuracy": 0.8466135458167331,
+              "matthews_correlation": 0.7302567705509455,
+              "f1": 0.760104660511186,
+              "confusion_matrix": [
+                     [
+                            514,
+                            35,
+                            52
+                     ],
+                     [
+                            8,
+                            52,
+                            15
+                     ],
+                     [
+                            13,
+                            31,
+                            284
+                     ]
+              ],
+              "total_time_in_seconds": 88.87573181092739,
+              "samples_per_second": 11.296672100949799,
+              "latency_in_seconds": 0.08852164523000736,
+              "task_name": "numericals",
+              "data_preprocessor": null
+       }
+]

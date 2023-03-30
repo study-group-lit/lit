@@ -1,0 +1,12 @@
+[
+    {
+        "accuracy": 0.5373012637586628,
+        "matthews_correlation": 0.47265271005933207,
+        "f1": 0.5503218485539971,
+        "total_time_in_seconds": 415.9082818906754,
+        "samples_per_second": 11.795869939636303,
+        "latency_in_seconds": 0.08477543454763053,
+        "task_name": "sick/test",
+        "data_preprocessor": null
+    }
+]
