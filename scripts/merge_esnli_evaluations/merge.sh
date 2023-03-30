@@ -13,5 +13,5 @@
 PATH=/opt/slurm/bin:$PATH
 
 
-source ~/lit/venv/bin/activate
+source ../../venv/bin/activate
 python3 merge_esnli_evaluations.py

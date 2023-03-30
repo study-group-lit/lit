@@ -84,23 +84,46 @@ We use \acs{MultiNLI} \cite{multinli}, \acs{e-SNLI} \cite{esnli} and \acs{SICK} 
 
 \autoref{code:data:samples:multinli} depicts a random sample from the \acs{e-SNLI} corpus including all available features. Comparing it to the features of \acs{MultiNLI} and \acs{SICK}, it is obvious that explanations and highlights of the sentences are added to the data. Up to three different explanations are included and for each explanation, the words in the premise and hypothesis that are relevant to this explanation are provided. The words are provided as indices into the premise and hypotheses starting at zero. For code simplicity, we only use the first explanation.
 
+Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge.
 \begin{lstlisting}[
-    language=json,
-    caption={A random data sample from the question-answering dataset.},
-    label=code:data:samples:rcdata
-    ]
-{
-    "text": "@entity0 , @entity1 ( @entity2 ) -- president @entity3 vetoed ...",
-    "question": "@entity3 says most of @placeholder ...",
-    "answer": "@entity10",
-    "entities": {
-        "@entity26": "Education",
-        ...
-    }
-}
+    language=plain,
+    caption={Fomrat of the CNN/Dailymail dataset.},
+    label=code:data:samples:cnn-format
+]
+<URL>
+
+<Article>
+
+<Question>
+
+<Correct Entity>
+
+<Entity Mapping>
 \end{lstlisting}
 
-Additionally, we use a question-answering dataset consisting of CNN/DailyMail articles and corresponding answers that can be entailed by the article \cite{cnn1}. The corpus formulates cloze-style questions by providing the article and a single sentence with a single word replaced by a placeholder. The original task then is to infer what entity would be correct in the place of the placeholder. To pseudonymize the dataset, named entities are replaced with abstract placeholders of the form \enquote{@entity\#\#} where \enquote{\#\#} is a positive integer. This is done in the original dataset to test reading comprehension instead of world knowledge. An example of such a data sample can be seen in \autoref{code:data:samples:rcdata}. The key \texttt{text} consists of the complete article and the \texttt{question} is a sentence that can be entailed by the article if the \enquote{@placeholder} is replaced with the entity in key \texttt{answer}. Finally, a mapping of all entities is present as well. We replace all placeholders with the original entities to provide sensible sentences and such that the model can use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
+Each sample in the dataset is provided in the format shown in \autoref{code:data:samples:cnn-format} as illustrated by the sample from the CNN dataset in \autoref{code:data:samples:cnn}.
+
+\begin{lstlisting}[
+    language=plain,
+    caption={A random data sample from the CNN dataset.},
+    label=code:data:samples:cnn
+]
+the job by both @entity25 and @entity26 majority leaders , @entity2 explained . @entity27 leader @entity27 of @entity28 praised @entity9 's smarts and his devotion to the @entity13 . the soft - spoken and bookish...
+
+@placeholder will replace @entity9 , who was parliamentarian for 18 years
+
+@entity8
+
+@entity31:Frumin
+@entity2:Reid
+@entity1:CNN
+@entity0:Washington
+@entity13:Senate
+@entity27:Mitch McConnell
+...
+\end{lstlisting}
+
+We replace all placeholders in the article and question with the original entities to provide sensible sentences and such that the model is able to use world knowledge when necessary. Nonetheless, we use the fact that the entities were recognized in the process of recasting the data, as described in \autoref{sec:meth:recasting}
 
 \section{Experiments} \label{sec:experiments}
 This section describes all experiments we conduct to evaluate our proposed hypotheses as well as the specific setup we use to perform the experiments including the metrics we use and the splits of our datasets.
@@ -124,7 +147,7 @@ The dataset is split into subsets of linguistic phenomena by us using data from 
 
 To test for biases in the training data, we train multiple hypothesis-only models, as described in \autoref{sec:method:detecting_biased_data}. The training data is said to be biased if the hypothesis-only models achieve better performance than could be explained by a majority-only baseline. The bias might manifest in particular words in the hypothesis correlating with specific labels or other structures or phenomena being correlated with a label. This is a data bias, as this is never based on reasoning if the premise can be entailed by the hypothesis, but are always based on statistical correlations only present in this particular data. By comparing the predictive performance of the hypothesis-only model for different linguistic phenomena, as described in the previous section, we can further analyze, for which linguistic phenomena the data is most biased. By analyzing in the described manner, we can learn what linguistic phenomena our mitigation needs to be focussed on.
 
-\subsection{Testing H4}
+\subsection{Testing H4} \label{sub:experiments-h4}
 \textbf{H4}: \textit{Mitigating biased data during training results in models with greater predictive performance and less bias.}
 
 To test \textbf{H4}, we train three different models and evaluate their predictive performance and bias for different linguistic phenomena. All of the models are based on the methods for mitigating data bias described in \autoref{sec:method:detecting_biased_data}. 
