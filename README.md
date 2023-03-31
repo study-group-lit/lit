@@ -60,13 +60,17 @@ Processed datasets and trained models are not part of this repository.
 
 ## Installation
 
+## Guarantees:
+- We guarantee that the code will work on Last, except running `candc` (recasting)
+
 **Requirements:**
-- Python3 (tested with version `3.8.10`)
-- C&C (required for recasting `scripts/quantifier_monotonicity/ccg_parse.py`)
+- Python3 (tested with version `3.7.4`)
+- Last cluster (other system setups may work)
+- C&C (required for recasting `recasting/quantifier_monotonicity/ccg_parse.py`)
 - Linux, as `candc` does not run on MacOS
 
 **C&C installation:**
-Run `scripts/quantifier_monotonicity/install_candc.sh`. If necessary make the file executable. The script will show an error, which may be ignored.<br>
+Run `recasting/quantifier_monotonicity/install_candc.sh`. If necessary make the file executable. The script will show an error, which may be ignored.<br>
 Create a folder `bin` in the root directory and move the new `candc-1.00` directory into the `bin` directory. (The `bin` folder will be ignored by Git)
 
 **Python setup**
