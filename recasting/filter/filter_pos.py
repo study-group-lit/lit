@@ -1,3 +1,7 @@
+# README
+# This file contains a script to filter samples form the CNN and Dailymail dataset 
+# that contain quantifiers in the answer based on POS tagging with nltk. 
+
 import os
 
 from typing import List
@@ -6,7 +10,7 @@ from dataclasses import dataclass
 from datasets import DatasetDict
 from argparse import ArgumentParser
 from multiprocessing import cpu_count
-from nltk import word_tokenize, ngrams, pos_tag
+from nltk import word_tokenize, pos_tag
 import nltk
 
 nltk.download('punkt')

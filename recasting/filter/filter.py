@@ -1,3 +1,7 @@
+# README
+# This file contains a script to filter samples form the CNN and Dailymail dataset 
+# that contain quantifiers in the answer based on pure string matching. 
+
 import os
 from datasets import DatasetDict
 from argparse import ArgumentParser
