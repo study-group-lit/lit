@@ -29,19 +29,19 @@ Looking at the resulting \ac{MCC} scores, we can see the expected ordering: The 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/all_words/base_filtered_recast_matthews_correlation.pdf}
-    \caption{\ac{MCC} scores for the models trained on different datasets separated by linguistic phenomena}
+    \caption{\ac{MCC} scores for the models trained on different variants of our training dataset separated by linguistic phenomena.}
     \label{fig:metric-heatmap-phenomena-mcc}
 \end{figure}
 
-Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \acs{MCC} scores for our base model separated by linguistic phenomena. As can be seen in the figure, there are disparities between different phenomena. Antonyms, quantifiers and numerals have the largest disparities of $\geq 0.1$. The base model performs best on the phenomenon of antonyms while performing worst on numerals and quantifiers.
+Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \acs{MCC} scores for our base model separated by linguistic phenomena. Scores for other models are depicted as well but will be described in the following sections. As can be seen in the figure, there are disparities between different phenomena. Antonyms, quantifiers and numerals have the largest disparities of $\geq 0.1$. The base model performs best on the phenomenon of antonyms while performing worst on numerals and quantifiers.
 
 Disparities between phenomena indicate a bias of the model towards certain phenomena. As can be seen in \autoref{fig:metric-heatmap-phenomena-mcc}, the base model performs significantly differently when antonyms, quantifiers or numerals occur.
 
-Analyzing the bias metrics of the model for different linguistic phenomena, we focus on \ac{LIME} as the explanation method of choice. \ac{LIME} has the best faithfulness results across all linguistic phenomena and faithfulness metrics and by a significant margin in many cases. We can see the plausibility metrics obtained using \ac{LIME} in \autoref{tab:res:bias_finetuned}. The complete bias metrics can be found in \autoref{sec:bias_plots}, including all explainers and their faithfulness scores.
+Analyzing the bias metrics of the model for different linguistic phenomena, we focus on \ac{LIME} as the explanation method of choice. \ac{LIME} has the best faithfulness results across all linguistic phenomena and faithfulness metrics and by a significant margin in many cases. We can see the plausibility metrics obtained using \ac{LIME} in \autoref{tab:res:bias_finetuned}. The complete bias metrics can be found in \autoref{sec:bias_plots_base}, including all explainers and their faithfulness scores.
 
 \begin{table}[ht!]
     \centering
-    \caption{Plausibility results obtained using \ac{LIME} as the explainer for different linguistic phenomena.}
+    \caption{Plausibility results obtained using \ac{LIME} as the explainer for different linguistic phenomena of the base fine-tuned model.}
     \begin{tabular}{l c c c}
         \toprule
         \multicolumn{1}{c}{Phenomenon} & \acs{AUPRC} & F$_1$ & \acs{IOU}\\
@@ -65,17 +65,17 @@ Figure~\ref{fig:ferret-sample} shows the explanations for the fine-tuned model's
 \begin{figure*}[t!]
     \centering
     \includegraphics[width=\textwidth]{./images/ferret_sample.pdf}
-    \caption{Example of a bad explanation}
+    \caption{An example of a bad explanation by the base fine-tuned model}
     \label{fig:ferret-sample}
 \end{figure*}
 
 \subsection{Testing H3}
 Figure~\ref{fig:metric-heatmap-phenomena-mcc-hyponly} depicts the \ac{MCC} scores separated by linguistic phenomena for our model trained on different datasets as described in \autoref{sub:experiments-h4} to show the different predictive performance of the models. The results for the hypothesis-only model were measured on the validation-matched split of \ac{MultiNLI}.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \centering
     \includegraphics[width=0.9\columnwidth]{./images/metric_heatmaps_phenomena/important_words/hypothesis_only_matthews_correlation.pdf}
-    \caption{Matthews Correlation Coefficients for the model trained on different datasets separated by linguistic phenomena}
+    \caption{Matthews Correlation Coefficients for the hypothesis-only model on our training dataset separated by linguistic phenomena}
     \label{fig:metric-heatmap-phenomena-mcc-hyponly}
 \end{figure}
 
@@ -83,8 +83,7 @@ In general, the hypothesis-only model shows the expected poor performance: For t
 
 \begin{table}[ht]
     \centering
-    \caption{Phenomena distribution of the hypothesis of the training split of \ac{MultiNLI}}
-    \small
+    \caption{Phenomenon distribution of the hypothesis of the training split of \ac{MultiNLI}}
     \begin{tabular}{l r}
         \toprule
         \multicolumn{1}{c}{Phenomenon} &  \multicolumn{1}{c}{Number of Samples} \\
@@ -132,7 +131,47 @@ The ensembled model performs better than the baseline and slightly worse than th
 
 Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separated by linguistic phenomena for the filtered model compared to the base fine-tuned model. We can see slightly improved performance for antonyms with harshly decreased performance for quantifiers and similar performance for all other phenomena. The decreased performance for quantifiers can be explained by the hypothesis-only model being more accurate on quantifiers and therefore more examples of quantifiers being discarded as biased during filtering. The decreased performance might be explained by either fewer samples of this phenomenon existing after filtering or the evaluation set having the same biases as the training set and thus decreased performance for it that would not exist for a less biased dataset. The increased performance on antonyms but decreased performance on numerals is surprising, as both have poor prediction performance for the hypothesis-only model and thus should not be filtered too much. We interpret that result as random noise or just a general decrease in bias that is randomly effective for antonyms but is not for numerals. Nonetheless, the filtering is beneficial for overall prediction performance, which can be explained by samples not being detected as part of any of our phenomena.
 
-% TODO: description of bias plots
+\begin{table}[ht!]
+    \centering
+    \caption{Plausibility results obtained using \ac{LIME} as the explainer for different linguistic phenomena for the model \enquote{Filtered 3/3 longer}.}
+    \begin{tabular}{l c c c}
+        \toprule
+        \multicolumn{1}{c}{Phenomenon} & \acs{AUPRC} & F$_1$ & \acs{IOU}\\
+        \midrule
+        Synonyms & $51.77\%$ & $41.87\%$ & $28.43\%$ \\
+        Antonyms & $73.32\%$ & $50.12\%$ & $34.81\%$ \\
+        Hypernyms & $56.95\%$ & $43.01\%$ & $29.44\%$ \\
+        Hyponyms & $55.20\%$ & $42.43\%$ & $28.74\%$ \\
+        Co-Hyponyms & $55.14\%$ & $42.43\%$ & $29.04\%$ \\
+        Quantifiers & $52.28\%$ & $37.69\%$ & $24.40\%$ \\
+        Numerals & $55.24\%$ & $44.01\%$ & $30.18\%$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:res:bias_filtered}
+\end{table}
+
+Once again, the faithfulness metrics of the explainers are best for \ac{LIME} across all cases, such that we only compare the plausibility results obtained using \ac{LIME}, as seen in \autoref{tab:res:bias_filtered}. The complete results for all explainers and all metrics can be seen in \autoref{sec:bias_plots_filtered}. As we have already found, all plausibility metrics correlate, but we find the biggest differences in \acs{AUPRC} and \acs{IOU}. Looking at the plausibility for different phenomena, we see the same patterns as for the base finetuned models with slight differences. The model performs similarly on all phenomena except for antonyms, for which it is a lot better. Nonetheless, differences show in the weaknesses of the model: Whereas the base fine-tuned model was weak for quantifiers, numerals and hyponyms, the improved model is weak only for quantifiers and synonyms. A notable exception to the correspondence between \acs{AUPRC}, F$_1$ and \acs{IOU} are the results for synonyms, that show a weak \acs{AUPRC} score but strong F$_1$ and \acs{IOU} scores. Because of this, we consider the \acs{IOU} instead of the \acs{AUPRC} in the comparison of the base and filtered model in \autoref{tab:res:bias_comparison}.
+
+\begin{table}[ht!]
+    \centering
+    \caption{Plausibility \acs{IOU} obtained using \ac{LIME} as the explainer for different linguistic phenomena compared between the base model and \enquote{Filtered 3/3 longer}.}
+    \begin{tabular}{l c c}
+        \toprule
+        \multicolumn{1}{c}{Phenomenon} & Base & Filtered 3/3 longer \\
+        \midrule
+        Synonyms & $25.57\%$ & $28.43\%$ \\
+        Antonyms & $33.23\%$ & $34.81\%$ \\
+        Hypernyms & $24.33\%$ & $29.44\%$ \\
+        Hyponyms & $23.94\%$ & $28.74\%$ \\
+        Co-Hyponyms & $26.57\%$ & $29.04\%$ \\
+        Quantifiers & $24.87\%$ & $24.40\%$ \\
+        Numerals & $25.02\%$ & $30.18\%$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:res:bias_comparison}
+\end{table}
+
+Comparing the filtered model to the base model, we can see a clear increase in plausibility across all phenomena except for quantifiers. This indicates, that the bias is successfully mitigated during training and as such the model is less biased. We interpret the result of quantifiers not being improved, in such a way, that simply removing the impact of biased samples of quantifiers is not enough to teach the model quantifier entailment patterns. This result of more bias for quantifiers is analogous to the decreased predictive performance for quantifiers. We can conclude, that the filtering process helps create a stronger model with less bias, but additional measures need to be taken, to improve performance for quantifiers.
 
 \subsection{Testing H5}
 To test this hypothesis the predictive performance of the recast model has been tested on both the \ac{SICK} dataset and the \ac{e-SNLI} dataset.
