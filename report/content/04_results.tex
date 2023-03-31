@@ -23,7 +23,7 @@ To test the knowledge contained in \acp{PLM}, we devise prompts that allow for \
     \label{tab:res:prompting}
 \end{table}
 
-Looking at the resulting \ac{MCC} scores, we can see the expected ordering: The a priori chosen word group is better than the simple words that do not fit into the sentence and the tuned words perform best, as they are tuned on \ac{MultiNLI} to perform better. Interestingly, all approaches, even the simple approach, perform much better than random, which would be an \ac{MCC} of $0$. Nonetheless, compared to the \ac{MCC} score of the fine-tuned model, which is $49.49\%$, the results of using prompting are far worse, even when specifically tuning the prompt words.
+Looking at the resulting \ac{MCC} scores, we can see the expected ordering: The a priori chosen word group is better than the simple words that do not fit into the sentence and the tuned words perform best, as they are tuned on \ac{MultiNLI} to perform better. Interestingly, all approaches, even the simple approach, perform much better than random, which would be an \ac{MCC} of $0$. Nonetheless, compared to the \ac{MCC} score of the fine-tuned model, which is $47.27\%$, the results of using prompting are far worse, even when specifically tuning the prompt words.
 
 \subsection{Testing H2}
 \begin{figure}[ht]
@@ -111,13 +111,13 @@ Also comparably rare are samples which contain quantifiers. Nevertheless, the mo
         \toprule
         \multicolumn{1}{c}{Model} & \acs{MCC} & $\text{F}_1$ \\
         \midrule
-        Base & $49.49\%$ & $56.60\%$ \\
-        Hypothesis-Only\tablefootnote{Average of three runs with different seeds} & $14.13\%$ & $40.02\%$ \\
-        Filtered $2/3$ & $46.21\%$ & $54.12\%$ \\
-        Filtered $2/3$ longer & $36.17\%$ & $52.85\%$ \\
-        Filtered $3/3$ & $48.73\%$ & $56.94\%$ \\
-        Filtered $3/3$ longer & $\mathbf{52.31\%}$ & $\mathbf{62.04\%}$ \\
-        Ensembled & $\underline{51.65\%}$ & $\underline{59.88\%}$ \\
+        Base & $47.27\%$ & $55.03\%$ \\
+        Hypothesis-Only\tablefootnote{Average of three runs with different seeds} & $10.93\%$ & $38.49\%$ \\
+        Filtered $2/3$ & $46.26\%$ & $55.17\%$ \\
+        Filtered $2/3$ longer & $37.73\%$ & $53.72\%$ \\
+        Filtered $3/3$ & $48.26\%$ & $56.52\%$ \\
+        Filtered $3/3$ longer & $\mathbf{51.59\%}$ & $\mathbf{60.63\%}$ \\
+        Ensembled & $\underline{50.16\%}$ & $\underline{57.75\%}$ \\
         Recast & $45.33\%$ & $51.64\%$ \\
         \bottomrule
     \end{tabular}

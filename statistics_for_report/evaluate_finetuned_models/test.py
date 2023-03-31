@@ -19,10 +19,10 @@ for model in models:
     print(model)
     model = pipeline("text-classification", model=model)
     print("sick test")
-    suite = EvaluationSuite.load("../../datasets/evaluation_suite_sick_test.py")
+    suite = EvaluationSuite.load("../../evaluation_suites/sick.py")
     print(suite.run(model))
     print("esnli test")
-    suite = EvaluationSuite.load("../../datasets/evaluation_suite_phenomena_test.py")
+    suite = EvaluationSuite.load("../../evaluation_suites/esnli_test_phenomena.py")
     results = suite.run(model)
     for result in results:
         result["task_name"] = result["task_name"].info.description
@@ -38,10 +38,10 @@ for seed in seeds:
     print(model+seed)
     model = pipeline("text-classification", model=model+seed)
     print("sick test")
-    suite = EvaluationSuite.load("../../datasets/evaluation_suite_sick_test_hypothesis_only.py")
+    suite = EvaluationSuite.load("../../evaluation_suites/sick_hypothesis_only.py")
     print(suite.run(model))
     print("esnli test")
-    suite = EvaluationSuite.load("../../datasets/evaluation_suite_phenomena_hypothesis_only_test.py")
+    suite = EvaluationSuite.load("../../evaluation_suites/esnli_test_phenomena_hypothesis_only.py")
     results = suite.run(model)
     for result in results:
         result["task_name"] = result["task_name"].info.description

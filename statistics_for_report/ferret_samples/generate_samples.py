@@ -14,12 +14,12 @@ def explain(record, index):
     label = int(record["label"])
     explanation = bench.explain(query, target=label)
     explanation_html = bench.show_table(explanation).to_html()
-    with open(f"~/lit/scripts/ferret_samples/results/{index}_explanation.html", "w") as f:
+    with open(f"./results/{index}_explanation.html", "w") as f:
         f.write(explanation_html)
 
     evaluation = bench.evaluate_explanations(explanation, target=label)
     evalutation_html = bench.show_evaluation_table(evaluation).to_html()
-    with open(f"~/lit/scripts/ferret_samples/results/{index}_evaluation.html" , "w" ) as f:
+    with open(f"./results/{index}_evaluation.html" , "w" ) as f:
         f.write(evalutation_html)
 
     return record

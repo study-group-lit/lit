@@ -16,7 +16,7 @@ if not os.path.exists(model_path):
 
 model = pipeline("text-classification", model=model_path)
 
-suite = EvaluationSuite.load("../../datasets/evaluation_suites/mnli_phenomena_hypothesis_only.py")
+suite = EvaluationSuite.load("../../evaluation_suites/mnli_phenomena_hypothesis_only.py")
 results = suite.run(model)
 
 for result in results:

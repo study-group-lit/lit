@@ -18,7 +18,7 @@ if not os.path.exists(model_path):
 
 model = pipeline("text-classification", model=model_path)
 
-evaluation_suite_path = "../../datasets/evaluation_suites/esnli_quantifiers_hypothesis_only.py" if hypothesis_only else "../../datasets/evaluation_suites/esnli_quantifiers.py"
+evaluation_suite_path = "../../evaluation_suites/esnli_quantifiers_hypothesis_only.py" if hypothesis_only else "../../evaluation_suites/esnli_quantifiers.py"
 suite = EvaluationSuite.load(evaluation_suite_path)
 results = suite.run(model)
 
