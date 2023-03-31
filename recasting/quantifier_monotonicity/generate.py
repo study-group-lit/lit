@@ -1,3 +1,8 @@
+# README
+# Augments an existing CNN or Dailymail dataset by:
+# 1. Filtering out samples, which do not have answer entities
+# 2. For each answer generating premise hypothesis pairs, in which the hypothesis can be entailed, is neutral, or is contradicting to the premise (if possible)
+
 import os
 from datasets import Dataset
 from argparse import ArgumentParser
@@ -13,7 +18,7 @@ def expand_pair(batch):
     labels = []
 
     for index, answer in enumerate(batch["answer"]):
-        correct_answer = answer.replace("@placeholder", batch["correct_entity"][index])        
+        correct_answer = answer.replace("@placeholder", batch["correct_entity"][index])
         results = generate_samples(correct_answer)
         if results is None:
             continue
