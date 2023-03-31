@@ -1,6 +1,10 @@
+# README
+# This file contains a script to filter an e-SNLI dataset with precalculated 
+# evauations and then calculate the metrics on the result.
+
 """
 In contrast to evaluations_esnli.py, this script does not need to calculate the evaluations, as they are already a part of the dataset.
-This script only needs to filter esnli (validations) and then calculate the metrics on the result.
+This script only needs 
 """
 from datasets import load_from_disk
 from statistics import mean, median

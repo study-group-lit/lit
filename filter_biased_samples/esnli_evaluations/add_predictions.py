@@ -1,7 +1,9 @@
+# README
+# This file contains a script to add the predictions of a hypothesis-only model to e-SNLI.
+
 import os
 import multiprocessing
 from datasets import load_from_disk
-import datasets
 from transformers import pipeline
 
 # Use this if the script crashes due to permissions problems with the cache
