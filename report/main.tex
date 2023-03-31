@@ -56,7 +56,11 @@
 
 \maketitle
 \begin{abstract}
-TODO TODO TODO
+Natural Language Inference (NLI) is the task of deciding on the entailment relation between a hypothesis and a premise. This task is very important for natural language understanding, as it can be used as a building block in more complex tasks. 
+
+We find that the source of predictive performance for \acs{NLI} is found in the fine-tuning procedure. By analyzing the performance and plausibility of the predictions of a fine-tuned model, we conclude that the model is biased for specific phenomena. Furthermore, by evaluating a hypothesis-only model on the training dataset, we show that the training data contains biases that have different strengths when split across different linguistic phenomena.
+
+We try multiple methods for mitigating data bias during training, succeeding in improving predictive performance and reducing bias in the explanations of the model. Furthermore, we recast data from the domain of question answering to the task of \acs{NLI} and apply linguistic techniques to find and generate new examples containing quantifier entailment. By training on the additional training data, the predictive performance is further increased on an easy evaluation set but reduced on a hard evaluation set, indicating increased bias. We conclude, by confirming most of our hypotheses and showing our learnings.
 \end{abstract}
 
 \input{content/01_task_description.tex}
