@@ -61,7 +61,7 @@ Processed datasets and trained models are not part of this repository.
   - different quantifiers
   - different datasets such as e-SNLI test, e-SNLI validation, SICK test, SICK validation or MultiNLI validation matched
 - `filter_biased_samples`:
-  - Adding prediction information on the Base model to the e-SNLI dataset with evaluation information
+  - Adding prediction information on the base model to the e-SNLI dataset with evaluation information
   - Filtering MultiNLI based on predictions of the hypothesis only models and thus generating the filtered models
 - `finetuning`: Training and testing scripts for the following models:
   - MultiNLI
