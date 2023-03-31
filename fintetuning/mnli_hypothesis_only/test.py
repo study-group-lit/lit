@@ -11,5 +11,5 @@ args = parser.parse_args()
 seed = args.seed
 model = pipeline("text-classification", model=f"/workspace/students/lit/models/roberta-base-finetuned-mnli-hypothesis-only/{seed}/")
 
-suite = EvaluationSuite.load("../../datasets/evaluation_suite_hypothesis_only.py")
+suite = EvaluationSuite.load("../../evaluation_suites/mnli_hypothesis_only.py")
 print(suite.run(model))

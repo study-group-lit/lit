@@ -3,5 +3,5 @@ from evaluate import EvaluationSuite
 
 model = pipeline("text-classification", model="/workspace/students/lit/models/roberta-ensemble-finetuned-mnli/")
 
-suite = EvaluationSuite.load("../../datasets/evaluation_suite.py")
+suite = EvaluationSuite.load("../../evaluation_suites/default.py")
 print(suite.run(model))

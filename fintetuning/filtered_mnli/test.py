@@ -16,5 +16,5 @@ if not os.path.exists(model_path):
 
 model = pipeline("text-classification", model=model_path)
 
-suite = EvaluationSuite.load("../../datasets/evaluation_suite.py")
+suite = EvaluationSuite.load("../../evaluation_suites/default.py")
 print(suite.run(model))
