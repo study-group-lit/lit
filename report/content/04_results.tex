@@ -108,10 +108,10 @@ Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separa
 % TODO: description of bias plots
 
 \subsection{Testing H5}
-To test this hypothesis the predictive performance of the recast model has been tested on both the test split of the \ac{SICK} dataset and the validation split of the \ac{e-SNLI} dataset.
+To test this hypothesis the predictive performance of the recast model has been tested on both the \ac{SICK} dataset and the \ac{e-SNLI} dataset.
 
 The results obtained on the \ac{SICK} dataset can be seen in \autoref{tab:res:finetuned}. Unexpectedly, the performance of the model on the \ac{SICK} dataset dropped significantly compared to the base finetuned model both in terms of the \ac{MCC} and F$_1$-Score.
 
-Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the result of the recast model on the \ac{e-SNLI} dataset per linguistic phenomena compared to the other models. The model's performance on samples that contain quantifiers and have been determined to be biased has indeed been improved by the addition of the recasted data compared to the base finetuned model. We interpret this as a result of decreased bias in the quantifier samples caused by the additional recasted data.
+Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the result of the recast model on the \ac{e-SNLI} dataset per linguistic phenomenon compared to the other models. The model's performance on samples that contain quantifiers and have been determined to be biased has indeed been improved by the addition of the recast data compared to the base finetuned model. We interpret this as a result of decreased bias in the quantifier samples caused by the additional recast data.
 
-Interestingly, also the performance on all other linguistic phenomena has increased, but most drastically on antonyms on which the model's performance increased by almost ten percentage points. Also on all other linguistic phenomena, the model's performance has increased by at least two percentage points. This behavior can be explained by the increased amount of training data.
+Interestingly, also the performance on all other linguistic phenomena has increased, but most drastically on antonyms on which the model's performance increased by almost ten percentage points. Also on all other linguistic phenomena, the model's performance has increased by at least two percentage points. This behavior can be explained by the increased amount of training data also showing examples of other linguistic phenomena.
