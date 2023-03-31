@@ -1,5 +1,5 @@
 # README
-# This file contains an EvaluationSuite to evaluate the porformance of a model on the
+# This file contains an EvaluationSuite to evaluate the performance of a model on the
 # test split of SICK and validation-matched and validation-missmatched split of MultiNLI.
 
 import evaluate
@@ -11,10 +11,10 @@ class ConfiguredMetric:
         self.metric = metric
         self.metric_args = metric_args
         self.metric_kwargs = metric_kwargs
-    
+
     def add(self, *args, **kwargs):
         return self.metric.add(*args, **kwargs)
-    
+
     def add_batch(self, *args, **kwargs):
         return self.metric.add_batch(*args, **kwargs)
 
@@ -38,7 +38,7 @@ class Suite(evaluate.EvaluationSuite):
             self.task_for("multi_nli", "validation_matched"),
             self.task_for("multi_nli", "validation_mismatched")
         ]
-    
+
     def task_for(self, data: str, split: str, premise: str = "premise", hypothesis: str = "hypothesis"):
         metric = evaluate.combine([
             evaluate.load("accuracy"),
