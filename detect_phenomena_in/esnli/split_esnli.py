@@ -1,9 +1,20 @@
+# README
+# This file contains a script to detect the liguistic phenomena of synonym, antonym,
+# hypernym, hyponym, co_hyponym, quantifiers and numerals in in the words marked as 
+# important by human annotators in the e-SNLI dataset. For each phenomenon a column 
+# will be added to the dataset which contains a number. If the number is >0, the 
+# respective phenomenon has been found in the sample.
+
 from datasets import load_dataset
 import re
 import nltk
 from nltk.corpus import wordnet
 from nltk import word_tokenize, pos_tag
 import multiprocessing
+import warnings
+from argparse import ArgumentParser
+
+warnings.filterwarnings("ignore")
 
 nltk.download('wordnet')
 nltk.download('punkt')
@@ -68,29 +79,73 @@ def get_words_at_indices(string, indices) -> list:
 
 def get_synonyms(word: str) -> set:
     synonyms = set()
-    for synset in wordnet.synsets(word):
+    try:
+        synsets = wordnet.synsets(word)
+    except:
+        return synonyms
+    if synsets is None:
+        return synonyms
+
+    for synset in synsets:
+        if synset is None:
+            continue
         for lemma in synset.lemmas():
+            if lemma is None:
+                continue
             synonyms.add(lemma.name())
     return synonyms
 
 def get_antonyms(word: str) -> set:
     antonyms = set()
-    for synset in wordnet.synsets(word):
+    try:
+        synsets = wordnet.synsets(word)
+    except:
+        return antonyms
+    if synsets is None:
+        return antonyms
+
+    for synset in synsets:
+        if synset is None:
+            continue
         for lemma in synset.lemmas():
-            if lemma.antonyms():
-                antonyms.add(lemma.antonyms()[0].name())
+            if lemma is None:
+                continue
+            try:
+                antonym_lemmas = lemma.antonyms()
+            except:
+                continue
+            if antonym_lemmas:
+                antonyms.add(antonym_lemmas[0].name())
     return antonyms
 
 def get_hypernyms(word: str) -> set:
     hypernyms = set()
-    for synset in wordnet.synsets(word):
+    try:
+        synsets = wordnet.synsets(word)
+    except:
+        return hypernyms
+    if synsets is None:
+        return hypernyms
+
+    for synset in synsets:
+        if synset is None:
+            continue
         for hypernym_synset in synset.hypernyms():
             hypernyms.update(hypernym_synset.lemma_names())
     return hypernyms
 
 def get_hyponyms(word: str) -> set:
     hyponyms = set()
-    for synset in wordnet.synsets(word):
+    try:
+        synsets = wordnet.synsets(word)
+    except:
+        return hyponyms
+    if synsets is None:
+        return hyponyms
+
+    for synset in synsets:
+        if synset is None:
+            continue
         for hyponym_synset in synset.hyponyms():
             hyponyms.update(hyponym_synset.lemma_names())
     return hyponyms
@@ -172,6 +227,12 @@ simple_relation_functions = {
 }
 
 if __name__ == "__main__":
+    parser = ArgumentParser(
+        prog="Split dataset"
+    )
+    parser.add_argument('-o', '--output_path', required=True)
+    args = parser.parse_args()
+
     esnli = esnli.map(transform_highlighted, num_proc=num_cpus)
 
     for key in simple_relation_functions.keys():
@@ -187,4 +248,4 @@ if __name__ == "__main__":
     print(f"Adding numerical column...")
     esnli = esnli.map(add_numerical_column, num_proc=num_cpus)
 
-    esnli.save_to_disk(dataset_dict_path="../../../lit-data/datasets/esnli_phenomena")
+    esnli.save_to_disk(dataset_dict_path=args.output_path)

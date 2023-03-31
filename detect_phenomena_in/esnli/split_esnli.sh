@@ -2,7 +2,7 @@
 #SBATCH --job-name=split_esnli
 #SBATCH --output=split_esnli.txt
 #SBATCH --ntasks=1
-#SBATCH --time=24:00:00
+#SBATCH --time=1:00:00
 #SBATCH --mem=32000
 #SBATCH --mail-type=ALL
 #SBATCH --partition=students

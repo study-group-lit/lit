@@ -1,6 +1,8 @@
-# Currently evaluation suites do not support custom parameters for the constructor:
-# https://github.com/huggingface/evaluate/blob/8b9373dc8693ffe0244a52551ac5573cffa503aa/src/evaluate/evaluation_suite/__init__.py#L77
-# Which is, why we duplicate the file for simplicity reasons for now and change the hypothesis only parameter
+# README
+# This file contains an EvaluationSuite to evaluate the performance of a hypothesis-only 
+# model on the part of the validation split of e-SNLI that contain quantifiers in the words 
+# of premise and hypothesis that have been marked as important by human annotators. The results
+# are split by quantifiers.
 
 import evaluate
 from evaluate.evaluation_suite import SubTask
@@ -59,12 +61,6 @@ def get_important_words_grouped(record: dict, hypothesis_only: bool):
                 words_and_groups.update(word_group)
                 words_and_groups.update(" ".join(word_group))
     return words_and_groups
-
-
-def add_quantifier_column(record: dict) -> dict:
-    important_words_grouped = get_important_words_grouped(record)
-    quantifiers = list(
-        filter(lambda phrase: phrase in all_quantifiers, important_words_grouped))
 
 
 def has_quantifier(record: str, quantifier: str, hypothesis_only: bool) -> bool:

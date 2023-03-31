@@ -1,3 +1,6 @@
+# README
+# This file contains a load script for the e-SNLI dataset
+
 # coding=utf-8
 # Copyright 2020 The TensorFlow Datasets Authors and the HuggingFace Datasets Authors.
 #

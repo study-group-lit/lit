@@ -1,13 +1,23 @@
+# README
+# This file contains a script to detect the liguistic phenomena of synonym, antonym,
+# hypernym, hyponym, co_hyponym, quantifiers and numerals in a dataset. For each
+# phenomenon a column will be added to the dataset which contains a number. If the
+# number is >0, the respective phenomenon has been found in the sample. For the
+# where it is possibl (numerals and quantifiers) only the hypothesis the hypothsis
+# is considered
+
 from typing import List
 from attr import dataclass
-from datasets import load_dataset, DatasetDict
+from datasets import load_dataset
 import re
 import nltk
-import os
 from nltk.corpus import wordnet
-from nltk import word_tokenize, pos_tag, ngrams
+from nltk import word_tokenize, pos_tag
 from multiprocessing import cpu_count
 from argparse import ArgumentParser
+import warnings
+
+warnings.filterwarnings("ignore")
 
 nltk.download('wordnet')
 nltk.download('punkt')
@@ -84,29 +94,73 @@ def split_sentence(sentence: dict) -> set:
 
 def get_synonyms(word: str) -> set:
     synonyms = set()
-    for synset in wordnet.synsets(word):
+    try:
+        synsets = wordnet.synsets(word)
+    except:
+        return synonyms
+    if synsets is None:
+        return synonyms
+
+    for synset in synsets:
+        if synset is None:
+            continue
         for lemma in synset.lemmas():
+            if lemma is None:
+                continue
             synonyms.add(lemma.name())
     return synonyms
 
 def get_antonyms(word: str) -> set:
     antonyms = set()
-    for synset in wordnet.synsets(word):
+    try:
+        synsets = wordnet.synsets(word)
+    except:
+        return antonyms
+    if synsets is None:
+        return antonyms
+
+    for synset in synsets:
+        if synset is None:
+            continue
         for lemma in synset.lemmas():
-            if lemma.antonyms():
-                antonyms.add(lemma.antonyms()[0].name())
+            if lemma is None:
+                continue
+            try:
+                antonym_lemmas = lemma.antonyms()
+            except:
+                continue
+            if antonym_lemmas:
+                antonyms.add(antonym_lemmas[0].name())
     return antonyms
 
 def get_hypernyms(word: str) -> set:
     hypernyms = set()
-    for synset in wordnet.synsets(word):
+    try:
+        synsets = wordnet.synsets(word)
+    except:
+        return hypernyms
+    if synsets is None:
+        return hypernyms
+
+    for synset in synsets:
+        if synset is None:
+            continue
         for hypernym_synset in synset.hypernyms():
             hypernyms.update(hypernym_synset.lemma_names())
     return hypernyms
 
 def get_hyponyms(word: str) -> set:
     hyponyms = set()
-    for synset in wordnet.synsets(word):
+    try:
+        synsets = wordnet.synsets(word)
+    except:
+        return hyponyms
+    if synsets is None:
+        return hyponyms
+
+    for synset in synsets:
+        if synset is None:
+            continue
         for hyponym_synset in synset.hyponyms():
             hyponyms.update(hyponym_synset.lemma_names())
     return hyponyms

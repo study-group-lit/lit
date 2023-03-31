@@ -1,3 +1,9 @@
+# README
+# This file contains an EvaluationSuite to evaluate the performance of a hypothesis-only 
+# model on the validation-matched split of Multi-NLI separated by linguistic phenomena 
+# considering only the words of premise and hypothesis that have been marked as important 
+# by human annotators.
+
 import evaluate
 from evaluate.evaluation_suite import SubTask
 from multiprocessing import cpu_count

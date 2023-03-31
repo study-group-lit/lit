@@ -1,3 +1,8 @@
+# README
+# This file contains an EvaluationSuite to evaluate the performance of a model on the
+# validation split of e-SNLI separated by linguistic phenomena considering only the 
+# words of premise and hypothesis that have been marked as important by human annotators.
+
 import evaluate
 from evaluate.evaluation_suite import SubTask
 from multiprocessing import cpu_count

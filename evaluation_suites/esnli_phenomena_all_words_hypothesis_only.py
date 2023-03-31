@@ -1,3 +1,11 @@
+# README
+# This file contains an EvaluationSuite to evaluate the performance of a hypothesis-only 
+# model on the validation split of e-SNLI separated by linguistic phenomena considering all 
+# words of premise and hypothesis.
+
+# https://github.com/huggingface/evaluate/blob/8b9373dc8693ffe0244a52551ac5573cffa503aa/src/evaluate/evaluation_suite/__init__.py#L77
+# Which is, why we duplicate the file for simplicity reasons for now and change the hypothesis only parameter
+
 import evaluate
 from evaluate.evaluation_suite import SubTask
 from multiprocessing import cpu_count
