@@ -1,3 +1,7 @@
+# README
+# Taken from https://github.com/verypluming/HELP/blob/master/scripts/create_dataset_PMB.py and heavily adapted
+# For a full list of changes consult ccg_parse.diff
+
 import os
 import os.path
 import re
@@ -140,7 +144,7 @@ def keep_tenses(verb, newverb):
         mood = SUBJUNCTIVE
     else:
         mood = None
-    
+
     #if 'imperfective' in ori_tense2:
     #   aspect = IMPERFECTIVE
     #elif 'perfective' in ori_tense2:
@@ -149,7 +153,7 @@ def keep_tenses(verb, newverb):
         aspect = PROGRESSIVE
     else:
         aspect = None
-    newverb_tense = conjugate(newverb, 
+    newverb_tense = conjugate(newverb,
         tense = tense,        # INFINITIVE, PRESENT, PAST, FUTURE
        person = person,              # 1, 2, 3 or None
        number = number,       # SG, PL
@@ -173,7 +177,7 @@ def generate_contradiction(determiner, sentence, results):
     contradictiondeterminer = contradiction_mapping[determiner]
     if contradictiondeterminer is None:
         print(f"{contradictiondeterminer} could not be mapped to a contradicting quantifier")
-    
+
     newsentence = replace_word(sentence, determiner, contradictiondeterminer)
     results.append({"label": "2", "hypothesis": newsentence}) # contradiction
 
@@ -198,12 +202,12 @@ def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb
         for nounhyponym in nounhyponyms
     ]
     verbhypersim = [
-        verbhypernym.wup_similarity(nounsynset) 
+        verbhypernym.wup_similarity(nounsynset)
         if nounsynset is not None and verbhypernym.wup_similarity(nounsynset) is not None else 0
         for verbhypernym in verbhypernyms
     ]
     verbhyposim = [
-        verbhyponym.wup_similarity(nounsynset) 
+        verbhyponym.wup_similarity(nounsynset)
         if nounsynset is not None and verbhyponym.wup_similarity(nounsynset) is not None else 0
         for verbhyponym in verbhyponyms
     ]
@@ -216,7 +220,7 @@ def replace_sentence_WN_nv(determiner, nounmono, verbmono, noun, nounsense, verb
         synsetdict["verb_hypernym"] = verbhypernyms[verbhypersim.index(max(verbhypersim))]
     if len(verbhyposim) > 0:
         synsetdict["verb_hyponym"] = verbhyponyms[verbhyposim.index(max(verbhyposim))]
-    
+
     for rel, synset in synsetdict.items():
         synsetwords = synset.lemma_names()
         for synsetword in synsetwords:
@@ -269,7 +273,7 @@ def replace_sentence(determiner, nounmono, noun, newnoun, sentence, results):
     gold_label = check_label(nounmono, 'simple')
     if gold_label == "neutral":
         results.append({"label": 1, "hypothesis": newsentence})
-    
+
     return results
 
 
