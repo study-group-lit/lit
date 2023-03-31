@@ -15,7 +15,7 @@ Processed datasets and trained models are not part of this repository.
 │   └── esnli
 ├── evaluation_suites
 ├── filter_biased_samples
-│   ├── filter_esnli_evaluations
+│   ├── esnli_evaluations
 │   └── mnli
 ├── finetuning
 │   ├── filtered_mnli
