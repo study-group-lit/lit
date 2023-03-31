@@ -110,7 +110,7 @@ Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the \ac{MCC} scores separa
 \subsection{Testing H5}
 To test this hypothesis the predictive performance of the recast model has been tested on both the \ac{SICK} dataset and the \ac{e-SNLI} dataset.
 
-The results obtained on the \ac{SICK} dataset can be seen in \autoref{tab:res:finetuned}. Unexpectedly, the performance of the model on the \ac{SICK} dataset dropped significantly compared to the base finetuned model both in terms of the \ac{MCC} and F$_1$-Score.
+The results obtained on the \ac{SICK} dataset can be seen in \autoref{tab:res:finetuned}. Unexpectedly, the performance of the model on the \ac{SICK} dataset dropped significantly compared to the base finetuned model both in terms of the \ac{MCC} and F$_1$-Score. This can be explained by the fact that both \ac{e-SNLI} and \ac{MultiNLI} are variants of the \ac{SNLI} dataset and are therefore rather similar to each other. In contrast, \ac{SICK} is from a completely different domain and was specifically constructed to reveal issues with crowdsourced datasets such as \ac{e-SNLI} and \ac{MultiNLI}.
 
 Figure~\ref{fig:metric-heatmap-phenomena-mcc} depicts the result of the recast model on the \ac{e-SNLI} dataset per linguistic phenomenon compared to the other models. The model's performance on samples that contain quantifiers and have been determined to be biased has indeed been improved by the addition of the recast data compared to the base finetuned model. We interpret this as a result of decreased bias in the quantifier samples caused by the additional recast data.
 
