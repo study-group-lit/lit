@@ -11,5 +11,5 @@
 PATH=/opt/slurm/bin:$PATH
 
 
-source ~/lit/venv/bin/activate
+source ../../venv/bin/activate
 python3 filter_pos.py -d /workspace/students/lit/datasets/dailymail_dataset_filtered

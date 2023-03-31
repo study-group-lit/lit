@@ -14,5 +14,5 @@
 PATH=/opt/slurm/bin:$PATH
 
 
-source ~/lit/venv/bin/activate
+source ../../venv/bin/activate
 python3 train.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli-maximum_one_3/ -d /workspace/students/lit/datasets/mnli_maximum_one
