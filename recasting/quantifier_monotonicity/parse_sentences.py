@@ -1,5 +1,5 @@
 # README
-# Testing the sample generation script by feeding a select few sample sentences into the generator.
+# Testing the sample generation script by feeding a few sample sentences into the generator.
 # The results are printed to the console.
 
 from tqdm import tqdm
