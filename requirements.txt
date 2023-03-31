@@ -1,13 +1,13 @@
+numpy==1.21.6
+numba==0.56.4
 datasets==2.10.1
 transformers==4.26.1
 scikit-learn==1.0.2
 torch==1.13.1
-numba==0.56.4
 ferret-xai==0.4.1
 evaluate==0.4.0
 matplotlib==3.7.1
 lime==0.2.0.1
-numpy==1.23.5
 pandas==1.5.3
 shap==0.41.0
 tqdm==4.65.0
