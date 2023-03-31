@@ -1,3 +1,8 @@
+# README
+# This file contains a script to test the performance a model trained only 
+# on the hypotheses of MultiNLI using the  EvaluationSuite defined 
+# in ../../evaluation_suites/default.py.
+
 from transformers import pipeline
 from evaluate import EvaluationSuite
 import argparse

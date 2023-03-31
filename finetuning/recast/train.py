@@ -1,3 +1,7 @@
+# README
+# This file contains a script to train a roberta-base model on the MultiNLI dataset 
+# extended with recast data as decribed in section 2.5 of the report.
+
 import os
 from datasets import load_from_disk, load_dataset, concatenate_datasets, ClassLabel, Value
 from transformers import TrainingArguments, Trainer

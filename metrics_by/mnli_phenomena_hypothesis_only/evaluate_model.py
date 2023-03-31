@@ -1,3 +1,7 @@
+# README
+# This file contains a script to test the performance of a model using the 
+# EvaluationSuite defined in ../../evaluation_suites/mnli_phenomena_hypothesis_only.py.
+
 import os
 from transformers import pipeline
 from evaluate import EvaluationSuite

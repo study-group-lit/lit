@@ -1,3 +1,8 @@
+# README
+# This file contains a script to test the performance of an ensembled model as 
+# described in section 2.4 of the report using the  EvaluationSuite defined 
+# in ../../evaluation_suites/default.py.
+
 from transformers import pipeline
 from evaluate import EvaluationSuite
 

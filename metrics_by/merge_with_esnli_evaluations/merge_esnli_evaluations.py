@@ -1,3 +1,7 @@
+# README
+# This file contains a script to merge the e-SNLI dataset with calculated evaluations 
+# with the e-SNLI dataset with detected linguitic phenomena.
+
 from datasets import load_from_disk, concatenate_datasets, Dataset
 import pandas as pd
 from statistics import mean, median

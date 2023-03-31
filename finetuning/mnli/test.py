@@ -1,3 +1,7 @@
+# README
+# This file contains a script to test the performance of a model using the 
+# EvaluationSuite defined in ../../evaluation_suites/default.py.
+
 from transformers import pipeline
 from evaluate import EvaluationSuite
 

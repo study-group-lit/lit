@@ -1,10 +1,14 @@
+# README
+# This file contains a script to test the performance of a model using the 
+# EvaluationSuite defined in ../../evaluation_suites/default.py.
+
 import os
 from argparse import ArgumentParser
 from transformers import pipeline
 from evaluate import EvaluationSuite
 
 parser = ArgumentParser(
-    prog="Train"
+    prog="Test"
 )
 parser.add_argument('-m', '--model_path', required=True)
 args = parser.parse_args()
