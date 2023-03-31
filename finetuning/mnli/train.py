@@ -5,7 +5,7 @@ from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score, balance
 from transformers import RobertaForSequenceClassification, RobertaModel, RobertaConfig, RobertaTokenizer
 
 # check paths and create if needed
-model_path = "/workspace/students/lit/models/roberta-base-finetuned-mnli/"
+model_path = "/mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli/"
 if not os.path.exists(model_path):
     os.mkdir(model_path)
 checkpoint_path = os.path.join(model_path, "checkpoints")

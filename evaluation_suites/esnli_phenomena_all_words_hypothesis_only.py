@@ -31,7 +31,7 @@ class ConfiguredMetric:
 class Suite(evaluate.EvaluationSuite):
     def __init__(self, name):
         super().__init__(name)
-        self.esnli_phenomena = DatasetDict.load_from_disk("/workspace/students/lit/datasets/esnli_phenomena_all_words")
+        self.esnli_phenomena = DatasetDict.load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_phenomena_all_words")
         self.phenomena = ["synonym", "antonym", "hypernym", "hyponym", "co_hyponym", "quantifiers", "numericals"]
         self.suite = list(map(lambda phenomenon: self.task_for(phenomenon), self.phenomena))
     

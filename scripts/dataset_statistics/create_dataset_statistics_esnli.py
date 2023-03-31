@@ -9,7 +9,7 @@ import datasets
 # Use this if the script crashes due to permissions problems with the cache
 datasets.disable_caching()
 
-DATASET_PREFIX = "/workspace/students/lit/datasets/"
+DATASET_PREFIX = "/mnt/semproj/sem_proj22/proj_05/data/datasets/"
 DATASETS = [
     DATASET_PREFIX + name for name in [
         "esnli_phenomena_with_predictions_filtered" # ESNLI samples, which were predicted by the model

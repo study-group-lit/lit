@@ -9,7 +9,7 @@ import datasets
 # Use this if the script crashes due to permissions problems with the cache
 datasets.disable_caching()
 
-DATASET_PREFIX = "/workspace/students/lit/datasets/"
+DATASET_PREFIX = "/mnt/semproj/sem_proj22/proj_05/data/datasets/"
 DATASETS = [
     DATASET_PREFIX + name for name in [
         "mnli_maximum_one", # MultiNLI samples, which were predicted by a maximum of 1 / 2 out of the three models

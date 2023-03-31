@@ -9,8 +9,8 @@ import datasets
 # Use this if the script crashes due to permissions problems with the cache
 datasets.disable_caching()
 
-cnn_path = "/workspace/students/lit/datasets/cnn_dataset_augmented"
-dailymail_path = "/workspace/students/lit/datasets/dailymail_dataset_augmented"
+cnn_path = "/mnt/semproj/sem_proj22/proj_05/data/datasets/cnn_dataset_augmented"
+dailymail_path = "/mnt/semproj/sem_proj22/proj_05/data/datasets/dailymail_dataset_augmented"
 
 LABELS = ["entailment", "neutral", "contradiction"]
 

@@ -6,10 +6,10 @@ from transformers import pipeline
 seeds = ["42", "69", "1337"]
 cpu_count = multiprocessing.cpu_count()
 
-model_path = "/workspace/students/lit/models"
+model_path = "/mnt/semproj/sem_proj22/proj_05/data/models"
 if not os.path.exists(model_path):
     raise IOError("Model path does not exist")
-dataset_path = "/workspace/students/lit/datasets"
+dataset_path = "/mnt/semproj/sem_proj22/proj_05/data/datasets"
 if not os.path.exists(dataset_path):
     raise IOError("Dataset path does not exist")
 

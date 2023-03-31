@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(
 # For each row the SHAP explainer alone takes 16s. Running all tasks would take ~150h
 # Thus we chunk the task into pieces of 2000 items (esnli validation has about 10000)
 parser.add_argument("-c", "--chunk_index", type=int, default=0)
-parser.add_argument("-m", "--model", default="/workspace/students/lit/models/roberta-base-finetuned-mnli/", type=str)
+parser.add_argument("-m", "--model", default="/mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli/", type=str)
 args = parser.parse_args()
 
 variant = args.variant

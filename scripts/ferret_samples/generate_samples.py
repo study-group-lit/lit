@@ -3,9 +3,9 @@ from transformers import RobertaForSequenceClassification, RobertaTokenizer
 from ferret import Benchmark
 from multiprocessing import cpu_count
 
-esnli = DatasetDict.load_from_disk("/workspace/students/lit/datasets/esnli_phenomena")
-model = RobertaForSequenceClassification.from_pretrained("/workspace/students/lit/models/roberta-base-finetuned-mnli")
-tokenizer = RobertaTokenizer.from_pretrained("/workspace/students/lit/models/roberta-base-finetuned-mnli")
+esnli = DatasetDict.load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_phenomena")
+model = RobertaForSequenceClassification.from_pretrained("/mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli")
+tokenizer = RobertaTokenizer.from_pretrained("/mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli")
 
 bench = Benchmark(model, tokenizer)
 

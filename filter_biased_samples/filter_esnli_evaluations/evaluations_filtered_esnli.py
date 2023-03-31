@@ -6,7 +6,7 @@ from datasets import load_from_disk
 from statistics import mean, median
 import json
 
-esnli = load_from_disk("/workspace/students/lit/datasets/esnli_phenomena_with_predictions")
+esnli = load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_phenomena_with_predictions")
 
 
 # The item ferret_explanations contains the scores for the explanations of Shap, LIME, Integrated Gradient and Integrated Gradients multiplying inputs
@@ -43,6 +43,6 @@ def calculate_dataset_scores(dataset):
 filtered_esnli = esnli.filter(filter_predicted_samples)
 print("Calculating scores")
 filtered_esnli_scores = calculate_dataset_scores(filtered_esnli)
-filtered_esnli.save_to_disk("/workspace/students/lit/datasets/esnli_phenomena_with_predictions_filtered")
-with open("/workspace/students/lit/datasets/esnli_phenomena_with_predictions_filtered.json", "w+") as f:
+filtered_esnli.save_to_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_phenomena_with_predictions_filtered")
+with open("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_phenomena_with_predictions_filtered.json", "w+") as f:
     f.write(json.dumps(filtered_esnli_scores))

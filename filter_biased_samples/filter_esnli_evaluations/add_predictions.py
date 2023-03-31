@@ -9,17 +9,17 @@ from transformers import pipeline
 
 cpu_count = multiprocessing.cpu_count()
 
-model_path = "/workspace/students/lit/models"
+model_path = "/mnt/semproj/sem_proj22/proj_05/data/models"
 if not os.path.exists(model_path):
     raise IOError("Model path does not exist")
-dataset_path = "/workspace/students/lit/datasets"
+dataset_path = "/mnt/semproj/sem_proj22/proj_05/data/datasets"
 if not os.path.exists(dataset_path):
     raise IOError("Dataset path does not exist")
 
 model = pipeline("text-classification", model=f"{model_path}/roberta-base-finetuned-mnli/")
 
 # Currently we only have an evaluations and phenomena dataset for the finetuned mnli model for seed 42
-esnli = load_from_disk("/workspace/students/lit/datasets/esnli_evaluations_42_phenomena")
+esnli = load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_evaluations_42_phenomena")
 
 label_mapping = {
     "ENTAILMENT": 0,

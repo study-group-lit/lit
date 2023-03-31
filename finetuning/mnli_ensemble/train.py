@@ -11,7 +11,7 @@ import torch.nn.functional as F
 from transformers.models.roberta.modeling_roberta import RobertaPreTrainedModel, RobertaClassificationHead
 from transformers.modeling_outputs import SequenceClassifierOutput
 
-model_path = "/workspace/students/lit/models/roberta-ensemble-finetuned-mnli/"
+model_path = "/mnt/semproj/sem_proj22/proj_05/data/models/roberta-ensemble-finetuned-mnli/"
 if not os.path.exists(model_path):
     os.makedirs(model_path, exist_ok=True)
 checkpoint_path = os.path.join(model_path, "checkpoints")
@@ -142,7 +142,7 @@ del state_dict["pooler.dense.weight"]
 del state_dict["pooler.dense.bias"]
 model.roberta.load_state_dict(state_dict)
 
-hypothesis_only = RobertaForSequenceClassification.from_pretrained("/workspace/students/lit/models/roberta-base-finetuned-mnli-hypothesis-only/1337/")
+hypothesis_only = RobertaForSequenceClassification.from_pretrained("/mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli-hypothesis-only/1337/")
 model.hypothesis_only.load_state_dict(hypothesis_only.state_dict())
 
 tokenizer = RobertaTokenizer.from_pretrained("roberta-base")

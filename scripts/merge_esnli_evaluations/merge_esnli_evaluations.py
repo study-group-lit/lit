@@ -3,14 +3,14 @@ import pandas as pd
 from statistics import mean, median
 import json
 
-esnli_phenomena = load_from_disk("/workspace/students/lit/datasets/esnli_phenomena")["validation"].to_pandas()
-esnli_evaluations = load_from_disk("/workspace/students/lit/datasets/esnli_evaluations_42/esnli_evaluations_chunk_0")
+esnli_phenomena = load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_phenomena")["validation"].to_pandas()
+esnli_evaluations = load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_evaluations_42/esnli_evaluations_chunk_0")
 for i in range(1, 5):
-    esnli_evaluations_chunk = load_from_disk(f"/workspace/students/lit/datasets/esnli_evaluations_42/esnli_evaluations_chunk_{i}")
+    esnli_evaluations_chunk = load_from_disk(f"/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_evaluations_42/esnli_evaluations_chunk_{i}")
     esnli_evaluations = concatenate_datasets([esnli_evaluations, esnli_evaluations_chunk])
 esnli_evaluations = esnli_evaluations.to_pandas()
 
-esnli_evaluations_hypothesis_only = load_from_disk("/workspace/students/lit/datasets/esnli_evaluations_hypothesis_only_42").to_pandas()
+esnli_evaluations_hypothesis_only = load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_evaluations_hypothesis_only_42").to_pandas()
 
 def merge(record):
     candidate_partners = esnli_evaluations.filter(lambda r: r["premise"] == record["premise"] and r["hypothesis"] == record["hypothesis"])
@@ -23,11 +23,11 @@ def merge(record):
 esnli_evaluations_phenomena_pd = pd.merge(esnli_evaluations, esnli_phenomena, on=["premise", "hypothesis"], suffixes=('', '_DROP')).filter(regex='^(?!.*_DROP)')
 
 esnli_evaluations_phenomena = Dataset.from_pandas(esnli_evaluations_phenomena_pd)
-esnli_evaluations_phenomena.save_to_disk("/workspace/students/lit/datasets/esnli_evaluations_42_phenomena")
+esnli_evaluations_phenomena.save_to_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_evaluations_42_phenomena")
 
 esnli_evaluations_hypothesis_only_phenomena_pd = pd.merge(esnli_evaluations_hypothesis_only, esnli_phenomena, on=["premise", "hypothesis"], suffixes=('', '_DROP')).filter(regex='^(?!.*_DROP)')
 esnli_evaluations_hypothesis_only_phenomena = Dataset.from_pandas(esnli_evaluations_hypothesis_only_phenomena_pd)
-esnli_evaluations_hypothesis_only_phenomena.save_to_disk("/workspace/students/lit/datasets/esnli_evaluations_hypothesis_only_42_phenomena")
+esnli_evaluations_hypothesis_only_phenomena.save_to_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_evaluations_hypothesis_only_42_phenomena")
 
 
 def calculate_score(dataset, row_value_selector, score):
@@ -52,9 +52,9 @@ def calculate_dataset_scores(dataset):
     return dataset_scores
 
 esnli_evaluations_hypothesis_only_phenomena_scores = calculate_dataset_scores(esnli_evaluations_hypothesis_only_phenomena)
-with open(f"/workspace/students/lit/datasets/esnli_evaluations_hypothesis_only_phenomena_scores.json", "w+") as f:
+with open(f"/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_evaluations_hypothesis_only_phenomena_scores.json", "w+") as f:
     f.write(json.dumps(esnli_evaluations_hypothesis_only_phenomena_scores))
 
 esnli_evaluations_phenomena_scores = calculate_dataset_scores(esnli_evaluations_phenomena)
-with open(f"/workspace/students/lit/datasets/esnli_evaluations_phenomena_scores.json", "w+") as f:
+with open(f"/mnt/semproj/sem_proj22/proj_05/data/datasets/esnli_evaluations_phenomena_scores.json", "w+") as f:
     f.write(json.dumps(esnli_evaluations_phenomena_scores))

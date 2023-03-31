@@ -9,7 +9,7 @@ import datasets
 datasets.disable_caching()
 
 # check paths and create if needed
-model_path = "/workspace/students/lit/models/roberta-base-finetuned-recast/"
+model_path = "/mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-recast/"
 if not os.path.exists(model_path):
     os.mkdir(model_path)
 checkpoint_path = os.path.join(model_path, "checkpoints")
@@ -76,8 +76,8 @@ del state_dict["pooler.dense.bias"]
 model.roberta.load_state_dict(state_dict)
 
 # load and preprocess datasets
-cnn = load_from_disk("/workspace/students/lit/datasets/cnn_dataset_augmented")
-dailymail = load_from_disk("/workspace/students/lit/datasets/dailymail_dataset_augmented")
+cnn = load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/cnn_dataset_augmented")
+dailymail = load_from_disk("/mnt/semproj/sem_proj22/proj_05/data/datasets/dailymail_dataset_augmented")
 mnli = load_dataset("multi_nli")
 
 def encode_label(recast_dataset):

@@ -13,7 +13,7 @@ models = [
     "roberta-ensemble-finetuned-mnli_0_03"
 ]
 
-models = ["/workspace/students/lit/models/" + model for model in models]
+models = ["/mnt/semproj/sem_proj22/proj_05/data/models/" + model for model in models]
 
 for model in models:
     print(model)
@@ -30,7 +30,7 @@ for model in models:
     print("")
 
 
-model = "/workspace/students/lit/models/roberta-base-finetuned-mnli-hypothesis-only/"
+model = "/mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli-hypothesis-only/"
 seeds = [
     "42", "69", "1337"
 ]

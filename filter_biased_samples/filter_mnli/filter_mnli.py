@@ -6,7 +6,7 @@ from datasets import load_from_disk
 seeds = ["42", "69", "1337"]
 cpu_count = multiprocessing.cpu_count()
 
-dataset_path = "/workspace/students/lit/datasets"
+dataset_path = "/mnt/semproj/sem_proj22/proj_05/data/datasets"
 if not os.path.exists(dataset_path):
     raise IOError("Dataset path does not exist")
 

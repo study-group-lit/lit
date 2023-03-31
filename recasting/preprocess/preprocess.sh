@@ -12,4 +12,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ../../venv/bin/activate
-python3 preprocess.py -d /workspace/students/lit/datasets/cnn_dataset
+python3 preprocess.py -d /mnt/semproj/sem_proj22/proj_05/data/datasets/cnn_dataset

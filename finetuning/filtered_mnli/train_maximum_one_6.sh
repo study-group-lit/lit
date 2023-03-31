@@ -15,4 +15,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ../../venv/bin/activate
-python3 train_more.py -p /workspace/students/lit/models/roberta-base-finetuned-mnli-maximum_one_3/ -m /workspace/students/lit/models/roberta-base-finetuned-mnli-maximum_one_6/ -d /workspace/students/lit/datasets/mnli_maximum_one
+python3 train_more.py -p /mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli-maximum_one_3/ -m /mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli-maximum_one_6/ -d /mnt/semproj/sem_proj22/proj_05/data/datasets/mnli_maximum_one

@@ -12,4 +12,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ../../venv/bin/activate
-python3 filter_pos.py -d /workspace/students/lit/datasets/dailymail_dataset_filtered
+python3 filter_pos.py -d /mnt/semproj/sem_proj22/proj_05/data/datasets/dailymail_dataset_filtered

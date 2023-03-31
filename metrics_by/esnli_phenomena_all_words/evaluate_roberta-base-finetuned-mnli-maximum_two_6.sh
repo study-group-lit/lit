@@ -14,4 +14,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ../../venv/bin/activate
-python3 evaluate_model.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli-maximum_two_6
+python3 evaluate_model.py -m /mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli-maximum_two_6

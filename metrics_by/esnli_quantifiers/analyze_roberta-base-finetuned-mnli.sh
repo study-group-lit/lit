@@ -14,4 +14,4 @@ PATH=/opt/slurm/bin:$PATH
 
 
 source ../../venv/bin/activate
-python3 analyze.py -m /workspace/students/lit/models/roberta-base-finetuned-mnli
+python3 analyze.py -m /mnt/semproj/sem_proj22/proj_05/data/models/roberta-base-finetuned-mnli
