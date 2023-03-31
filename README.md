@@ -9,32 +9,39 @@ Processed datasets and trained models are not part of this repository.
 ## Structure
 ```
 ├── datasets
+│   └── esnli_evaluations_per_phenomena
+├── detect_phenomena_in
+│   ├── dataset
+│   └── esnli
+├── evaluation_suites
+├── filter_biased_samples
+│   ├── esnli_evaluations
+│   └── mnli
+├── finetuning
+│   ├── filtered_mnli
+│   ├── mnli
+│   ├── mnli_ensemble
+│   ├── mnli_hypothesis_only
+│   └── recast
+├── metrics_by
+│   ├── esnli_phenomena
+│   ├── esnli_phenomena_all_words
+│   ├── esnli_quantifiers
+│   ├── merge_with_esnli_evaluations
+│   └── mnli_phenomena_hypothesis_only
 ├── models
 ├── notebooks
 ├── outline
-│   └── pdf
+├── recasting
+│   ├── add_summaries
+│   ├── filter
+│   ├── preprocess
+│   └── quantifier_monotonicity
 ├── report
-│   ├── auxiliary
-│   └── content
-├── scripts
-│   ├── add_summaries
-│   ├── analyze_quantifiers
-│   │   └── results
-│   ├── filter_esnli_evaluations
-│   ├── filter_mnli
-│   ├── finetune_filtered_mnli
-│   │   └── results
-│   ├── finetune_mnli
-│   ├── finetune_mnli_ensemble
-│   ├── finetune_mnli_hypothesis_only
-│   ├── finetune_recast
-│   ├── merge_esnli_evaluations
-│   ├── metrics_by_phenomena
-│   │   └── results
-│   ├── metrics_by_phenomena_all_words
-│   │   └── results
-│   ├── quantifier_monotonicity
-│   └── split_esnli
+├── statistics_for_report
+│   ├── dataset_statistics
+│   ├── evaluate_finetuned_models
+│   └── ferret_samples
 └── visualisations
 ```
 
@@ -44,29 +51,45 @@ Processed datasets and trained models are not part of this repository.
 
 ### Code
 - `datasets`:
-    - various evaluation suites
-    - e-SNLI loading and preprocessing scripts
+    - evaluations on the mnli filtered 3/3 long model with e-SNLI, grouped by phenomena
+    - e-SNLI loading script
+- `detect_phenomena_in`:
+  - general preprocessing and phenomena statistic scripts on datasets
+  - adding phenomena information to e-SNLI samples
+- `evaluation_suites`: Calculating accuracy, macro F1 and MCC for hypothesis only and general models for:
+  - different phenomena
+  - different quantifiers
+  - different datasets such as e-SNLI test, e-SNLI validation, SICK test, SICK validation or MultiNLI validation matched
+- `filter_biased_samples`:
+  - Adding prediction information on the base model to the e-SNLI dataset with evaluation information
+  - Filtering MultiNLI based on predictions of the hypothesis only models and thus generating the filtered models
+- `finetuning`: Training and testing scripts for the following models:
+  - MultiNLI
+  - MultiNLI using only hypothesis
+  - Filtered MultiNLI
+  - Ensemble
+- `metrics_by`:
+  - Evaluating models using the defined evaluation suites
 - `models`: RoBERTa config for sequence classification
-- `notebooks`: Jupyter Notebook playground. The notebooks contain visualisations for datasets and evaluations of models, as well as early versions of code found in `scripts`.
-- `scripts`:
-  - fine-tuning of RoBERTa on:
-    - MultiNLI
-    - MultiNLI using only hypothesis
-    - MultiNLI + recast CNN and Dailymail datasets
-    - Ensembled model
-  - miscellaneous scripts for calculating statistics / metrics
-  - miscellaneous scripts for analyzing datasets on models by phenomena
-- `visualisations`: heatmap generation scripts
+- `notebooks`: Jupyter Notebooks to interactively generate statistics and diagrams.
+- `recasting`: Preprocessing the CNN and Dailymail datasets to create a new dataset
+- `statistics_for_report`: Generating statistics and tables used in the report
+- `visualisations`: Interactive diagram generation
 
 ## Installation
 
+**Guarantees:**
+- We guarantee that the code will work on Last, except running `candc`
+- `candc` is required to generate CCG derivations for recasting found in `recasting/quantifier_monotonicity`
+
 **Requirements:**
-- Python3 (tested with version `3.8.10`)
-- C&C (required for recasting `scripts/quantifier_monotonicity/ccg_parse.py`)
+- Python3.9 (tested with version `3.9.2`. Newer versions might work, but are not supported)
+- CLuster (other system setups may work)
+- C&C (required for recasting `recasting/quantifier_monotonicity/ccg_parse.py`)
 - Linux, as `candc` does not run on MacOS
 
 **C&C installation:**
-Run `scripts/quantifier_monotonicity/install_candc.sh`. If necessary make the file executable. The script will show an error, which may be ignored.<br>
+Run `recasting/quantifier_monotonicity/install_candc.sh`. If necessary make the file executable. The script will show an error, which may be ignored.<br>
 Create a folder `bin` in the root directory and move the new `candc-1.00` directory into the `bin` directory. (The `bin` folder will be ignored by Git)
 
 **Python setup**
