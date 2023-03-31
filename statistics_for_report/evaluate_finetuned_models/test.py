@@ -1,3 +1,15 @@
+# README
+# Calculate metrics on the following evaluation suites found in ../../evaluation_suites:
+# 1. Metrics on SICK test
+# 2. Metrics on e-SNLI test for each phenomena
+# for each of the following models:
+# 1. Base MultiNLI
+# 2. Recast
+# 3. All filtered models
+# 4. Ensemble
+# 5. All three hypothesis only models
+# The hypothesis only models require a slightly different evaluation suite, as the models only receive the hypothesis
+
 from transformers import pipeline
 from evaluate import EvaluationSuite
 import datasets
