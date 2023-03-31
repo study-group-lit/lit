@@ -79,11 +79,12 @@ Processed datasets and trained models are not part of this repository.
 ## Installation
 
 **Guarantees:**
-- We guarantee that the code will work on Last, except running `candc` (recasting)
+- We guarantee that the code will work on Last, except running `candc`
+- `candc` is required to generate CCG derivations for recasting found in `recasting/quantifier_monotonicity`
 
 **Requirements:**
 - Python3.9 (tested with version `3.9.2`. Newer versions might work, but are not supported)
-- Last cluster (other system setups may work)
+- CLuster (other system setups may work)
 - C&C (required for recasting `recasting/quantifier_monotonicity/ccg_parse.py`)
 - Linux, as `candc` does not run on MacOS
 
@@ -92,7 +93,7 @@ Run `recasting/quantifier_monotonicity/install_candc.sh`. If necessary make the 
 Create a folder `bin` in the root directory and move the new `candc-1.00` directory into the `bin` directory. (The `bin` folder will be ignored by Git)
 
 **Python setup**
-Run `bootstrap.sh`, it will create a Python virtual environment at `venv`, activate it and then install the necessary packages. After installing all packages, run scripts with `python3.9` explicitly.
+Run `bootstrap.sh`, it will create a Python virtual environment at `venv`, activate it and then install the necessary packages.
 
 ## Troubleshooting
 ### Pip
