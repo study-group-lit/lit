@@ -1,3 +1,7 @@
+# README
+# This file contains a script to train a roberta-base model only on the hypotheses 
+# from the MultiNLI dataset for three epochs.
+
 from datasets import load_dataset
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score, balanced_accuracy_score

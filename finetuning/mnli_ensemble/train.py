@@ -1,3 +1,6 @@
+# README
+# This file contains a script to ensemble and train a model as described in section 2.4 of the report.
+
 from datasets import load_dataset
 from transformers import TrainingArguments, Trainer
 from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score, balanced_accuracy_score

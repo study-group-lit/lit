@@ -1,3 +1,6 @@
+# README
+# This file contains a script to train a roberta-base model on the regular MultiNLI dataset for three epochs.
+
 import os
 from datasets import load_dataset
 from transformers import TrainingArguments, Trainer

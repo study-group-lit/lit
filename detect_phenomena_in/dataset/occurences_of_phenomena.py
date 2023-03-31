@@ -1,3 +1,8 @@
+# README
+# This file contains a script to get the number of occurences of linguisitc phenomena in a dataset
+# where the linguisitc phenomena have been detected using the script in ./split_dataset.py,
+# ./split_dataset_hypothesis_only.py or ../esnli/split_esnli.py
+
 from datasets import DatasetDict
 from multiprocessing import cpu_count
 import json

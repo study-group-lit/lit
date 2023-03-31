@@ -1,3 +1,9 @@
+# README
+# This file contains an EvaluationSuite to evaluate the performance of a model on the
+# part of the validation split of e-SNLI that contain quantifiers in the words of premise 
+# and hypothesis that have been marked as important by human annotators. The results are
+# split by quantifiers.
+
 import evaluate
 from evaluate.evaluation_suite import SubTask
 from multiprocessing import cpu_count
@@ -47,10 +53,6 @@ def get_important_words_grouped(record: dict, hypothesis_only: bool):
                 words_and_groups.update(word_group)
                 words_and_groups.update(" ".join(word_group))
     return words_and_groups
-
-def add_quantifier_column(record: dict) -> dict:
-    important_words_grouped = get_important_words_grouped(record)
-    quantifiers = list(filter(lambda phrase: phrase in all_quantifiers, important_words_grouped))
 
 def has_quantifier(record: str, quantifier: str, hypothesis_only: bool) -> bool:
     important_words_grouped = get_important_words_grouped(record, hypothesis_only)

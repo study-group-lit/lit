@@ -1,3 +1,10 @@
+# README
+# This file contains a script to test the performance of a model using the EvaluationSuites defined in
+# 1. ../../evaluation_suites/esnli_quantifiers_hypothesis_only.py for hypothesis-only models
+# 2. ../../evaluation_suites/esnli_quantifiers.py for regular models.
+# Tests will run on samples from e-SNLI that contain quantifiers and all metrics will be calculated
+# separated by concrete quantifiers occuring in the samples.
+
 import os
 from transformers import pipeline
 from evaluate import EvaluationSuite

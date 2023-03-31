@@ -1,3 +1,7 @@
+# README
+# This file contains a script to train a roberta-base model that has alredy been 
+# trained on a filtered MultiNLI dataset for three more epochs.
+
 import os
 from argparse import ArgumentParser
 from datasets import load_from_disk

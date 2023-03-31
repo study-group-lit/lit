@@ -1,3 +1,10 @@
+# README
+# This file contains a script to test the performance of a model using the EvaluationSuites defined in 
+# 1. ../../evaluation_suites/esnli_phenomena_hypothesis_only.py for hypothesis-only models
+# 2. ../../evaluation_suites/esnli_phenomena.py for regular models.
+# Tests will run on e-SNLI and all metrics will be calculated separated by linguistic phenomena considering 
+# all words of the premise and hypothesis.
+
 import os
 from transformers import pipeline
 from evaluate import EvaluationSuite

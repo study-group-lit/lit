@@ -1,3 +1,8 @@
+# README
+# This file contains a script to calculate explanations as well as plausibility and faithfulness metrics
+# for the predictions of a roberta-base model fine-tuned only on the hypotheses of the MultiNLI dataset 
+# over the e-SNLI dataset. Also the sum, min, max, median, mean for all metrics are calculated.
+
 from datasets import load_dataset
 from transformers import RobertaForSequenceClassification, RobertaTokenizer
 from ferret import Benchmark

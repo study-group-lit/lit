@@ -1,3 +1,8 @@
+# README
+# This file contains a script to summarize the articles of the CNN and Dailymail dataset.
+# The sumaries are generated using the model sshleifer/distilbart-cnn-6-6 from huggingface
+# and added to the dataset as an additional column.
+
 import os
 from datasets import DatasetDict
 from transformers import pipeline

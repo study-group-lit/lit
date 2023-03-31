@@ -1,3 +1,6 @@
+# README
+# This file contains a script to add the predictions of a hypothesis-only model to MultiSNLI.
+
 import os
 import multiprocessing
 from datasets import load_dataset

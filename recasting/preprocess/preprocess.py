@@ -1,3 +1,10 @@
+# README
+# This file contains a script to preprocess the CNN and Dailymail datasets. This contains:
+# - Unmasking the articles (replacing the place holder with real entities)
+# - Unamsking the correct entities
+# - Extracting the entities in the answers
+# - Unmasking the answers
+
 import os
 from datasets import DatasetDict
 from multiprocessing import cpu_count
@@ -44,7 +51,7 @@ def preprocess(record):
                 answer_entites_list.append(entity_mapping[token])
             except KeyError:
                 pass
-    answer_entities = " ".join(answer_entites_list)
+    answer_entities = ",".join(answer_entites_list)
 
     # unmask answer
     answer = record["answer_masked"]
@@ -77,4 +84,4 @@ if __name__ == "__main__":
     datasetdict = DatasetDict.load_from_disk(dataset_path)
 
     datasetdict_preprocessed = datasetdict.map(preprocess, num_proc=cpu_count())
-    datasetdict_preprocessed.save_to_disk(dataset_dict_path=f"{dataset_path}_preprocessed_fixed")
+    datasetdict_preprocessed.save_to_disk(dataset_dict_path=f"{dataset_path}_preprocessed")

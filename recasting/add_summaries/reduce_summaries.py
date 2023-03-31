@@ -1,3 +1,7 @@
+# README
+# This file contains a script to reduce the summaries generated using ./add_summaries.py 
+# to a single sentence by selecting the sentence that contains the most entities from the answer.
+
 import os
 from datasets import Dataset, concatenate_datasets
 from multiprocessing import cpu_count

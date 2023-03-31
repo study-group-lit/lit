@@ -1,3 +1,7 @@
+# README
+# This file contains an EvaluationSuite to evaluate the performance of a model 
+# on the test split of the SICK dataset.
+
 import evaluate
 from evaluate.evaluation_suite import SubTask
 

@@ -1,3 +1,9 @@
+# README
+# Calculates the following two statistics over the esnli_phenomena_with_predictions_filtered dataset:
+# 1. Sample count for each of the labels
+# 2. Sample count per split
+# The values are printed as JSON and also stored in the ./results folder
+
 import os
 from datasets import load_from_disk
 from evaluate import EvaluationSuite
